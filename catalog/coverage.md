@@ -13,7 +13,7 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | backend-engineer | JavaScript and TypeScript | planned | none | planned |
 | backend-engineer | Rust | planned | none | planned |
 | backend-engineer | API design | planned | none | planned |
-| backend-engineer | Software architecture | planned (shared architecture capabilities) | mattpocock `codebase-design`, `domain-modeling` | planned |
+| backend-engineer | Software architecture | planned (shared architecture capabilities) | mattpocock `codebase-design` | planned |
 | frontend-engineer | Plain HTML, CSS, and JavaScript | planned | none | planned |
 | frontend-engineer | React, Astro, Svelte | planned | none | planned |
 | frontend-engineer | GPUI and desktop | planned | none | planned |
@@ -21,7 +21,7 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | mobile-engineer | Swift (iOS) | planned | none | planned |
 | mobile-engineer | Android | planned | Google `android/skills` | planned |
 | mobile-engineer | Software architecture | planned (shared architecture capabilities) | none | planned |
-| ui-ux-designer | UI and UX design | planned | none | planned |
+| ui-ux-designer | UI and UX design | `prototype`, `domain-modeling`; remaining methods planned | none | planned |
 | qa-engineer | Quality assurance and testing | planned | mattpocock `tdd` | planned |
 | devops-engineer | Shell: zsh on macOS, bash on Linux | planned | none | planned |
 | devops-engineer | CI/CD | planned | none | planned |
@@ -42,3 +42,11 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | copywriter | Copywriting | planned; builds on `clear-communication` | none | planned |
 | all roles | Clear, lean communication in both directions | `clear-communication` | none | in PR |
 | engineering, data, systems, security, QA | An enforcement environment that makes work right by construction | `project-guardrails`, `toolchain-upgrade`, `correct` | none | in PR |
+| agent-orchestrator | Shape an idea into approved, source-bound work | `grilling`, `grill-with-docs`, `to-spec`, `to-tickets`, `domain-modeling`, `grill-me` | none | in PR |
+| agent-orchestrator | Import exact tickets and verify their actual Proof | `work-decomposition`, `agent-briefing`, `decision-log`, `result-verification` | none | in PR |
+| agent-orchestrator | Configure tracker paths and triage incoming work | `setup-agent-skills`, `triage` | none | in PR |
+| agent-orchestrator | Resolve an unclear destination and outside knowledge | `wayfinder`, `research`, `prototype`, `to-questionnaire` | none | in PR |
+| backend-engineer, frontend-engineer, mobile-engineer | Explore a bounded design question | `prototype`; role routers planned | none | in PR |
+| business-analyst | Domain understanding, specs and approved tickets | `domain-modeling`, `to-spec`, `to-tickets`; role router planned | none | in PR |
+| data-analyst, data-scientist, technical-writer, seo-engineer, financial-analyst, marketing-expert | Primary research for a bounded decision | `research`; role methods and routers planned | none | in PR |
+| all roles | Explain mechanism and intent, refine a prompt, repair an unclear answer | `how`, `why`, `sharpen`, `bro`, `wait-what`, `clear-communication` | none | in PR |

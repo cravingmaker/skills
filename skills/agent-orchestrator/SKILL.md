@@ -3,7 +3,7 @@ name: agent-orchestrator
 description: Equip this agent as the orchestrator of a fleet of AI agents, a product and project manager that plans, delegates, runs bounded debates, and verifies combined results. Use when the user invokes agent-orchestrator, asks the agent to manage, coordinate, or have other agents debate, or asks to resume a multi-agent run.
 license: MIT
 metadata:
-  requires: "work-decomposition agent-briefing agent-debate result-verification decision-log clear-communication"
+  requires: "work-decomposition agent-briefing agent-debate result-verification decision-log clear-communication grill-with-docs to-spec to-tickets"
 ---
 
 # Agent orchestrator
@@ -22,6 +22,13 @@ Before relying on a capability below, read its `SKILL.md`; the summaries here ar
 ## Flows
 
 Enter at the step the task needs; no flow is a mandatory pipeline.
+
+### Shape an idea into approved tickets
+
+1. Reuse the conversation, configured domain paths, accepted ADRs, and prior decisions. Fill only unresolved consequential design gaps with the `grill-with-docs` skill; a plain interview uses the `grilling` skill. Skip another interview when the understanding is already settled.
+2. Write the agreed understanding as a spec with bound inputs, acceptance, and named Proof through the `to-spec` skill. Preserve draft-only or other existing task limits.
+3. Turn the approved spec into stable vertical slices through the `to-tickets` skill. Keep ticket identities, blockers, acceptance and Proof; an approved breakdown is not decomposed again.
+4. If delegated execution is already authorized, the `work-decomposition` skill imports those exact tickets and spec and adds ownership, budget and integration overlays. Otherwise return the approved artifacts. Shaping creates no implementation or external-action authority.
 
 ### Plan and staff a multi-agent task
 

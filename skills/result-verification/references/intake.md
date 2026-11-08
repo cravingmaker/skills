@@ -12,6 +12,7 @@ Outputs: <path at revision or hash: present | missing>.
 Contract: <complete | missing: field, field>.
 Scope: <as briefed | unrequested: what>.
 Boundary: `check-ownership.sh <base> <globs>` → exit <n>; <paths outside, if any>.
+Proof: <named surface or source> → <actual observation | unresolved: reason>, at <input hashes, artifact hash/revision, environment, command/locator, saved receipt>.
 Reruns: `<command>` → <matches | differs: what the report said, what you saw>.
 Source checks: <claim> → <verified | false | unverifiable>, via <what you opened>.
 Decision: <accepted | rejected | unresolved>, because <evidence>.
@@ -26,7 +27,8 @@ Each of these leaves the task unresolved, never passed:
 - a timeout, a cancellation, or a host error;
 - an evaluator that reached no verdict, or a review that did not pass its format check after one return;
 - a budget that ran out before the task finished;
-- a check that could not be run, for lack of environment, credentials, or authority.
+- a check that could not be run, for lack of environment, credentials, or authority;
+- named Proof that is missing, stale, a proxy, inconclusive, or bound to another input or artifact.
 
 An unresolved required task blocks the run's acceptance until it is reassigned within the budget, or until the user removes it from scope. A successful sibling does not cover it.
 
@@ -36,9 +38,9 @@ An unresolved required task blocks the run's acceptance until it is reassigned w
 Integrated revision: <commit or hash>. Included: <task IDs>. Excluded: <task IDs and why>.
 Conflicts: <files or claims, and how each was settled>.
 
-| Acceptance criterion | Check | Command or source/rubric | Result |
+| Acceptance criterion | Named Proof | Command or source/rubric | Result and identity |
 | --- | --- | --- | --- |
-| <criterion> | <what proves it> | <command or exact source/rubric> | <observed result and evidence> |
+| <criterion> | <actual surface/source and expected observation> | <command or exact source/rubric> | <observed result, input hashes, integrated artifact hash/revision, environment, saved receipt> |
 ```
 
 ## Report to the user

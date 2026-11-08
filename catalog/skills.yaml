@@ -78,11 +78,92 @@ skills:
     roles: [agent-orchestrator]
     status: unevaluated
 
+  grilling:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  grill-with-docs:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+    invocation: user
+  grill-me:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+    invocation: user
+  domain-modeling:
+    kind: capability
+    roles: [agent-orchestrator, ui-ux-designer, business-analyst]
+    status: unevaluated
+  to-spec:
+    kind: capability
+    roles: [agent-orchestrator, business-analyst]
+    status: unevaluated
+    invocation: user
+  to-tickets:
+    kind: capability
+    roles: [agent-orchestrator, business-analyst]
+    status: unevaluated
+    invocation: user
+  triage:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+    invocation: user
+  wayfinder:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+    invocation: user
+  to-questionnaire:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+    invocation: user
+
+  setup-agent-skills:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+    invocation: user
+  prototype:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, ui-ux-designer]
+    status: unevaluated
+  sharpen:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: user
+  research:
+    kind: capability
+    roles: [agent-orchestrator, data-analyst, data-scientist, technical-writer, seo-engineer, financial-analyst, marketing-expert]
+    status: unevaluated
+  how:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+  why:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+  bro:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: user
+  wait-what:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: user
+
 external:
   mattpocock-skills:
     source: https://github.com/mattpocock/skills
     install: Claude Code plugin mattpocock-skills from claude-plugins-official, or the skills CLI
-    skills: [codebase-design, diagnosing-bugs, domain-modeling, grilling, prototype, research, tdd, writing-for-agents, wizard, handoff, retro]
+    skills: [codebase-design, diagnosing-bugs, tdd, writing-for-agents, wizard, handoff, retro]
   android-skills:
     source: https://github.com/android/skills
     install: skills CLI from the source repository

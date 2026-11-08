@@ -7,11 +7,15 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 - "Keep a run record for these workers so another agent can resume after compaction." Expect: durable current state, dispatch intents and receipts, raw reports, and decisions.
 - "Resume this multi-agent migration run without repeating finished work." Expect: workspace and host reconciliation before further dispatch.
 
+- Record the imported ticket graph and each task's named Proof in the authoritative PLAN.md.
+
 ## Near miss
 
 - "Write an architecture decision record explaining our cache choice." Expect: domain-modeling or architecture writing, without a fleet scaffold.
 - "Fix this one typo." Expect: direct execution without run bookkeeping.
 - "Summarize the decisions in this pasted meeting note." Expect: a direct summary unless a durable agent run is requested.
+
+- Write a product spec. Expect specification work, with no run record.
 
 ## Outcome
 
@@ -21,3 +25,4 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 - **Traceability.** Every result names its input revision and raw report; a summary never replaces the original; a changed draft receives a new filename and a review cannot silently move to another hash.
 - **Decisions.** Rejected alternatives retain their evidence and reasons, unresolved dissent has an owner, and exhausted retries or review rounds leave an unresolved result.
 - **Cancellation.** A superseded writer's boundary is reassigned only after permitted cancellation is confirmed and partial effects are inspected; if cancellation is forbidden, the unresolved slot and ownership remain visible.
+- The PLAN template carries surface/source, observable result, input/artifact identity and evidence receipts for both task and integration acceptance. An unconfigured scaffold remains unstarted; Proof fields do not create another log or controller.

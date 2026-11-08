@@ -8,11 +8,15 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - "The worker says all tests pass. Can I merge?" Expect: the agent runs the tests itself on the integrated revision and reports the command and its output; the worker's statement is not the evidence.
 - "One research agent never returned. Finish the synthesis." Expect: the missing slice is recorded as unresolved with its reason; the synthesis says what is missing and does not present itself as complete.
 
+- Accept these ticket results only after their named CLI Proof runs on each worker artifact and the integrated revision.
+
 ## Near miss
 
 - "Run the test suite." Expect: the tests run and their result is reported, with no intake records or ownership checks.
 - "Review my pull request for bugs." Expect: a code review; no delegated results to verify.
 - "Write a brief for a research sub-agent." Expect: the `agent-briefing` skill handles it; nothing has been returned yet.
+
+- Author a way to drive this application. Expect scoped authoring only; no completed delegated result is being accepted.
 
 ## Outcome
 
@@ -23,3 +27,4 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - A run whose budget ran out with one required task unfinished is reported as unresolved, naming the task and the decision it needs.
 - The final report maps each acceptance criterion to an executed check or a direct source/rubric check and its result at an exact revision.
 - A research child with no shell commands is verified by opening its decisive sources; a static blocker is verified at its cited revision without inventing a command to satisfy intake.
+- A passing test suite cannot replace the named CLI/UI/native/source observation. Missing, stale, proxy or inconclusive proof leaves acceptance unresolved; exact static evidence remains valid for a static claim. Match inputs, artifact identity, environment, actual observation and receipt on both worker and integration state.

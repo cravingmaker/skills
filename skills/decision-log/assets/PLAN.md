@@ -27,6 +27,7 @@ This is an unconfigured scaffold, not a started or completed run. Populate the e
 - **Inputs.** {{specification revision, code base, source dates, required hashes}}
 - **Terminology.** {{shared definitions or authoritative pointer}}
 - **Acceptance.** {{checkable requirements and the commands or evidence that establish them}}
+- **Proof.** {{each task's actual surface or source, expected observation, input/artifact identity, and evidence receipt; rerun on the integrated revision}}
 
 ## Current state
 
@@ -38,7 +39,7 @@ Plan revision: {{revision and timestamp}}. Phase: {{unstarted, active, checkpoin
 
 ## Ownership and dependencies
 
-{{for each task: inputs, outputs, artifact/decision dependencies, literal write paths, shared resources, and acceptance; reflect the checked fields in the JSON block}} {{one integration owner, how overlapping integration writes wait for worker completion, and how late outputs are handled}}
+{{for each task: inputs, outputs, artifact/decision dependencies, literal write paths, shared resources, acceptance, and named Proof (surface or source plus observable result); reflect the checked fields in the JSON block}} {{one integration owner, how overlapping integration writes wait for worker completion, and how late outputs are handled}}
 
 ## Open decisions and risks
 

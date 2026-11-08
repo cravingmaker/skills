@@ -49,7 +49,7 @@ class PlanTests(unittest.TestCase):
                 self.check(value)
 
     def test_missing_task_fields(self):
-        for field in ("id", "owner", "execution", "depends_on", "write_paths", "reason"):
+        for field in ("id", "owner", "execution", "proof", "depends_on", "write_paths", "reason"):
             with self.subTest(field=field):
                 value = copy.deepcopy(BASE)
                 del value["tasks"][1][field]
@@ -158,6 +158,22 @@ class PlanTests(unittest.TestCase):
         self.check(value, 1, "consumed the reserve")
         value["budget"]["worker_starts"].update(limit=2, used=0)
         self.check(value, 1, "task allocations exceed limit")
+
+    def test_placeholders_in_unchecked_fields(self):
+        for field, value in (("outputs", ["{{artifact}}"]), ("shared_resources", ["{{resource}}"]), ("reason", "{{why}}")):
+            with self.subTest(field=field):
+                plan = copy.deepcopy(BASE)
+                plan["tasks"][0][field] = value
+                self.check(plan, 1, f"contract.{field}")
+
+    def test_proof_values_and_nested_placeholders(self):
+        for proof in (None, "", "  ", ["not a string"], "{{surface and result}}"):
+            value = copy.deepcopy(BASE)
+            value["tasks"][0]["proof"] = proof
+            self.check(value, 1, "contract.proof")
+        value = copy.deepcopy(BASE)
+        value["source"] = {"owner": {"proof": "{{receipt}}"}}
+        self.check(value, 1, "source.owner.proof")
 
     def test_invalid_input_and_usage(self):
         self.run_source('{"tasks": [}', 1, "fix the input")

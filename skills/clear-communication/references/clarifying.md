@@ -45,4 +45,16 @@ Restate only the uncertain part, in the user's terms. When the request is clear,
 <!-- skill-names: historical -->
 The batching, recommended answers, and the facts-versus-decisions split follow the `grilling` skill in [mattpocock/skills](https://github.com/mattpocock/skills). Looking at context first follows the `brainstorming` skill in [obra/superpowers](https://github.com/obra/superpowers). The house rule of batching only answerable questions, and the word budget, are this repository's.
 
+## Requested goal restatement
+
+When explicitly asked to restate a goal in your own words, describe the supplied problem and outcome using the user's terms. Mark your assumptions separately. Reuse known facts and decisions; do not reopen them or expand the work.
+
+Outside that requested restatement, play back only the unresolved consequential meaning. A fully specified request needs neither an interview nor a summary before action.
+
+## Requested interview
+
+Within a requested interview, read the `grilling` skill when installed and let its frontier rounds determine which dependent questions can be asked next. Its close applies to that interview, not every later task.
+
+For ordinary clarification, keep the answerable-question batching above. Reversible assumptions remain within current authority; they do not grant permission or take over user-owned direction.
+
 <!-- skill-names: end -->

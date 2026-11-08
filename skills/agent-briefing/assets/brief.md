@@ -10,11 +10,11 @@
 
 ## Context
 
-{{essential facts, accepted prior decisions, source authority, and readable artifact paths with revisions}}
+{{essential facts, accepted prior decisions, source authority, and readable artifact paths with revisions; for an approved spec/ticket, its exact path and SHA-256 instead of a rewritten body; read only relevant sections and add missing contract fields}}
 
 ## Workspace
 
-{{actual environment and checkout; base commit; required input hashes; how any uncommitted inputs are transferred}}
+{{actual environment and checkout; base commit; required spec/ticket hashes verified before work; how any uncommitted inputs are transferred; missing or changed input stops dependent work}}
 
 ## Scope
 
@@ -66,7 +66,7 @@
 
 ## Acceptance
 
-{{observable done criteria and required checks for this task, including relevant failure cases}}
+{{observable done criteria and required checks, relevant failure cases, and the exact named Proof: surface to drive or source to open, and result to observe}}
 
 ## Evidence standard
 
@@ -75,7 +75,7 @@
 ## Return contract
 
 - Result first: State COMPLETE, PARTIAL, or BLOCKED, followed by the result and the acceptance conditions actually met.
-- Evidence: Link supporting sources, file locations, and saved check receipts; state the evidence class and limits.
+- Evidence: Return the actual named Proof result on the exact artifact, with its input/output identity, command or source locator, observed result, environment, and saved receipt. State evidence class and limits; missing, stale, proxy, or inconclusive proof stays unresolved.
 - Artifacts and revisions: List readable paths, input and output hashes or commits, changed files, and skills actually loaded.
 - Commands and results: Record commands actually executed, their observed outcomes, and required checks not run with reasons.
 - Unresolved claims: List unsupported claims, missing slices, and evidence gaps; use none only when verified absent.
