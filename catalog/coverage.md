@@ -13,16 +13,16 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | backend-engineer | JavaScript and TypeScript | planned | none | planned |
 | backend-engineer | Rust | planned | none | planned |
 | backend-engineer | API design | planned | none | planned |
-| backend-engineer | Software architecture | planned (shared architecture capabilities) | mattpocock `codebase-design` | planned |
+| backend-engineer | Software architecture | `codebase-design`, `architect`, `improve-codebase-architecture`; domain methods planned | none | planned |
 | frontend-engineer | Plain HTML, CSS, and JavaScript | planned | none | planned |
 | frontend-engineer | React, Astro, Svelte | planned | none | planned |
 | frontend-engineer | GPUI and desktop | planned | none | planned |
-| frontend-engineer | Software architecture | planned (shared architecture capabilities) | mattpocock `codebase-design` | planned |
+| frontend-engineer | Software architecture | `codebase-design`, `architect`, `improve-codebase-architecture`; domain methods planned | none | planned |
 | mobile-engineer | Swift (iOS) | planned | none | planned |
 | mobile-engineer | Android | planned | Google `android/skills` | planned |
 | mobile-engineer | Software architecture | planned (shared architecture capabilities) | none | planned |
 | ui-ux-designer | UI and UX design | `prototype`, `domain-modeling`; remaining methods planned | none | planned |
-| qa-engineer | Quality assurance and testing | planned | mattpocock `tdd` | planned |
+| qa-engineer | Quality assurance and testing | `tdd`, `change-review`; remaining QA methods planned | none | planned |
 | devops-engineer | Shell: zsh on macOS, bash on Linux | planned | none | planned |
 | devops-engineer | CI/CD | planned | none | planned |
 | devops-engineer | Docker and Kubernetes | planned | none | planned |
@@ -50,3 +50,11 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | business-analyst | Domain understanding, specs and approved tickets | `domain-modeling`, `to-spec`, `to-tickets`; role router planned | none | in PR |
 | data-analyst, data-scientist, technical-writer, seo-engineer, financial-analyst, marketing-expert | Primary research for a bounded decision | `research`; role methods and routers planned | none | in PR |
 | all roles | Explain mechanism and intent, refine a prompt, repair an unclear answer | `how`, `why`, `sharpen`, `bro`, `wait-what`, `clear-communication` | none | in PR |
+| agent-orchestrator | Run approved code tickets through one coordinator | `implement-spec`, `implement`, `work-decomposition`, `result-verification`; shared record and budget | none | in PR |
+| engineering and QA | Deep modules, design alternatives and architecture reports | `codebase-design`, `architect`, `improve-codebase-architecture`; domain methods and routers planned | none | in PR |
+| engineering, QA and systems | Build and diagnose an authorized slice | `implement`, `tdd`, `diagnosing-bugs`; domain methods planned | none | in PR |
+| agent-orchestrator, devops-engineer | Resumable setup for human-only steps | `wizard`; devops router planned | none | in PR |
+| engineering, QA, security and data | Code review, bounded fix loops and downstream effects | `change-review`, `sol-loop`, `interrogate`, `blast-radius` | none | in PR |
+| all roles | Explicit code, design or read-only provider panels | `council`, `sol-loop`, `agent-debate`; requested mode preserves authority | none | in PR |
+| engineering, QA, systems and data-scientist | Comparable benchmarks and explainable numbers | `benchmark-checklist`; domain methods planned | none | in PR |
+| engineering, QA and systems | Real-surface project drivers and feature-map maintenance | `create-verification-skill`, `maintain-verification-skill`; scope and actual proof gaps decide mode | none | in PR |

@@ -2,12 +2,17 @@
 agent-briefing
 agent-debate
 agent-orchestrator
+change-review
 clear-communication
+codebase-design
 decision-log
 domain-modeling
 grill-with-docs
 grilling
+implement
+implement-spec
 result-verification
+tdd
 to-spec
 to-tickets
 work-decomposition

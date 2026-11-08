@@ -1,6 +1,6 @@
 # What the research says about debate and judging
 
-The rules in `SKILL.md` follow from these results. Each row keeps the study's limit, because most were measured on benchmark questions with one right answer, not on open design choices made by frontier coding agents. Links and access dates are in [sources.md](sources.md).
+The rules in `SKILL.md` follow from these results. Each row keeps the study's limit, because most were measured on benchmark questions with one right answer, not on open design choices made by frontier coding agents. Links and access dates are in [sources.md](policy-sources.md).
 
 ## Debate
 

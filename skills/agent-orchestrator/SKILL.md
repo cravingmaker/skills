@@ -6,8 +6,8 @@ metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/ask-matt/SKILL.md"
   source-revision: "49dd158d1076134a641b33efb035946536778336"
   source-files: "skills/engineering/ask-matt/SKILL.md"
-  local-changes: "Merged the shaping stage map into the owned orchestrator; reuse settled inputs and current authority; route only to shipped skills; build, delivery and retrospective source adaptations remain in their planned later stages."
-  requires: "work-decomposition agent-briefing agent-debate result-verification decision-log clear-communication grill-with-docs to-spec to-tickets"
+  local-changes: "Merged the shaping stage map into the owned orchestrator; reuse settled inputs and current authority; merged stage selection, coverage/competing-attempt modes and bounded recovery; routed approved code tickets to implement-spec under the same coordinator, record and budget; added owned design/review dispatch without a competing runner; delivery and retrospective source adaptations remain in their planned later stage."
+  requires: "work-decomposition agent-briefing agent-debate result-verification decision-log clear-communication grill-with-docs to-spec to-tickets implement-spec"
 ---
 
 # Agent orchestrator
@@ -32,21 +32,33 @@ Enter at the step the task needs; no flow is a mandatory pipeline.
 1. Reuse the conversation, configured domain paths, accepted ADRs, and prior decisions. Fill only unresolved consequential design gaps with the `grill-with-docs` skill when recording domain changes is authorized; otherwise use the `grilling` skill for a plain interview. Skip another interview when the understanding is already settled.
 2. Write the agreed understanding as a spec with bound inputs, acceptance, and named Proof through the `to-spec` skill. Preserve draft-only or other existing task limits.
 3. Turn the approved spec into stable vertical slices through the `to-tickets` skill. Keep ticket identities, blockers, acceptance and Proof; an approved breakdown is not decomposed again.
-4. If delegated execution is already authorized, the `work-decomposition` skill imports those exact tickets and spec and adds ownership, budget and integration overlays. Otherwise return the approved artifacts. Shaping creates no implementation or external-action authority.
+4. Return the approved artifacts, or continue authorized code-ticket execution through the `implement-spec` skill below. Shaping creates no implementation or external-action authority.
+
+### Build from an approved spec and code tickets
+
+Read the `implement-spec` skill and use it as the single approved-code-ticket runner. Resolve the exact approved spec, ticket source and closure rules from the configured tracker contract, and the configured domain paths; preserve lazy absent glossary or ADR files. Import stable IDs, status, blockers, source hashes and named Proof through the `work-decomposition` skill without a second interview or decomposition.
+
+Continue under this same coordinator, PLAN.md/LOG.md/DECISIONS.md and remaining finite budget. The runner owns dependency-frontier scheduling, host-owned isolation, leaf briefs, scoped review/fix rounds, worker acceptance and integration proof. It adds no second controller or ledger. Close tickets only after worker and integrated evidence are accepted, and only within current tracker authority. A child returns artifact/check state; monitoring belongs to the root only when requested or while an already authorized action waits.
+
+For one authorized slice, use the `implement` skill; an accepted testing seam can use the `tdd` skill. Generic non-code coordination continues through the flow below. A mixed run keeps one graph and budget, with code-ticket execution assigned to the same runner.
 
 ### Plan and staff a multi-agent task
 
-1. Decide whether to delegate at all, split the goal into tasks with dependencies, owners, and write boundaries, and record the budget → the `work-decomposition` skill.
+1. For generic work without an approved code-ticket graph, decide whether to delegate at all, split the goal into tasks with dependencies, owners, and write boundaries, and record the budget → the `work-decomposition` skill.
 2. Open the run record (plan, log, decisions) on disk before the first dispatch → the `decision-log` skill.
 3. Write one brief per task that a fresh agent with no history can execute, including the role and capability skills it loads and its return contract → the `agent-briefing` skill.
 4. Dispatch within the budget and the concurrency limit; launch independent tasks together; wait for completion instead of polling; cancel superseded work.
 5. Take in each result: save the raw report, check it against its brief, and spot-check its claims at the source → the `result-verification` skill.
 6. Integrate, then run the acceptance checks on the combined result → the `result-verification` skill.
 
-### Find the best approach through debate
+### Design, review or debate
+
+For a concrete interface or module design, use the `architect` skill with the `codebase-design` skill's vocabulary. It optionally consumes the `agent-debate` skill's blind alternatives engine. A code review uses the `change-review` skill in report-only mode; an authorized code review/fix loop uses the `sol-loop` skill. An explicit `council` entry dispatches code fixes to that loop, design/non-code deliberation to debate, and read-only work to a report-only panel. The `interrogate` skill selects report-only code probes. Preserve requested providers and scope; every seat and retry is reserved from this run's budget.
+
+For non-code deliberation or choosing between approaches:
 
 1. Get independent first positions from distinct lenses or models, written blind → the `agent-debate` skill.
-2. Run evaluator rounds with finding IDs, severity, evidence, exact changes, and a verdict line; log every acceptance and rejection → the `agent-debate` and `decision-log` skills.
+2. Run evaluator rounds with finding IDs, severity, evidence, exact changes, and a verdict line; log every acceptance and rejection → the `agent-debate` skill and the `decision-log` skill.
 3. Stop at full agreement, or when a finding reaches its round limit without new evidence; bring each finding still open to the user as a decision with both positions.
 
 ### Resume after an interruption or compaction
@@ -54,6 +66,8 @@ Enter at the step the task needs; no flow is a mandatory pipeline.
 1. Read the run record: plan, budget used, dispatched tasks, raw reports, decisions → the `decision-log` skill.
 2. Reconcile what finished with what the record expected; never repeat completed work, and never treat a missing report as a result.
 3. Continue from the next unmet task.
+
+Read [the workflow modes](references/workflow-modes.md) when choosing a stage, splitting coverage, comparing competing attempts or resuming a bounded run. It supplies routing and recovery checks; the named capabilities own their procedures.
 
 ## Handoffs
 

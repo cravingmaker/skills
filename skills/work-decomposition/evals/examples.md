@@ -9,6 +9,8 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 
 - An approved local ticket graph and a spec at configured nondefault paths are imported without rewording or another breakdown.
 
+- Import these approved tickets for the `implement-spec` skill, retaining the one graph and shared budget.
+
 ## Near miss
 
 - "Rename this function in one file." Expect: direct execution without a team or run scaffold.
@@ -16,6 +18,8 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 - "You are the assigned writer; edit only this skill and do not delegate." Expect: the bounded leaf assignment.
 
 - Write tickets from this spec. Expect the `to-tickets` skill, with no ownership plan or dispatch.
+
+- Write an interface design. Expect the `architect` skill; no imported execution graph is needed.
 
 ## Outcome
 
@@ -25,3 +29,4 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 - **Finite run.** Repeated new findings and replacement workers consume the original allowance even at concurrency one; exhaustion leaves the unmet condition explicit rather than resetting totals or approving it.
 - **Reserve and accounting.** A child cannot delegate without an explicit shared allocation; idempotent retrieval of one receipt is counted once; a timed-out dispatch retains its slot until reconciliation; integration and verification retain capacity.
 - Missing, empty, or placeholder Proof rejects a ticket before stdout JSON; exact status, Proof, hashes and blocker order survive import. Unknown, duplicate, partially consumed or ambiguous blockers and cycles fail; fixing them passes repeat runs without writes. A raw skeleton fails until all coordinator placeholders are resolved. Unknown-first probes, verifiable boundaries, separate ownership and host-owned isolation reuse one record and budget.
+- The importer supplies exact source-bound inputs and coordinator overlays; it starts no competing code-ticket runner.

@@ -49,6 +49,23 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [bro](skills/bro) | Manual entry that repairs the last answer through clear-communication. |
 | [wait-what](skills/wait-what) | Manual entry that explains the last unclear point using the user's context. |
 
+| [codebase-design](skills/codebase-design) | Designs deep modules, precise interfaces and testable seams while preserving real trust boundaries. |
+| [architect](skills/architect) | Compares grounded interface sketches and records a bounded design with trade-offs and rationale. |
+| [improve-codebase-architecture](skills/improve-codebase-architecture) | Surveys architecture candidates and renders an escaped, offline report before product changes. |
+| [implement](skills/implement) | Builds one authorized slice with appropriate behavior proof and scoped review. |
+| [implement-spec](skills/implement-spec) | Runs the exact approved ticket graph with one coordinator, finite budget and integration acceptance. |
+| [tdd](skills/tdd) | Proves meaningful red/green behavior at accepted seams, then refactors within the slice. |
+| [diagnosing-bugs](skills/diagnosing-bugs) | Reproduces a symptom, discriminates causes and verifies the causal fix. |
+| [wizard](skills/wizard) | Creates resumable setup wizards with parser round trips and scoped secret-safe writes. |
+| [change-review](skills/change-review) | Reports separate Standards and Spec findings with source evidence and bounded probes. |
+| [sol-loop](skills/sol-loop) | Runs authorized review, fix and recheck rounds with stable findings and an honest finite stop. |
+| [council](skills/council) | Manual dispatch to the code-fix loop, design debate or a report-only provider panel. |
+| [interrogate](skills/interrogate) | Manual report-only probe mode for change-review, preserving static and executed evidence. |
+| [blast-radius](skills/blast-radius) | Traces real consumers and user-visible effects with claim-appropriate proof. |
+| [benchmark-checklist](skills/benchmark-checklist) | Checks comparable workloads, correctness, sensitivity, noise and measurement meaning. |
+| [create-verification-skill](skills/create-verification-skill) | Authors one namespaced project driver in bounded-gap or full-feature-map mode. |
+| [maintain-verification-skill](skills/maintain-verification-skill) | Audits an existing driver and declared feature map, separating drift from product regressions. |
+
 See [the catalog](catalog/skills.yaml) for evaluation status and each skill's `evals/results/` for outcomes and limits. Explicit entries use the catalog's `invocation: user`; host policy grants no additional task authority.
 
 ## Installation

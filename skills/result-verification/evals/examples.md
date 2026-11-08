@@ -10,6 +10,8 @@ Run each prompt with and without this skill, with the same host, models, fixture
 
 - Accept these ticket results only after their named CLI Proof runs on each worker artifact and the integrated revision.
 
+- The named CLI observation has no driver; author only the missing repeatable proof within this task's scope.
+
 ## Near miss
 
 - "Run the test suite." Expect: the tests run and their result is reported, with no intake records or ownership checks.
@@ -17,6 +19,8 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - "Write a brief for a research sub-agent." Expect: the `agent-briefing` skill handles it; nothing has been returned yet.
 
 - Author a way to drive this application. Expect scoped authoring only; no completed delegated result is being accepted.
+
+- Maintain a project driver without returned worker results. Expect the `maintain-verification-skill` skill, without invented acceptance.
 
 ## Outcome
 
@@ -28,3 +32,4 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - The final report maps each acceptance criterion to an executed check or a direct source/rubric check and its result at an exact revision.
 - A research child with no shell commands is verified by opening its decisive sources; a static blocker is verified at its cited revision without inventing a command to satisfy intake.
 - A passing test suite cannot replace the named CLI/UI/native/source observation. Missing, stale, proxy or inconclusive proof leaves acceptance unresolved; exact static evidence remains valid for a static claim. Match inputs, artifact identity, environment, actual observation and receipt on both worker and integration state.
+- Existing commands/drivers are used first. A missing observation conditionally routes to bounded authoring, requested full mapping selects full-map mode, and an existing stale map routes to maintenance. Missing tools, baseline, authority or helper leave the original Proof unresolved; static claims retain applicable static evidence and no product repair is inferred.
