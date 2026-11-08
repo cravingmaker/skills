@@ -51,3 +51,5 @@ Changes: <file: what changed>.
 Proof: <guardrail: violation rejected (command, output); valid code accepted; rerun clean>.
 Open: <gap: reason, source, next step>.
 ```
+
+Per-file provenance: [references/SOURCES.md](references/SOURCES.md).

@@ -15,6 +15,8 @@ import sys
 from pathlib import Path
 
 import skillcatalog
+import skillprose
+import hostconfig
 
 KINDS = {"capability", "role"}
 STATUSES = {"unevaluated", "evaluated"}
@@ -70,6 +72,12 @@ def check(repo: skillcatalog.Repo) -> list[str]:
 
     for name, entry in sorted(entries.items()):
         entry = entry or {}
+        if repo.invocation(name) not in ("model", "user"):
+            problems.append(f"{name}: invocation must be model or user")
+        if not skillprose.NAME.fullmatch(name) or len(name) > 64:
+            problems.append(f"{name}: use a canonical lowercase skill name")
+        if name in on_disk and repo.frontmatter[name].get("name") != name:
+            problems.append(f"{name}: frontmatter name must equal its catalog and directory name")
         kind = entry.get("kind")
         if kind not in KINDS:
             problems.append(f"{name}: kind must be one of {sorted(KINDS)}")
@@ -98,16 +106,29 @@ def check(repo: skillcatalog.Repo) -> list[str]:
                     problems.append(f"{name}: unknown role {role}")
 
     for name in sorted(on_disk):
-        for key in ("requires", "handoffs"):
+        for key in ("requires",):
             for target in repo.names(name, key):
                 if target == name:
                     problems.append(f"{name}: metadata.{key} names the skill itself")
                 elif target not in on_disk and target not in external:
                     problems.append(f"{name}: metadata.{key} names {target}, which is neither in skills/ nor an external skill in the catalog")
+    providers = {}
+    for provider, spec in (repo.catalog.get("external") or {}).items():
+        for target in (spec or {}).get("skills") or []:
+            if not isinstance(target, str) or not skillprose.NAME.fullmatch(target) or len(target) > 64:
+                problems.append(f"{provider}: external skill names must be canonical")
+            if target in providers:
+                problems.append(f"{target}: duplicate external inventory entries ({providers[target]}, {provider})")
+            providers[target] = provider
+    problems.extend(skillprose.check(repo))
+    problems.extend(hostconfig.check(repo))
     return problems
 
 
 def main(arguments: list[str]) -> int:
+    if arguments in (["--help"], ["-h"]):
+        print(__doc__.strip())
+        return 0
     root = Path(".")
     if arguments[:1] == ["--root"] and len(arguments) == 2:
         root = Path(arguments[1])
@@ -116,9 +137,9 @@ def main(arguments: list[str]) -> int:
         return 2
     problems = check(skillcatalog.load(root))
     for problem in problems:
-        print(f"  - {problem}")
+        print(f"  - {problem}", file=sys.stderr)
     if problems:
-        print(f"Catalog check failed: {root}")
+        print(f"Catalog check failed: {root}", file=sys.stderr)
         return 1
     print(f"Catalog check passed: {root}")
     return 0

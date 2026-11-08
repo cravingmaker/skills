@@ -44,10 +44,11 @@ To install a role or a skill together with every skill it requires, clone this r
 
 ```bash
 scripts/install-skills.py --target ~/.claude/skills clear-communication
-scripts/install-skills.py --target ~/.claude/skills --mode symlink <role-or-skill>
+scripts/install-skills.py --target ~/.claude/skills --apply clear-communication
+scripts/install-skills.py --target ~/.claude/skills --mode symlink --apply <role-or-skill>
 ```
 
-It lists any upstream skills a role relies on so you can install them from their source. To install one skill by hand, copy its folder from `skills/` into the agent's skills directory, for example `~/.claude/skills/` for Claude Code.
+The default prints a JSON preview; `--apply` writes. See [installation and host policy](docs/installing.md) for explicit Claude settings, Codex generation, ownership conflicts and temporary-host checks. It lists any upstream skills a role relies on so you can install them from their source. To install one skill by hand, copy its folder from `skills/` into the agent's skills directory, for example `~/.claude/skills/` for Claude Code.
 
 For everyday answers to follow the communication rules without loading a skill, paste the standing contract from [clear-communication/references/house-style.md](skills/clear-communication/references/house-style.md) into your AGENTS.md or CLAUDE.md.
 
@@ -59,6 +60,7 @@ For everyday answers to follow the communication rules without loading a skill, 
 │   └── <skill-name>/
 │       ├── SKILL.md        # Required: frontmatter and instructions
 │       ├── evals/          # Required: activation, near-miss, and outcome examples
+│       ├── agents/         # Generated openai.yaml only for invocation: user
 │       ├── references/     # Optional: documentation loaded on demand
 │       ├── scripts/        # Optional: executable code
 │       └── assets/         # Optional: templates, configs, and data
@@ -82,6 +84,7 @@ Set `name`, write a `description` that says what the skill does and when to use 
 
 ```bash
 scripts/build-profiles.py
+scripts/build-host-config.py --check
 ./scripts/validate.sh
 ```
 

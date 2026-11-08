@@ -2,8 +2,6 @@
 name: agent-briefing
 description: Write a self-contained task brief for a fresh agent, with skills, permissions, evidence, and a return contract. Use when preparing a delegation or repairing a brief that depends on missing history.
 license: MIT
-metadata:
-  handoffs: "work-decomposition decision-log clear-communication result-verification agent-orchestrator"
 ---
 
 # Agent briefing

@@ -103,7 +103,10 @@ def dependency_sources(root: Path, candidate: str, extra: list[str]) -> dict[str
         if frontmatter.get("name") != name:
             raise InvalidComparison(f"{path}: frontmatter name must equal {name}")
         visiting.add(name)
-        for dependency in (frontmatter.get("metadata", {}).get("requires", "")).split():
+        metadata = frontmatter.get("metadata") or {}
+        if not isinstance(metadata, dict) or not isinstance(metadata.get("requires", ""), str):
+            raise InvalidComparison(f"{path}: metadata.requires must be a quoted string")
+        for dependency in metadata.get("requires", "").split():
             visit(dependency)
         visiting.remove(name)
         result[name] = path

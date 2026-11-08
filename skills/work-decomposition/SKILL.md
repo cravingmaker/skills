@@ -4,7 +4,6 @@ description: Decide whether delegation earns its cost, then map tasks, dependenc
 license: MIT
 metadata:
   requires: "decision-log"
-  handoffs: "agent-briefing agent-debate result-verification agent-orchestrator"
 ---
 
 # Work decomposition
@@ -28,7 +27,7 @@ Python 3.12 or later is required; no packages are needed. Exit 0 means the recor
 
 ## Assign ownership and order
 
-1. **Record.** Resolve the required `decision-log` skill through the installed inventory and read its SKILL.md; if it is missing, report the prerequisite and stop this delegation flow. Reuse the existing run record or scaffold one through that skill. Done when one coordinator can recover the plan and its budget from disk.
+1. **Record.** Resolve the `decision-log` skill (required) through the installed inventory and read its SKILL.md; if it is missing, report the prerequisite and stop this delegation flow. Reuse the existing run record or scaffold one through that skill. Done when one coordinator can recover the plan and its budget from disk.
 2. **Owner.** Give every task one owner, inputs with revisions, outputs, acceptance checks, dependencies, literal write paths, and shared mutable resources. Include each worker's unique raw report path in its write boundary, even for a repository reader. Appoint one integration owner for the final artifact and cross-component checks. Done when every required outcome has an accountable task and every mutable resource has one writer at a time.
 3. **Order.** Each dependency names the artifact or decision needed before the successor starts. Set shared interfaces before fan-out; serialize tasks that share a schema, lockfile, generated output, browser session, database, port, or external resource. Parallel writers own disjoint paths; separate checkouts still need a single owner for each path in the integrated result. When two proposals need the same eventual file, give them separate draft paths and let the integration owner apply one result later. Done when tasks without dependency ordering can run independently and the checker reports no overlapping writers.
 

@@ -28,6 +28,10 @@ dir=.
 ignored=0
 while [ "$#" -gt 0 ]; do
   case $1 in
+    --help|-h)
+      echo "usage: check-ownership.sh [--ignored] [-C DIR] BASE [GLOB...]"
+      echo "Exit: 0 every change is inside the boundary, 1 a change is outside it, 2 usage or Git error."
+      exit 0 ;;
     --ignored) ignored=1; shift ;;
     -C)
       [ "$#" -ge 2 ] || usage

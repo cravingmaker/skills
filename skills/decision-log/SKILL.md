@@ -4,7 +4,6 @@ description: Keep a durable run record with task state, dispatch receipts, raw r
 license: MIT
 metadata:
   requires: "work-decomposition"
-  handoffs: "agent-briefing agent-debate result-verification agent-orchestrator"
 ---
 
 # Decision log
@@ -25,7 +24,7 @@ The script uses POSIX shell and standard utilities, with no network or agent cal
 ## Keep one recoverable record
 
 1. **Locate.** Prefer the existing task-owned run folder and surrounding workflow conventions; use a new folder only when this is genuinely a new run. Designate one coordinator to update shared state; workers own unique briefed outputs and raw report paths. Done when every participant knows the run ID, coordinator, current plan revision, and report destination.
-2. **Record.** Populate [assets/PLAN.md](assets/PLAN.md) with the goal, scope, authority, acceptance criteria, work graph, owners, finite budget, and next actions. Keep its current state consistent with the append-only event history in [assets/LOG.md](assets/LOG.md). Store choices and rejected alternatives with evidence through [assets/DECISIONS.md](assets/DECISIONS.md). When the plan delegates work, resolve the required `work-decomposition` skill through the installed inventory and read its SKILL.md. If it is unavailable, record the missing prerequisite and stop dispatch. Run its `scripts/check-plan.py` on PLAN.md with a supported interpreter; dispatch only after exit 0, and log the command, exit status, and output. Done when the next task, its dependency, write owner, allowance, and evidence gap can be found without chat history.
+2. **Record.** Populate [assets/PLAN.md](assets/PLAN.md) with the goal, scope, authority, acceptance criteria, work graph, owners, finite budget, and next actions. Keep its current state consistent with the append-only event history in [assets/LOG.md](assets/LOG.md). Store choices and rejected alternatives with evidence through [assets/DECISIONS.md](assets/DECISIONS.md). When the plan delegates work, resolve the `work-decomposition` skill (required) through the installed inventory and read its SKILL.md. If it is unavailable, record the missing prerequisite and stop dispatch. Run its `scripts/check-plan.py` on PLAN.md with a supported interpreter; dispatch only after exit 0, and log the command, exit status, and output. Done when the next task, its dependency, write owner, allowance, and evidence gap can be found without chat history.
 3. **Preserve.** Save every dispatched brief and full worker task report separately; retain raw reports unchanged and make summaries separate derived files with source pointers. Freeze draft revisions under new names with input/output hashes or commits using [assets/draft.md](assets/draft.md); never overwrite a draft already sent for review. Use [assets/report.md](assets/report.md) for a new report only when the brief supplies no stricter return format. Done when every result and verdict can be traced to the exact input and output snapshots.
 
 ## Record each operation and result

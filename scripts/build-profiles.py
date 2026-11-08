@@ -28,6 +28,9 @@ def render(repo: skillcatalog.Repo, role: str) -> str:
 
 
 def main(arguments: list[str]) -> int:
+    if arguments in (["--help"], ["-h"]):
+        print(__doc__.strip())
+        return 0
     check = "--check" in arguments
     rest = [argument for argument in arguments if argument != "--check"]
     root = Path(".")
@@ -53,9 +56,9 @@ def main(arguments: list[str]) -> int:
     if check:
         drift = sorted(name for name in set(wanted) | set(existing) if wanted.get(name) != existing.get(name))
         for name in drift:
-            print(f"  - catalog/profiles/{name} is out of date")
+            print(f"  - catalog/profiles/{name} is out of date", file=sys.stderr)
         if drift:
-            print("Profiles drifted; run scripts/build-profiles.py and commit the result.")
+            print("Profiles drifted; run scripts/build-profiles.py and commit the result.", file=sys.stderr)
             return 1
         print("Profiles are up to date.")
         return 0
