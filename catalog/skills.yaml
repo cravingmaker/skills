@@ -73,7 +73,7 @@ skills:
   result-verification:
     kind: capability
     roles: [agent-orchestrator]
-    status: evaluated
+    status: unevaluated
   decision-log:
     kind: capability
     roles: [agent-orchestrator]
