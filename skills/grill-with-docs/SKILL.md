@@ -27,10 +27,10 @@ Run the `grilling` interview with the `domain-modeling` discipline active, so th
 Work the `grilling` rounds. As each round lands:
 
 - Challenge and sharpen terms against the glossary, as the `domain-modeling` skill describes.
-- Write each resolved term to the configured glossary when it settles.
-- Offer an ADR only when a decision meets all three `domain-modeling` criteria. Write it when the user accepts.
+- Write each resolved term to the configured glossary when it settles, within the task's write authority; otherwise include the proposed entry in the close.
+- Offer an ADR only when a decision meets all three `domain-modeling` criteria. Write it when the user accepts and the task permits doc writes; otherwise return the proposed ADR.
 
-Running this skill authorizes glossary and ADR writes at the configured paths. It does not authorize commits, product code, or tracker writes.
+Use the task's existing authority. A request to keep the glossary and ADRs updated authorizes those writes at the configured paths; loading this skill adds no authority. Preserve read-only and draft-only limits. Commits, product code, and tracker writes need their own authority.
 
 ## 3. Optional builder check
 
@@ -40,7 +40,7 @@ When the settled understanding will be handed on to be built (to the `to-spec` s
 
 Post the `grilling` close, then list every glossary and ADR change with its path. Name the `to-spec` skill as the next step when the result is a build.
 
-Done when the user confirms the close and every resolved term and accepted ADR is written at its configured path.
+Done when the interview closes under the `grilling` skill's scope rule and every resolved term and accepted ADR is written at its configured path or returned as a proposal when doc writes are outside the task's authority.
 
 ## Out of scope
 

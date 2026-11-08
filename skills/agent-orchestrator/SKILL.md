@@ -3,6 +3,10 @@ name: agent-orchestrator
 description: Equip this agent as the orchestrator of a fleet of AI agents, a product and project manager that plans, delegates, runs bounded debates, and verifies combined results. Use when the user invokes agent-orchestrator, asks the agent to manage, coordinate, or have other agents debate, or asks to resume a multi-agent run.
 license: MIT
 metadata:
+  source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/ask-matt/SKILL.md"
+  source-revision: "49dd158d1076134a641b33efb035946536778336"
+  source-files: "skills/engineering/ask-matt/SKILL.md"
+  local-changes: "Merged the shaping stage map into the owned orchestrator; reuse settled inputs and current authority; route only to shipped skills; build, delivery and retrospective source adaptations remain in their planned later stages."
   requires: "work-decomposition agent-briefing agent-debate result-verification decision-log clear-communication grill-with-docs to-spec to-tickets"
 ---
 
@@ -25,7 +29,7 @@ Enter at the step the task needs; no flow is a mandatory pipeline.
 
 ### Shape an idea into approved tickets
 
-1. Reuse the conversation, configured domain paths, accepted ADRs, and prior decisions. Fill only unresolved consequential design gaps with the `grill-with-docs` skill; a plain interview uses the `grilling` skill. Skip another interview when the understanding is already settled.
+1. Reuse the conversation, configured domain paths, accepted ADRs, and prior decisions. Fill only unresolved consequential design gaps with the `grill-with-docs` skill when recording domain changes is authorized; otherwise use the `grilling` skill for a plain interview. Skip another interview when the understanding is already settled.
 2. Write the agreed understanding as a spec with bound inputs, acceptance, and named Proof through the `to-spec` skill. Preserve draft-only or other existing task limits.
 3. Turn the approved spec into stable vertical slices through the `to-tickets` skill. Keep ticket identities, blockers, acceptance and Proof; an approved breakdown is not decomposed again.
 4. If delegated execution is already authorized, the `work-decomposition` skill imports those exact tickets and spec and adds ownership, budget and integration overlays. Otherwise return the approved artifacts. Shaping creates no implementation or external-action authority.
@@ -63,3 +67,5 @@ Enter at the step the task needs; no flow is a mandatory pipeline.
 - The run record holds the plan, the budget and what was spent, every raw report, and every decision with its evidence.
 - The user's report leads with the outcome, then the decisions still open (each with both positions), the evidence limits, and the cost: workers started, review rounds, and any budget left unspent.
 - No action outside the authorization the user gave; an action whose authorization is unresolved waits for the user.
+
+Per-file attribution: [references/SOURCES.md](references/SOURCES.md).

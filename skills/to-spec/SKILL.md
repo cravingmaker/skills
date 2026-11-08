@@ -37,9 +37,11 @@ Use [references/spec-template.md](references/spec-template.md). Read it before w
 
 ## 4. File it
 
-- **Local tracker:** write the spec at the path the tracker setup names.
-- **Remote tracker:** file it when the user asked for filing or ran this skill to file the spec; when the user asked for a draft or a review, return the draft and the exact filing step instead. Use the host's connected tracker tools when they can do the operation, and the CLI the setup names otherwise.
-- Apply the label the setup maps to the `ready-for-agent` role, when the tracker uses labels.
+Preserve draft-only and review-only limits for every destination. Return the draft in the conversation unless the user already authorized writing that draft at a named path. File it when filing is within the current task's authority.
+
+- **Local tracker:** write an authorized spec at the path the tracker setup names.
+- **Remote tracker:** use the host's connected tracker tools when they can do the authorized operation, and the CLI the setup names otherwise. When filing is outside the task's authority, return the exact filing step with the draft.
+- Keep a spec with open questions or unconfirmed testing seams in draft state. Apply the label the setup maps to the `ready-for-agent` role only when the spec is agreed, those points are settled, and filing is authorized.
 
 Once filed, story numbers are stable: new stories get new numbers, and a changed story keeps its number.
 

@@ -18,4 +18,5 @@ Run each prompt with and without this skill in a fixture repository that holds t
 - No question asks for a fact present in the repo, the docs, or the conversation.
 - No question in a round depends on another open question in the same round.
 - The session stops when remaining answers would not change the plan, and the close lists settled, deferred, and next-step items.
-- No project files are written in the default mode, and nothing is built before the user confirms the close.
+- No project files are written by the default interview, and an explicit interview waits for the user to confirm its close before building.
+- Embedded use asks only about its unresolved gap. Once the user answers that gap in an already authorized task, control returns to the caller without requiring another confirmation of the whole plan.

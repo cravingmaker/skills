@@ -52,7 +52,7 @@ Stop when the frontier is empty or every remaining question would not change the
 - **Deferred:** anything the user chose to leave open, with who decides it.
 - **Next step:** what the settled plan feeds, such as the `to-spec` skill or direct work.
 
-Done when the user confirms the close. Do not act on the plan before that confirmation.
+For an explicit interview, finish when the user confirms the close and wait for that confirmation before acting on its plan. For embedded use, return when the specific consequential gap is resolved; continue within the caller's existing authority without another whole-plan confirmation.
 
 ## Scope
 

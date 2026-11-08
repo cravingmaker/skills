@@ -19,3 +19,4 @@ Run each prompt with and without this skill after a conversation that settled a 
 - Every user story has an acceptance line and a proof naming a real surface and an observable result.
 - The Sources section binds each relied-on file by SHA-256.
 - The spec lands only at the destination the tracker setup names, or is returned as a draft when the user asked for one or setup is missing; nothing is implemented.
+- A draft-only request writes neither a local tracker file nor a remote issue unless the user explicitly named a path for that draft. A filed spec with open questions or unconfirmed testing seams stays in draft state and receives no ready-for-agent label.

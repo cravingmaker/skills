@@ -17,6 +17,6 @@ Run each prompt with and without this skill in a fixture repository with `docs/a
 ## Outcome
 
 - No question asks for a fact the repo, the docs, or the conversation already answers, and no settled decision is reopened.
-- Glossary and ADR writes land only at the paths the domain setup names.
+- Glossary and ADR writes land only at the paths the domain setup names and within existing authority. In a read-only design review, loading this skill returns proposed terms and ADRs without writing files.
 - Nothing blocks ordinary building: there is no design-approval gate and no second spec document.
 - When a builder check runs, it runs once within the budget and its "theirs" questions arrive in one message.

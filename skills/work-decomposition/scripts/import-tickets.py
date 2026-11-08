@@ -38,19 +38,43 @@ def shown(path, workspace):
     return str(path.relative_to(workspace)) if workspace and path.is_relative_to(workspace) else str(path)
 
 
+def visible_line(line, in_comment):
+    """Strip HTML comments while retaining literal markers inside inline code."""
+    parts, start, code_ticks = [], 0, 0
+    for match in re.finditer(r"(?<!\\)(`+|<!--|-->)", line):
+        token = match[0]
+        if in_comment:
+            if token == "-->":
+                in_comment = False
+                start = match.end()
+        elif token.startswith("`"):
+            if not code_ticks:
+                code_ticks = len(token)
+            elif len(token) == code_ticks:
+                code_ticks = 0
+        elif token == "<!--" and not code_ticks:
+            parts.append(line[start:match.start()])
+            in_comment = True
+    if not in_comment:
+        parts.append(line[start:])
+    return "".join(parts), in_comment
+
+
 def parse(path, text):
     """Return the ticket's title, fields, and acceptance items, ignoring comments."""
     title, fields, acceptance, listed, errors = None, {}, [], None, []
     fence = None
+    in_comment = False
+    inline_blockers = False
     for line in text.splitlines():
-        marker = re.match(r"^\s*(`{3,}|~{3,})", line)
-        if marker:
-            if fence is None:
-                fence = marker[1]
-            elif marker[1][0] == fence[0] and len(marker[1]) >= len(fence):
+        if fence:
+            marker = re.match(r"^\s*(`{3,}|~{3,})", line)
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence):
                 fence = None
             continue
-        if fence:
+        line, in_comment = visible_line(line, in_comment)
+        if marker := re.match(r"^\s*(`{3,}|~{3,})", line):
+            fence = marker[1]
             continue
         if re.fullmatch(r"##\s+comments\s*", line, re.I):
             break
@@ -65,13 +89,27 @@ def parse(path, text):
             fields[key] = value
             # An empty inline "Blocked by:" or "Proof:" may be followed by one item per list line.
             listed = (key, []) if key in ("blocked by", "proof") and not value else None
+            inline_blockers = key == "blocked by" and bool(value)
             continue
         if match := CHECKBOX.fullmatch(line):
             acceptance.append(match[1])
             listed = None
+            inline_blockers = False
+        elif inline_blockers or (listed is not None and listed[0] == "blocked by"):
+            if not line.strip():
+                continue
+            if re.match(r"\s*#{1,6}\s+", line):
+                listed = None
+                inline_blockers = False
+            elif not inline_blockers and (match := re.fullmatch(r"\s*[-*]\s+(.+?)\s*", line)):
+                listed[1].append(match[1])
+                fields["blocked by"] = ", ".join(listed[1])
+            else:
+                errors.append(f"{path.name}: unsupported continuation of 'blocked by'; "
+                              "use one inline value, or an empty field followed only by '-' or '*' list items")
         elif listed is not None and (match := re.fullmatch(r"\s*[-*]\s+(.+?)\s*", line)):
             listed[1].append(match[1])
-            fields[listed[0]] = (", " if listed[0] == "blocked by" else "; ").join(listed[1])
+            fields[listed[0]] = "; ".join(listed[1])
         elif line.strip():
             listed = None
     return title, fields, acceptance, errors
@@ -82,11 +120,17 @@ def blockers(value, numbers, titles):
     text = value.strip()
     if re.fullmatch(r"none(?:\s*\(can start immediately\))?\.?", text, re.I):
         return [], []
-    if text.casefold() in titles:
+    if match := NUMBER.fullmatch(text):
+        number = int(match[1])
+        return ([number], []) if number in numbers else ([], [text])
+    parts = re.split(r"\s*(?:,|;|\band\b)\s*", text, flags=re.I)
+    numbered = all(re.fullmatch(r"(?:#|ticket\s+)?\d+(?:\s*[:-]\s*.+)?", part.strip(), re.I)
+                   for part in parts)
+    if not numbered and text.casefold() in titles:
         matches = titles[text.casefold()]
         return (matches, []) if len(matches) == 1 else ([], [text])
     found, unresolved = [], []
-    for part in re.split(r"\s*(?:,|;|\band\b)\s*", text, flags=re.I):
+    for part in parts:
         part = part.strip()
         if not part:
             unresolved.append("empty blocker")
@@ -101,6 +145,8 @@ def blockers(value, numbers, titles):
                 found.append(number)
             else:
                 unresolved.append(part)
+        elif NUMBER.fullmatch(part):
+            unresolved.append(part)
         elif part.casefold() in titles and len(titles[part.casefold()]) == 1:
             found.extend(titles[part.casefold()])
         else:

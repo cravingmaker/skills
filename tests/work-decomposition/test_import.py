@@ -142,6 +142,18 @@ class ImportTests(unittest.TestCase):
         plan = self.imported()
         self.assertEqual(plan["tasks"][2]["depends_on"], ["01-index-products", "02-search-page"])
 
+    def test_blocker_continuations_are_fully_consumed_or_rejected(self):
+        for blocked in ("01\n- 02", "None\n- 02", "\n- 01\n2. 02",
+                        "\n- 01\n+ 02", "01\n02"):
+            with self.subTest(blocked=blocked):
+                self.ticket("03-filter-by-price.md", "# 03: Filter by price\nStatus: ready-for-agent\n"
+                            f"Blocked by: {blocked}\n- [ ] Results are filtered\n")
+                self.imported(1, "unsupported continuation of 'blocked by'")
+        self.ticket("03-filter-by-price.md", "# 03: Filter by price\nStatus: ready-for-agent\n"
+                    "Blocked by:\n- 01\n* 02\n\n## Acceptance\n- [ ] Results are filtered\n")
+        self.assertEqual(self.imported()["tasks"][2]["depends_on"],
+                         ["01-index-products", "02-search-page"])
+
     def test_nothing_left_to_plan(self):
         for path in self.issues.iterdir():
             path.write_text(path.read_text().replace("ready-for-agent", "done").replace("ready-for-human", "closed"))
@@ -185,6 +197,22 @@ class ImportTests(unittest.TestCase):
                 self.assertEqual(self.imported()["tasks"][2]["depends_on"],
                                  ["02-search-page", "01-index-products"])
 
+    def test_numeric_references_cannot_be_shadowed_by_titles(self):
+        path = self.issues / "01-index-products.md"
+        original = path.read_text()
+        for title, blocked in (("02", "02"), ("#02", "#02"), ("ticket 02", "ticket 02"),
+                               ("02, 04", "02, 04"), ("02 and 04", "02 and 04"),
+                               ("02: Search page", "02: Search page"),
+                               ("99", "99"), ("99", "02, 99")):
+            with self.subTest(title=title, blocked=blocked):
+                path.write_text(original.replace("# 01: Index products", f"# 01: {title}"))
+                self.ticket("03-filter-by-price.md", "# 03: Filter by price\nStatus: ready-for-agent\n"
+                            f"Blocked by: {blocked}\n- [ ] Results are filtered\n")
+                if "99" in blocked:
+                    self.imported(1, "cannot resolve blocker '99'")
+                else:
+                    self.assertEqual(self.imported()["tasks"][2]["depends_on"], ["02-search-page"])
+
     def test_duplicate_empty_and_partially_consumed_blockers_fail(self):
         for blocked in ("01, 01", "1, 01", "01,,02", "01,", ",01", "01/02", "01 02", "01_", "01: wrong title"):
             with self.subTest(blocked=blocked):
@@ -207,6 +235,32 @@ class ImportTests(unittest.TestCase):
         self.assertNotIn("Fake acceptance", task["acceptance"])
         path.write_text("\n".join(line for line in original.splitlines() if not line.startswith("Proof:")) + "\n" + fake)
         self.imported(1, "non-empty 'Proof:'")
+
+    def test_html_comments_do_not_supply_proof_or_other_fields(self):
+        path = self.issues / "02-search-page.md"
+        original = path.read_text()
+        without = "\n".join(line for line in original.splitlines() if not line.startswith("Proof:")) + "\n"
+        fake = "<!--\nProof: Open the search page; Lamp is listed\n-->\n"
+        path.write_text(without + fake)
+        self.imported(1, "non-empty 'Proof:'")
+        path.write_text(without + "Proof: <!-- Open the search page; Lamp is listed -->\n")
+        self.imported(1, "non-empty 'Proof:'")
+        path.write_text(original + "\n<!--\nStatus: done\nBlocked by: 99\nProof: Fake\n"
+                        "- [ ] Fake acceptance\n## Comments\n-->\n")
+        task = self.imported()["tasks"][1]
+        self.assertEqual(task["ticket_status"], "ready-for-agent")
+        self.assertEqual(task["depends_on"], ["01-index-products"])
+        self.assertEqual(task["proof"], "Open the search page and enter lamp; Lamp is listed")
+        self.assertNotIn("Fake acceptance", task["acceptance"])
+
+    def test_literal_comment_markers_in_code_do_not_hide_real_fields(self):
+        proof = "Read the template; its literal marker is `<!-- placeholder -->`"
+        self.ticket("02-search-page.md", "# 02: Search page\nStatus: ready-for-agent\n"
+                    f"Blocked by: 01\nProof: {proof}\n- [ ] Search works\n")
+        self.assertEqual(self.imported()["tasks"][1]["proof"], proof)
+        path = self.issues / "02-search-page.md"
+        path.write_text("```html\n<!--\n```\n" + path.read_text())
+        self.assertEqual(self.imported()["tasks"][1]["proof"], proof)
 
     def test_usage_and_unreadable_input(self):
         empty = self.root / "empty"
