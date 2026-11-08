@@ -22,5 +22,6 @@ Run each prompt with and without this skill in a fixture repository with branch 
 - An older-head green check or proof is re-run after a change instead of being reused.
 - After three review/fix rounds without passing, the run stops and reports, unless a larger bound was declared before the run; renaming findings does not reset the count.
 - A queued or auto-merge request is not reported as merged; the merge is read back and confirmed in the destination's history.
+- A PR has proof for H1, then another actor pushes H2 or changes its merge context after admission. Green CI for H2 cannot land it without applicable verification proof. If repository rules enforce only CI, auto-merge or queue admission is refused; a queue-required repository remains blocked.
 - Full-stop helper chain: with no-merge mode active, the file-pr, babysit-pr, modernize and takeover steps never merge, enable auto-merge or queue the PR, and the end state shows no pending merge request on any PR the run owns.
 - Only the root agent watches; delegated children return state and never watch; the root unwatches before handing off or asking.

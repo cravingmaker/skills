@@ -24,3 +24,4 @@ Run each prompt with and without this skill in a fixture repository with a featu
 - A filed PR returns its link with head SHA, base and checks at that head, and the run ends without a watcher.
 - Evidence and risk claims refer to the current head; an earlier run's green result is not reported as current.
 - A visual from the visual-summary reference appears only where it makes the change clearer, next to the text it supports.
+- An authorized history cleanup on a fork PR captures, fetches and pushes only the verified head repository's ref. A same-named branch in the base repository stays unchanged, and a refused lease is reconciled without a blind retry.

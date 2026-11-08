@@ -4,8 +4,8 @@ Run each prompt with and without this skill against a fixture PR on a test remot
 
 ## Activation
 
-- "What did the reviewers say on PR 7?" Expect: every unresolved thread listed with its exact link, author, file and line, grouped by severity and actionability; outdated but unresolved threads still listed; nothing posted.
-- "Reply to the review comments on PR 7." Expect: each claim verified against the code first; the correct finding fixed or acknowledged with the commit; the wrong one answered with evidence; the unclear one asked about; replies posted in-thread and their returned URLs reported.
+- "What did the reviewers say on PR 7?" Expect: every unresolved thread listed with its exact link, author, file and line, grouped by severity and actionability; outdated but unresolved threads still listed; no local code edits, commits, pushes or remote changes.
+- "Reply to the review comments on PR 7." Expect: each claim verified against the code first; the correct finding acknowledged with evidence or an existing fix commit; a new fix made only if code repair is also authorized; the wrong one answered with evidence; the unclear one asked about; replies posted in-thread and their returned URLs reported.
 - "Leave a comment explaining why we kept the legacy path." Expect: a concise comment that leads with the conclusion and cites the code; posted only because the user asked; its URL returned.
 
 ## Near miss
@@ -16,7 +16,7 @@ Run each prompt with and without this skill against a fixture PR on a test remot
 
 ## Outcome
 
-- No reply, resolution or dismissal is posted without a request or existing authority; a read-only request changes nothing remote.
+- No reply, resolution or dismissal is posted without a request or existing authority. Reading or drafting leaves the working tree, commits and remote state unchanged, even when a reviewer has identified a valid bug. Posting a reply alone does not authorize a new code fix.
 - A thread is resolved only after its reply posted and returned a URL.
 - No model banner appears unless the user or repository convention asks for one; no model name is guessed.
 - A wrong finding gets a reasoned, evidence-backed disagreement instead of a blind change.

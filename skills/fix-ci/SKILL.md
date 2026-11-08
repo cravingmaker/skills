@@ -20,9 +20,9 @@ Get a red check green for the right reason. Read the real logs, find the first e
 1. **Bind the failure.** Record the PR or branch, the current head SHA and base, the failing check, its workflow run ID, attempt number, job, step and log link. Read the checks from a connected forge tool, or `gh pr checks --json name,bucket,state,workflow,link`. If the failing run is for an older head, re-read the checks at the current head first; an old failure is history.
 2. **Read the real logs.** Use `gh run view <run-id> --log-failed` for GitHub Actions, or the external check's own link. Find the first causal error, not the last line or a cascade of follow-on failures. When no step ran at all, read the run's annotations and the job's runner assignment instead.
 3. **Classify the cause** with the evidence that decides it:
-   - **Code:** the failure is in code the diff changed.
+   - **Code:** evidence ties the failure to a code, configuration, dependency or interface defect. A changed producer can break an unchanged caller or test; the failing file's absence from the diff does not rule out a regression.
    - **Test:** the test itself is wrong, or it pinned behavior the change was meant to alter.
-   - **Stale base:** the failure is in code the diff never touches. Check whether the branch contains the current base with `git merge-base --is-ancestor origin/<base> HEAD` before assuming a flake.
+   - **Stale base:** the branch lacks a relevant base change and evidence shows that omission causes the failure or that the base change fixes it. Check ancestry against the freshly fetched PR base. An untouched failing file, or ancestry alone, does not establish this class. Record unrelated pre-existing failures separately and repair them only within the task's scope.
    - **Flake:** the same SHA passes and fails without a change, or the failure matches a known nondeterministic pattern.
    - **Runner or infrastructure:** the runner was lost, ran out of disk, or failed to provision.
    - **Third-party outage:** a registry, API or service the job depends on was down; cite its status or error.
@@ -30,7 +30,7 @@ Get a red check green for the right reason. Read the real logs, find the first e
 4. **Act on the class:**
    - **Code or test:** reproduce the narrow failure locally with the same command CI runs. When the cause is not obvious, follow the `diagnosing-bugs` skill. Fix one actionable failure at a time with the smallest safe change. Change an assertion only when the behavior genuinely changed and the assertion pinned the old behavior.
    - **Stale base:** report that the branch needs its base brought in; update it through the `modernize` skill only when the task authorizes branch updates.
-   - **Flake or runner:** one fresh run of the whole workflow, not a single-job retry. An identical second failure means it was never a flake: reclassify and read the child logs instead of retrying again.
+   - **Flake or runner:** one fresh run of the whole workflow, not a single-job retry. If it fails again, stop retrying, read the child logs and reassess the cause. Repetition alone does not disprove nondeterminism; keep an unresolved cause explicit.
    - **Outage, quota or billing:** change no code. Report the blocker, its evidence and who can clear it, such as the account owner.
 5. **Re-check.** Push the fix within the task's authority, then read the full set of required checks at the new head. Repeat from step 1 for the next failure, within the round budget.
 

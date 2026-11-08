@@ -30,24 +30,31 @@ If the PR is too large to make reviewable with notes, recommend splitting it ins
 
 Rewrite history only when the user asks for it or agrees to the plan, and only on a branch you may rewrite. Propose the plan before rewriting or force-pushing.
 
-Before rewriting, record the original tree and the remote head:
+Before rewriting, use the connected PR tool to record the head repository, branch and SHA and the separate base repository and branch. A supported fallback is `gh pr view <PR> --json headRepository,headRepositoryOwner,headRefName,headRefOid,baseRefName,state`. Resolve `head_remote` and verify that both its fetch and push URLs identify the recorded head repository; `origin` may instead be the base repository.
+
+Capture the head ref before rewriting:
 
 ```bash
-gh pr view <PR> --json title,headRefName,baseRefName,state,commits
-git fetch origin <headRefName> <baseRefName>
-ORIGINAL_TREE=$(git rev-parse "origin/<headRefName>^{tree}")
-REMOTE_HEAD=$(git rev-parse "origin/<headRefName>")
+git ls-remote --exit-code "$head_remote" "refs/heads/$head_branch"
 ```
 
-After rewriting, verify content identity:
+Require exactly that ref with the recorded PR head SHA and save it as `captured_remote_head`. Reconcile any mismatch. Fetch that same ref, confirm its identity, then record the original tree:
 
 ```bash
-echo "Original tree: $ORIGINAL_TREE"
-echo "Current tree:  $(git rev-parse 'HEAD^{tree}')"
-git diff "origin/<headRefName>" --stat
+git fetch "$head_remote" "refs/heads/$head_branch"
+fetched_head=$(git rev-parse FETCH_HEAD)
+test "$fetched_head" = "$captured_remote_head" || exit 1
+original_tree=$(git rev-parse "$captured_remote_head^{tree}")
 ```
 
-Do not push if the tree changed unintentionally. Push with a lease on the recorded head: `git push --force-with-lease=<headRefName>:$REMOTE_HEAD origin HEAD:<headRefName>`. Preserve authorship and co-author trailers through the rewrite.
+After rewriting, verify content identity against the captured object:
+
+```bash
+git diff "$captured_remote_head" --stat
+test "$(git rev-parse 'HEAD^{tree}')" = "$original_tree" || exit 1
+```
+
+Do not push if the tree changed unintentionally. Push to the same verified head remote with the captured lease: `git push --force-with-lease="refs/heads/$head_branch:$captured_remote_head" "$head_remote" "HEAD:refs/heads/$head_branch"`. If the lease refuses, fetch and reconcile rather than refreshing it to overwrite new work. Preserve authorship and co-author trailers through the rewrite.
 
 ## Guardrails
 

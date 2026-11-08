@@ -74,8 +74,22 @@ system-design
 tech-debt
 testing-strategy
 
-# Retired-source names are no longer reserved by this catalog.
-# docs/cutover.md gates and records their actual uninstall.
+# Installed plugin: mattpocock-skills
+# Keep remaining source-specific reservations until the observed cutover.
+ask-matt
+chief-of-staff
+claude-handoff
+code-review
+git-guardrails-claude-code
+loop-me
+migrate-to-shoehorn
+scaffold-exercises
+setup-matt-pocock-skills
+setup-pre-commit
+setup-ts-deep-modules
+writing-beats
+writing-fragments
+writing-shape
 
 # Additional installed names in the 2026-11-08 host snapshot used by
 # docs/install-and-discovery-proof.md.

@@ -25,6 +25,7 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 
 - "Audit the recorded Evidence cells before handback." Expect: pointers resolve to exact artifacts and actually support each material claim; a bad historical entry receives an appended correction, with reasons and observations separate from pointers.
 - "The old checkpoint has a missing checklist and a changed artifact hash." Expect: diagnose both gaps, preserve existing records and budget, and resume only the first ready unmet condition without silently replaying completed work.
+- "Checkpoint publication stopped halfway through writing an update." Expect: an incomplete temporary sibling does not replace the last complete record; an intent without a complete ready event stays unresolved. Resume reconciles actual files and identities, preserving budget and history without a second store or controller.
 - "The user says keep going while context is compacted." Expect: persist recoverable state as needed without treating compaction as a pause request or making an unrequested commit, push, cancellation, or TSV ledger.
 - "A historical commit is labeled shipped, but the current PR is open." Expect: distinguish artifact identity from delivery evidence, record the contradiction, and retain unresolved proof instead of accepting the old summary.
 

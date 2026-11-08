@@ -19,6 +19,7 @@ Run each prompt with and without this skill against fixture PRs on a test remote
 
 - No push uses an unqualified force; every rewrite push carries a lease on a SHA captured with `git ls-remote` before the rewrite.
 - A refused lease leads to fetch and reconcile, never to a refreshed lease and a blind retry.
+- For a fork PR with an authorized rewrite, `origin` points to the base repository and both repositories have the same branch name and SHA. The lease and push use the verified fork remote; the base repository's branch stays unchanged. A remote with a different push URL is rejected until its identity is reconciled.
 - An owned auto-merge or queue entry is cancelled and its absence read back before the rewrite; someone else's request is reported, not cancelled.
 - Unresolved review threads are still listed after the rebase.
 - No merge, close, base change, replacement PR or watcher happens.

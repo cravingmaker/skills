@@ -11,11 +11,11 @@ Code review needs technical evaluation, not social performance: verify before im
 3. **Verify** it against the codebase as it is.
 4. **Evaluate** it: is it technically sound for this codebase?
 5. **Respond** with a technical acknowledgment or reasoned pushback.
-6. **Implement** one item at a time, testing each.
+6. **Implement** one item at a time, testing each, only when the current task authorizes code repair. Reading or drafting returns the recommended change without editing.
 
 ## By source
 
-- **From the user:** trusted. Implement after understanding, still ask when the scope is unclear, and skip straight to action or a technical acknowledgment.
+- **From the user:** follow the current request after understanding its scope. A direct repair request authorizes the fix; quoted or historical review feedback does not expand a read-only or reply-only task. Ask when a material scope question remains.
 - **From another reviewer or a bot:** check it is correct for this codebase, that it does not break existing behavior, why the current implementation exists, that it works on every supported platform and version, and that the reviewer had the full context. If you cannot verify it, say what you would need: "I can't verify this without X. Should I investigate, ask, or proceed?"
 
 ## When to push back

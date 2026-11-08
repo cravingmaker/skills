@@ -15,11 +15,11 @@ Cancellation is an observed condition, not a lock: another actor can re-arm it. 
 
 ## Lease on a captured SHA
 
-Capture the remote branch SHA right before rewriting, with `git ls-remote --exit-code origin "refs/heads/$branch"`, and confirm exactly the intended ref came back. Keep that SHA in the operation record. An implicit lease or an earlier fetch is not enough; a background fetch can move a tracking ref.
+Resolve `head_remote` from the PR's recorded head repository and verify both its fetch and push URLs. Keep the base remote separate. Capture the remote branch SHA right before rewriting with `git ls-remote --exit-code "$head_remote" "refs/heads/$branch"`, and require exactly the intended ref with the recorded PR head SHA. Reconcile a mismatch before rewriting. Keep the repository identity, ref and captured SHA in the operation record. An implicit lease or an earlier fetch is not enough; a background fetch can move a tracking ref.
 
 ```sh
 git push --force-with-lease="refs/heads/$branch:$captured_remote_head" \
-  origin "HEAD:refs/heads/$branch"
+  "$head_remote" "HEAD:refs/heads/$branch"
 ```
 
 If the lease refuses the push, fetch and reconcile the concurrent work. Do not refresh the lease and retry the overwrite blindly.
@@ -30,13 +30,13 @@ After a parent PR squash-merges, its child still carries the parent's old commit
 
 1. Confirm the parent squash landed in the intended destination, and fetch trunk.
 2. Find the recorded old parent tip the child was built on. Verify it is an ancestor of the child, and inspect `old-parent..child` to confirm the range holds only child work. If it does not, reconstruct the boundary before going on. Never infer it from the parent's new squash commit.
-3. In the child's clean worktree, where `HEAD` is the prepared child:
+3. Resolve the child's head repository and verify its fetch and push remote as `child_head_remote`; capture `captured_remote_head` from that exact remote and child ref as above. In the child's clean worktree, where `HEAD` is the prepared child:
 
 ```sh
 git merge-base --is-ancestor "$old_parent_tip" "$child"
 git rebase --onto "$trunk_tip" "$old_parent_tip" "$child"
 git push --force-with-lease="refs/heads/$child:$captured_remote_head" \
-  origin "HEAD:refs/heads/$child"
+  "$child_head_remote" "HEAD:refs/heads/$child"
 ```
 
 4. Inspect the resulting diff and content, reassess whether earlier reviews still apply, and run checks at the new head.

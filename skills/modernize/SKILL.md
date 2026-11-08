@@ -54,7 +54,7 @@ Be willing to recommend CLOSE. Age alone is not evidence, and sunk effort is not
 
 For a MODERNIZE disposition:
 
-1. Capture the remote head: `git ls-remote --exit-code origin "refs/heads/<branch>"`, and confirm exactly that ref came back.
+1. Resolve a remote whose fetch and push URLs identify the PR's head repository, and record it as `head_remote`, separately from the base remote. Capture the remote head with `git ls-remote --exit-code "$head_remote" "refs/heads/<branch>"`. Require exactly that ref and the recorded PR head SHA; reconcile a mismatch before rewriting. The name `origin` alone establishes no repository identity.
 2. Before rewriting, inspect auto-merge and merge-queue state on this PR and on every PR whose base or contents the rewrite changes. Cancel any pending merge you own and read back its absence. Read [references/restack-safety.md](references/restack-safety.md) for stacks and the cancellation readback.
 3. In the isolated worktree, start a branch at the recorded PR head and rebase its commits onto the freshly fetched base. Merge the base in instead when the repository or user prefers merges. After a parent squash-merged, rebase a child from its recorded old parent tip, never from the squash commit.
 4. Resolve each conflict by the PR's intent and the base's newer invariants:
@@ -65,7 +65,7 @@ For a MODERNIZE disposition:
    - If a conflict reveals a product or architecture disagreement, stop and reconsider the disposition instead of guessing.
 5. Compare the series before and after with `git range-diff`, and read the final diff. Confirm no intentional behavior disappeared and no already-landed behavior came back.
 6. Run the repository's compile, lint and focused tests for the touched area. Distinguish real failures from pre-existing or infrastructure failures.
-7. Push with the captured lease: `git push --force-with-lease="refs/heads/<branch>:<captured-sha>" origin "HEAD:refs/heads/<branch>"`. If the lease refuses the push, fetch and reconcile the new work; do not refresh the lease and retry the overwrite.
+7. Push to that same verified head remote with the captured lease: `git push --force-with-lease="refs/heads/<branch>:<captured-sha>" "$head_remote" "HEAD:refs/heads/<branch>"`. If the lease refuses the push, fetch and reconcile the new work; do not refresh the lease and retry the overwrite.
 8. Read the PR back at the new head: checks, mergeability and every unresolved thread. Rebasing does not resolve review feedback.
 
 Do not merge the PR.

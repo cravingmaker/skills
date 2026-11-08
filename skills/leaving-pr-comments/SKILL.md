@@ -16,7 +16,7 @@ Every reply rests on a verified reading of the code. Collect the feedback with i
 
 ## Authority
 
-- Reading and drafting need no extra authority.
+- Reading and drafting need no extra authority and leave code, commits and remote state unchanged. A valid finding is a recommendation until the current task also authorizes repairing it.
 - Post, reply, resolve or dismiss only when the user asked for it or the current task already authorizes it, such as a babysit-pr run in `drive` or `threads-only` mode.
 - Resolve a thread only after its reply posted successfully, and only when the finding is addressed or explicitly disposed of.
 - Fixing an issue does not authorize watching or merging.
@@ -38,8 +38,8 @@ For each item:
 1. Read it in full and restate the requirement in your own words. If it is unclear, ask about that item before implementing it or the items it touches; keep working on the items you understand.
 2. Check it against the code at the current head. Is it correct for this codebase? Would it break existing behavior? Is there a reason for the current implementation? Does it hold on every supported platform and version? Does the reviewer have the full context?
 3. Before "implementing it properly", search for actual usage. If nothing calls the code, propose removing it instead.
-4. Decide: fix, disagree with evidence, or ask. If the suggestion conflicts with an earlier decision by the user, take it to the user.
-5. Implement accepted items one at a time, blocking issues first, then simple fixes, then complex ones, and test each.
+4. Decide: recommend a fix, disagree with evidence, or ask. If the suggestion conflicts with an earlier decision by the user, take it to the user.
+5. When the current task authorizes code repair, implement accepted items one at a time, blocking issues first, then simple fixes, then complex ones, and test each. For reading or drafting, report the proposed fix and its evidence without editing. Reply authority alone does not authorize code repair.
 
 Read [references/verifying-feedback.md](references/verifying-feedback.md) for worked examples of verifying and pushing back.
 
