@@ -24,7 +24,7 @@ An upgrade is safe when every change in **effective behavior** is known and deci
 7. **Verify.** Run the project's full checks, focused tests for any behavior that changed, and consumer checks when the project is a package others install (pack it and import it in a clean consumer).
 8. **Report** with [references/upgrade-report.md](references/upgrade-report.md).
 
-Done when every difference between the before and after states has a recorded decision, the full checks pass, and the report lists anything left unverified.
+Done when every difference between the before and after states has a recorded decision, the full checks pass, and the report lists anything left unverified. Say the effective behavior is unchanged only when the comparison output is empty, and quote that output; a difference you configured back to its old value is still a decision to record.
 
 ## Rules
 

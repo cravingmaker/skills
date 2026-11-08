@@ -26,7 +26,7 @@ The checklist in [references/capabilities.md](references/capabilities.md) lists 
 4. **Assess each capability** in scope, in goal order, using [references/capabilities.md](references/capabilities.md) and the stack profile: [TypeScript](references/typescript.md) or [Python](references/python.md). Status per capability: enforced, unwired, broken, missing, or not applicable, each with its evidence.
 5. **Plan the smallest authorized change** for each gap. Prefer the user's shared configs and the project's established commands. Ask before adding a tool, a dependency, or a CI job the user has not approved.
 6. **Apply** the changes. Wire every check into one repository command that runs locally and in CI.
-7. **Prove each changed guardrail.** Show it rejecting a representative violation and accepting valid code, in the real project or a temporary fixture copy. Then run the setup again and confirm it produces no further changes.
+7. **Prove each changed guardrail.** Show it rejecting a representative violation and accepting valid code, in the real project or a temporary fixture copy. Then run the setup again and show that it changes nothing: `git status --porcelain` (or the project's equivalent) is empty after the second run. Report the command and its output; a guardrail without this rerun proof is not done.
 8. **Report** with the template below.
 
 Done when every capability in scope has a status with evidence, every changed guardrail has its reject, accept, and rerun proof, and every gap left open names its reason and source.
