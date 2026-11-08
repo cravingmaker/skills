@@ -1,0 +1,12 @@
+{
+  "name": "fixture-boundary",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/public.js",
+    "./internal/*": "./src/internal/*"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  }
+}

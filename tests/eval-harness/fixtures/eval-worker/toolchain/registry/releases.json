@@ -1,0 +1,35 @@
+{
+  "1.0.0": {
+    "released": "2026-09-01",
+    "rules": {
+      "no-debugger": "error",
+      "max-len": [
+        "warn",
+        80
+      ]
+    }
+  },
+  "1.1.0": {
+    "released": "2026-10-01",
+    "rules": {
+      "no-debugger": "error",
+      "max-len": [
+        "warn",
+        100
+      ],
+      "eqeqeq": "error"
+    }
+  },
+  "1.2.0": {
+    "released": "2026-11-07",
+    "rules": {
+      "no-debugger": "error",
+      "max-len": [
+        "warn",
+        100
+      ],
+      "eqeqeq": "error",
+      "no-console": "error"
+    }
+  }
+}

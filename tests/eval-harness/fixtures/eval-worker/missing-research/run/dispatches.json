@@ -1,0 +1,17 @@
+{
+  "tasks": [
+    {
+      "id": "a",
+      "state": "returned",
+      "report": "inbox/a.md"
+    },
+    {
+      "id": "b",
+      "state": "timed-out",
+      "report": null,
+      "required": true,
+      "owner": "coordinator"
+    }
+  ],
+  "remaining_worker_starts": 0
+}
