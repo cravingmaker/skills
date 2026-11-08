@@ -1,0 +1,4 @@
+roles: [role-one]
+skills:
+  cap-b: {kind: capability, roles: [all], status: unevaluated}
+  role-one: {kind: role, status: unevaluated}

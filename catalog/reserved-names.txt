@@ -1,0 +1,115 @@
+# Skill names this repository must not use, because the user's agents already
+# have a skill or command with that name. A duplicate name makes invocation
+# ambiguous and splits ownership of one job. One name per line; '#' starts a comment.
+# Checked by scripts/check-catalog.py. Update when a host or an installed plugin adds names.
+
+# Claude Code built-in skills and commands
+batch
+code-review
+fewer-permission-prompts
+init
+keybindings-help
+loop
+plugin-authoring
+review
+run
+schedule
+security-review
+simplify
+update-config
+workflow-authoring
+claude-api
+artifact-design
+artifact-capabilities
+artifact-diagramming
+dataviz
+
+# Anthropic skills (anthropics/skills and Claude's built-in document skills)
+algorithmic-art
+brand-guidelines
+canvas-design
+doc-coauthoring
+docx
+frontend-design
+internal-comms
+mcp-builder
+pdf
+pptx
+skill-creator
+slack-gif-creator
+theme-factory
+web-artifacts-builder
+webapp-testing
+xlsx
+
+# Installed plugin: design
+accessibility-review
+design-critique
+design-handoff
+design-system
+research-synthesis
+user-research
+ux-copy
+
+# Installed plugin: data
+analyze
+build-dashboard
+create-viz
+data-context-extractor
+data-visualization
+explore-data
+sql-queries
+statistical-analysis
+validate-data
+write-query
+
+# Installed plugin: engineering
+architecture
+debug
+deploy-checklist
+documentation
+incident-response
+standup
+system-design
+tech-debt
+testing-strategy
+
+# Installed plugin: mattpocock-skills
+ask-matt
+chief-of-staff
+claude-handoff
+code-review
+codebase-design
+diagnosing-bugs
+domain-modeling
+git-guardrails-claude-code
+grill-me
+grill-with-docs
+grilling
+handoff
+implement
+implement-spec
+improve-codebase-architecture
+loop-me
+migrate-to-shoehorn
+pr
+prototype
+research
+retro
+scaffold-exercises
+setup-matt-pocock-skills
+setup-pre-commit
+setup-ts-deep-modules
+tdd
+teach
+to-questionnaire
+to-spec
+to-tickets
+triage
+wait-what
+wayfinder
+wizard
+writing-beats
+writing-for-agents
+writing-fragments
+writing-shape
