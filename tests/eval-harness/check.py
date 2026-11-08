@@ -199,9 +199,14 @@ class IsolationTests(unittest.TestCase):
         session = arm.config / "sessions/test.jsonl"
         session.parent.mkdir()
         session.write_text(json.dumps({"type": "turn_context", "payload": {"model": "test-model"}}) + "\n")
+        empty_read = f"sed -n '99999,100000p' {path}"
+        wrapped = f"/bin/sh -c {shlex.quote(empty_read)}"
         commands = [
             f"false && cat {path}\nprintf '%s\\n' '# Clear communication'",
             f"sed -n '99999,100000p' {path} && printf '%s\\n' '# Clear communication'",
+            f"{wrapped} && printf '%s\\n' '# Clear communication'",
+            f"{wrapped}\nprintf '%s\\n' '# Clear communication'",
+            f"{wrapped} >/dev/null; printf '%s\\n' '# Clear communication'",
         ]
         for command in commands:
             with self.subTest(command=command):
