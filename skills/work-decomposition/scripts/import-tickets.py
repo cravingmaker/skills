@@ -39,58 +39,50 @@ def shown(path, workspace):
     return str(path.relative_to(workspace)) if workspace and path.is_relative_to(workspace) else str(path)
 
 
-def visible_line(line, in_comment):
-    """Strip HTML comments while retaining literal markers inside inline code."""
-    parts, start, position = [], 0, 0
+def field_markup_error(line):
+    """Reject ambiguous markup instead of interpreting it as authoritative fields."""
+    if "<!--" in line or "-->" in line:
+        return "HTML comment marker; remove it or move the example into a fenced block"
+    position = 0
     while position < len(line):
-        if in_comment:
-            end = line.find("-->", position)
-            if end < 0:
-                return "".join(parts), True
-            in_comment = False
-            position = start = end + 3
-        elif line[position] == "\\":
+        if line[position] == "\\":
             position += 2
-        elif line.startswith("<!--", position):
-            parts.append(line[start:position])
-            in_comment = True
-            position += 4
+        elif line[position] == "<":
+            return "angle-bracket markup; use plain text or a balanced same-line code span"
         elif line[position] == "`":
             end = position + 1
             while end < len(line) and line[end] == "`":
                 end += 1
             closing = re.search(r"(?<!`)" + re.escape(line[position:end]) + r"(?!`)", line[end:])
-            # An unmatched backtick run is literal text, not an open code span.
-            position = end + closing.end() if closing else end
+            if closing is None:
+                return "unmatched code delimiter; close it on the same line or use a fenced example"
+            position = end + closing.end()
         else:
             position += 1
-    if not in_comment:
-        parts.append(line[start:])
-    return "".join(parts), in_comment
+    return None
 
 
 def parse(path, text):
-    """Return the ticket's title, fields, and acceptance items, ignoring comments."""
+    """Read the strict field region before Comments; fenced examples stay inert."""
     title, fields, acceptance, listed, errors = None, {}, [], None, []
     fence = None
-    in_comment = False
     inline_blockers = False
     for line in text.splitlines():
         if fence:
-            marker = re.match(r"^\s*(`{3,}|~{3,})", line)
+            marker = re.fullmatch(r" {0,3}(`{3,}|~{3,})[ \t]*", line)
             if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence):
                 fence = None
             continue
-        # A fence's info string is literal, including any HTML comment marker.
-        if not in_comment and (marker := re.match(r"^\s*(`{3,}|~{3,})", line)):
-            fence = marker[1]
-            continue
-        line, in_comment = visible_line(line, in_comment)
-        if marker := re.match(r"^\s*(`{3,}|~{3,})", line):
-            fence = marker[1]
-            continue
-        if re.fullmatch(r"##\s+comments\s*", line, re.I):
+        if re.fullmatch(r" {0,3}##[ \t]+comments(?:[ \t]+#+)?[ \t]*", line, re.I):
             break
+        if marker := re.fullmatch(r" {0,3}(`{3,}|~{3,})(.*)", line):
+            if marker[1][0] == "`" and "`" in marker[2]:
+                errors.append(f"{path.name}: backticks in a fence info string; use a plain language label")
+            fence = marker[1]
+            continue
+        if problem := field_markup_error(line):
+            errors.append(f"{path.name}: {problem}")
+            continue
         if title is None and (match := re.fullmatch(r"#\s+(.+?)\s*", line)):
             title = re.sub(r"^\d+\s*[:.)-]\s*", "", match[1])
             continue
@@ -125,6 +117,8 @@ def parse(path, text):
             fields[listed[0]] = "; ".join(listed[1])
         elif line.strip():
             listed = None
+    if fence:
+        errors.append(f"{path.name}: unclosed fenced example; add its closing fence")
     return title, fields, acceptance, errors
 
 
@@ -137,7 +131,7 @@ def blockers(value, numbers, titles):
         number = int(match[1])
         return ([number], []) if number in numbers else ([], [text])
     parts = re.split(r"\s*(?:,|;|\band\b)\s*", text, flags=re.I)
-    numbered = all(NUMERIC_REFERENCE.fullmatch(part.strip()) for part in parts)
+    numbered = any(NUMERIC_REFERENCE.fullmatch(part.strip()) for part in parts)
     if not numbered and text.casefold() in titles:
         matches = titles[text.casefold()]
         return (matches, []) if len(matches) == 1 else ([], [text])

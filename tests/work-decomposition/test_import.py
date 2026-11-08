@@ -233,6 +233,28 @@ class ImportTests(unittest.TestCase):
                             f"Blocked by: {title}\n- [ ] Results are filtered\n")
                 self.assertEqual(self.imported()["tasks"][2]["depends_on"], ["01-index-products"])
 
+    def test_mixed_numeric_references_cannot_be_shadowed_by_whole_titles(self):
+        path = self.issues / "01-index-products.md"
+        original = path.read_text()
+        for blocked in ("02, Price field", "Price field, 02", "#02 and Price field", "ticket 02; Price field"):
+            with self.subTest(blocked=blocked):
+                path.write_text(original.replace("# 01: Index products", f"# 01: {blocked}"))
+                self.ticket("03-filter-by-price.md", "# 03: Filter by price\nStatus: ready-for-agent\n"
+                            f"Blocked by: {blocked}\n- [ ] Results are filtered\n")
+                self.assertEqual(self.imported()["tasks"][2]["depends_on"], ["02-search-page"])
+        for blocked in ("99, Search page", "Search page, 99: Absent", "99: Search page and More",
+                        "02, Missing title", "02,", "02: wrong title and More"):
+            with self.subTest(blocked=blocked):
+                path.write_text(original.replace("# 01: Index products", f"# 01: {blocked}"))
+                self.ticket("03-filter-by-price.md", "# 03: Filter by price\nStatus: ready-for-agent\n"
+                            f"Blocked by: {blocked}\n- [ ] Results are filtered\n")
+                self.imported(1, "cannot resolve blocker")
+        title = "Search, sort and filter"
+        path.write_text(original.replace("# 01: Index products", f"# 01: {title}"))
+        self.ticket("03-filter-by-price.md", "# 03: Filter by price\nStatus: ready-for-agent\n"
+                    f"Blocked by: {title}\n- [ ] Results are filtered\n")
+        self.assertEqual(self.imported()["tasks"][2]["depends_on"], ["01-index-products"])
+
     def test_duplicate_empty_and_partially_consumed_blockers_fail(self):
         for blocked in ("01, 01", "1, 01", "01,,02", "01,", ",01", "01/02", "01 02", "01_", "01: wrong title"):
             with self.subTest(blocked=blocked):
@@ -262,34 +284,32 @@ class ImportTests(unittest.TestCase):
         without = "\n".join(line for line in original.splitlines() if not line.startswith("Proof:")) + "\n"
         fake = "<!--\nProof: Open the search page; Lamp is listed\n-->\n"
         path.write_text(without + fake)
-        self.imported(1, "non-empty 'Proof:'")
+        self.imported(1, "HTML comment marker")
         path.write_text(without + "Proof: <!-- Open the search page; Lamp is listed -->\n")
-        self.imported(1, "non-empty 'Proof:'")
+        self.imported(1, "HTML comment marker")
         path.write_text(original + "\n<!--\nStatus: done\nBlocked by: 99\nProof: Fake\n"
                         "- [ ] Fake acceptance\n## Comments\n-->\n")
-        task = self.imported()["tasks"][1]
-        self.assertEqual(task["ticket_status"], "ready-for-agent")
-        self.assertEqual(task["depends_on"], ["01-index-products"])
-        self.assertEqual(task["proof"], "Open the search page and enter lamp; Lamp is listed")
-        self.assertNotIn("Fake acceptance", task["acceptance"])
+        self.imported(1, "HTML comment marker")
 
-    def test_literal_comment_markers_in_code_do_not_hide_real_fields(self):
+    def test_field_region_rejects_literal_comment_markers(self):
         proof = "Read the template; its literal marker is `<!-- placeholder -->`"
         self.ticket("02-search-page.md", "# 02: Search page\nStatus: ready-for-agent\n"
                     f"Blocked by: 01\nProof: {proof}\n- [ ] Search works\n")
-        self.assertEqual(self.imported()["tasks"][1]["proof"], proof)
+        self.imported(1, "HTML comment marker")
         path = self.issues / "02-search-page.md"
+        plain = "Read `template.md`; its named fields are present"
+        path.write_text(path.read_text().replace(proof, plain))
         path.write_text("```html\n<!--\n```\n" + path.read_text())
-        self.assertEqual(self.imported()["tasks"][1]["proof"], proof)
+        self.assertEqual(self.imported()["tasks"][1]["proof"], plain)
 
-    def test_unmatched_backticks_do_not_disable_comment_stripping(self):
+    def test_ambiguous_comments_reject_and_fence_info_stays_literal(self):
         path = self.issues / "02-search-page.md"
         original = path.read_text()
         without = "\n".join(line for line in original.splitlines() if not line.startswith("Proof:")) + "\n"
         for prefix in ("`", "``", "`not closed ", "``mismatched` "):
             with self.subTest(prefix=prefix):
                 path.write_text(without + f"\n{prefix}<!--\nProof: Hidden evidence\n-->\n")
-                self.imported(1, "non-empty 'Proof:'")
+                self.imported(1, "HTML comment marker")
         for fence in ("```", "~~~"):
             with self.subTest(fence=fence):
                 path.write_text(f"{fence}html <!--\nProof: Fake\n{fence}\n" + original)
@@ -297,7 +317,46 @@ class ImportTests(unittest.TestCase):
                                  "Open the search page and enter lamp; Lamp is listed")
         proof = "Read the template; its marker is ``literal ` and <!-- placeholder -->``"
         path.write_text(original.replace("Open the search page and enter lamp; Lamp is listed", proof))
-        self.assertEqual(self.imported()["tasks"][1]["proof"], proof)
+        self.imported(1, "HTML comment marker")
+
+    def test_multiline_code_and_raw_html_cannot_supply_fields(self):
+        path = self.issues / "02-search-page.md"
+        original = path.read_text()
+        proof = "Proof: Open the search page and enter lamp; Lamp is listed"
+        for payload, diagnostic in (
+            ("`example\nProof: Hidden evidence\nexample`", "unmatched code delimiter"),
+            ("``example\nProof: Hidden evidence\nexample``", "unmatched code delimiter"),
+            ("<script>\nProof: Hidden evidence\n</script>", "angle-bracket markup"),
+        ):
+            with self.subTest(payload=payload):
+                path.write_text(original.replace(proof, payload))
+                self.imported(1, diagnostic)
+        path.write_text(original + "\n## Comments\n`unmatched <!-- <script>\nProof: Fake\n")
+        self.assertEqual(self.imported()["tasks"][1]["proof"], proof.removeprefix("Proof: "))
+
+    def test_fence_closers_cannot_expose_example_fields(self):
+        path = self.issues / "02-search-page.md"
+        original = path.read_text()
+        proof = "Proof: Open the search page and enter lamp; Lamp is listed"
+        for marker, false_close in (("```", "```not-a-close"), ("~~~", "~~~not-a-close"),
+                                    ("```", "    ```")):
+            with self.subTest(false_close=false_close):
+                fake = f"{marker}markdown\n{false_close}\nProof: Hidden evidence\n- [ ] Fake\n{marker}"
+                path.write_text(original.replace(proof, fake))
+                self.imported(1, "non-empty 'Proof:'")
+        path.write_text(original + "\n```markdown\nExample without a closer\n")
+        self.imported(1, "unclosed fenced example")
+
+    def test_comments_heading_variants_end_the_field_region(self):
+        path = self.issues / "02-search-page.md"
+        original = path.read_text()
+        proof = "Proof: Open the search page and enter lamp; Lamp is listed"
+        for heading in ("## Comments", "## Comments ##", "  ## Comments", "   ## COMMENTS ###"):
+            with self.subTest(heading=heading):
+                path.write_text(original.replace(proof, heading + "\nProof: Conversation evidence"))
+                self.imported(1, "non-empty 'Proof:'")
+                path.write_text(original + f"\n{heading}\nStatus: done\nProof: Fake\n<!--\n")
+                self.assertEqual(self.imported()["tasks"][1]["proof"], proof.removeprefix("Proof: "))
 
     def test_usage_and_unreadable_input(self):
         empty = self.root / "empty"
