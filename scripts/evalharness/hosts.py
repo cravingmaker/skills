@@ -309,10 +309,11 @@ def selected_skill_injections(rollout: list[dict], candidate_path: str) -> list[
         kinds = metadata.get("content_item_kinds")
         details = metadata.get("content_item_metadata")
         content = payload.get("content")
-        if not all(isinstance(value, list) for value in (kinds, details, content)):
+        if (not all(isinstance(value, list) for value in (kinds, details, content))
+                or not len(kinds) == len(details) == len(content)):
             continue
         for index, part in enumerate(content):
-            if index >= len(kinds) or index >= len(details) or not isinstance(part, dict):
+            if not isinstance(part, dict) or part.get("type") != "input_text":
                 continue
             detail = details[index]
             provenance = detail.get("provenance") if isinstance(detail, dict) else None

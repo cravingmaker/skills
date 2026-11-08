@@ -458,5 +458,30 @@ class IsolationTests(unittest.TestCase):
 
 
 
+    def test_codex_native_selection_rejects_unknown_content_types(self):
+        def change_type(value):
+            def change(message, path):
+                part = message["payload"]["content"][0]
+                if value == "absent":
+                    part.pop("type")
+                else:
+                    part["type"] = value
+            return change
+        for value in ("output_text", "input_image", "image", "tool_result", "refusal", "unknown", None, "absent"):
+            with self.subTest(content_type=value):
+                self.assertFalse(self.native_selection_observation(change_type(value))["activation"])
+
+    def test_codex_native_selection_requires_aligned_metadata(self):
+        def extra_kind(message, path):
+            message["payload"]["internal_chat_message_metadata_passthrough"]["content_item_kinds"].append("user")
+        def extra_detail(message, path):
+            message["payload"]["internal_chat_message_metadata_passthrough"]["content_item_metadata"].append({"provenance": {"type": "human"}})
+        def extra_content(message, path):
+            message["payload"]["content"].append({"type": "input_text", "text": "unannotated"})
+        for change in (extra_kind, extra_detail, extra_content):
+            with self.subTest(change=change.__name__):
+                self.assertFalse(self.native_selection_observation(change)["activation"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
