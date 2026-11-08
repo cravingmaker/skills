@@ -21,7 +21,7 @@ Start from [assets/brief.md](assets/brief.md), populate its fields, and run:
 python3 <skill-dir>/scripts/check-brief.py <run-dir>/briefs/<task>-r1.md
 ```
 
-Python 3.12 or later is required; no packages are needed. Exit 0 means required sections and structured contract lines are present; 1 names every missing field, placeholder, or malformed allocation; 2 means usage or unreadable input. Use explicit `none` with a reason where a field does not apply, and keep the template's field names. The checker reads without writing; it cannot establish whether permission is real, a path is usable by the child, a skill was loaded, or the content supplies enough context. Read [references/brief-checks.md](references/brief-checks.md) when changing the format or investigating a rejected brief.
+Python 3.12 or later is required; no packages are needed. Find `python3.12` or a newer versioned interpreter on PATH; if `python3` is older, use that interpreter or `uv run --python 3.12` before the script path. Exit 0 means required sections and structured contract lines are present; 1 names every missing field, placeholder, or malformed allocation; 2 means usage or unreadable input. Use explicit `none` with a reason where a field does not apply, and keep the template's field names. The checker reads without writing; it cannot establish whether permission is real, a path is usable by the child, a skill was loaded, or the content supplies enough context. Read [references/brief-checks.md](references/brief-checks.md) when changing the format or investigating a rejected brief.
 
 ## Prepare the contract
 

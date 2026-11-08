@@ -1,6 +1,6 @@
 ---
 name: domain-modeling
-description: Maintain a project's domain glossary and architecture decision records (ADRs) at its configured paths, challenging fuzzy terms and recording only hard-to-reverse trade-offs. Use when resolving or renaming project domain terms, or recording or superseding an ADR.
+description: Change a project's domain model by resolving or renaming terms in its configured glossary, or recording or superseding hard-to-reverse architecture decisions. Use for domain-model changes; vocabulary-only explanations use the existing glossary directly.
 license: MIT
 metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/domain-modeling/SKILL.md"
@@ -31,6 +31,8 @@ Build and sharpen the project's domain model while a design is discussed: challe
 ## Record a term
 
 Update the glossary when a term is resolved, not in a batch at the end. Follow [references/glossary-format.md](references/glossary-format.md) unless the project's glossary already uses another format.
+
+Before saving, check that the entry names the canonical term, its definition, and any competing names under `_Avoid_`. Keep distinct existing concepts distinct rather than broadening one term to cover both.
 
 The glossary holds domain language and nothing else: no implementation details, no spec, no scratch notes. Keep the exact term the domain uses, and link its authority (a stakeholder decision, a regulation, an ADR, a source document) when one exists.
 

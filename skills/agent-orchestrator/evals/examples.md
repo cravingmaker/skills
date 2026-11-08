@@ -8,7 +8,7 @@ Run each prompt with and without this skill, keeping the standing communication 
 - "Manage backend, frontend, and QA agents to build this feature." Expect: tasks with dependencies, one integration owner, disjoint write boundaries, briefs a fresh agent can execute, and acceptance checks run on the integrated result.
 - "Pick up the agent run from yesterday and finish it." Expect: the run record read first, completed work not repeated, and the next unmet task resumed.
 
-- Use the configured docs to shape this idea, write its agreed spec and approved tickets, then stop.
+- "Act as the orchestrator: use the configured docs to shape the unsettled refund idea, then write the agreed spec and approved tickets and stop." Expect: read the existing glossary and accepted decisions, interview only the open consequential refund choices, and wait for answers before claiming a spec or ticket breakdown is agreed. No implementation or dispatch.
 
 ## Near miss
 

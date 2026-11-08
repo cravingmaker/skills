@@ -49,7 +49,7 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [bro](skills/bro) | Manual entry that repairs the last answer through clear-communication. |
 | [wait-what](skills/wait-what) | Manual entry that explains the last unclear point using the user's context. |
 
-The new shape and understand skills remain unevaluated pending matched behavioral runs. Explicit entries use the catalog's `invocation: user`; host policy grants no additional task authority.
+See [the catalog](catalog/skills.yaml) for evaluation status and each skill's `evals/results/` for outcomes and limits. Explicit entries use the catalog's `invocation: user`; host policy grants no additional task authority.
 
 ## Installation
 

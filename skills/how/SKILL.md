@@ -1,6 +1,6 @@
 ---
 name: how
-description: "Explain how a concrete subsystem works from its source: entry points, execution flow, data, and ownership. Use for code walkthroughs, onboarding a subsystem, or checking where behavior belongs."
+description: "Explain a concrete subsystem's current execution from source: entry points, flow, data, and ownership. Use for code walkthroughs or onboarding; historical-intent questions belong to the `why` skill."
 license: MIT
 metadata:
   source: "https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/how/SKILL.md"

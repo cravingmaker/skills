@@ -26,6 +26,8 @@ Exit status: 0 the report passes, 1 the report has defects, 2 usage error.
 Requires Python 3.12 or later; standard library only; reads only.
 """
 
+from __future__ import annotations
+
 import argparse
 import re
 import sys
@@ -307,7 +309,7 @@ def check_verdict(
 
 def main(argv: list[str]) -> int:
     if sys.version_info < (3, 12):
-        print("error: check-review.py needs Python 3.12 or later.", file=sys.stderr)
+        print("error: check-review.py needs Python 3.12 or later; use python3.12 or a newer versioned interpreter on PATH, or uv run --python 3.12 check-review.py", file=sys.stderr)
         return 2
     args = parse_args(argv)
     problems = check(read_report(args.report), args)

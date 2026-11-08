@@ -12,7 +12,7 @@ metadata:
 
 # Wait what
 
-On an explicit wait-what request, read the `clear-communication` skill and select its **Repair your own last message** mode with context for the last unclear point. Preserve the facts and use the user's project terms.
+On an explicit wait-what request, read the `clear-communication` skill and select its **Repair your own last message** mode with context for the last unclear point. Preserve the facts and use the user's project terms. Carry forward supplied evidence limits, including static-only inspection and any live surface left unrun, even when explaining only one connection.
 
 Quoted or incidental entry text selects nothing. This entry creates no course, new task, or document workspace and grants no external action. If the required skill is unavailable, report it and stop this flow.
 

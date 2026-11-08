@@ -78,8 +78,8 @@ The user brings a loose idea.
 
 The user brings a map (a path, a URL, or a number), optionally with a ticket.
 
-1. Load the map: the low-resolution view, not every ticket body.
-2. Choose the ticket the user named, or else the first frontier ticket in order. Claim it before any work.
+1. Load the map and only the ticket headers needed to identify the frontier.
+2. Choose the ticket the user named, or else the first frontier ticket in order. Save its claim and confirm it before reading resolution sources or investigating the answer. If the claim cannot be saved, stop that ticket's work.
 3. Resolve it as its type says. Read the type from the label or `Type:` line, not the body. Fetch related or closed tickets on demand, and read the skills the map's Notes name.
 4. Record the resolution: the answer on the ticket, the ticket closed, and a one-line context pointer added to the map's Decisions so far.
 5. Add newly surfaced tickets (create, then wire). Graduate fog the answer made specifiable, removing it from Not yet specified. Rule out-of-scope tickets out. Update or delete tickets the decision invalidates.

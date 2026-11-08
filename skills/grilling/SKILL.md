@@ -40,7 +40,7 @@ Format a round like this:
 
 Word each question so "yes" accepts your recommended answer. Ask for a missing fact only the user holds plainly, without a recommendation.
 
-Each round of answers reshapes the tree: settled decisions push the frontier outward. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a later round.
+Each round of answers reshapes the tree: settled decisions push the frontier outward. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a later round. Before sending, check each question and recommendation for a condition supplied by an open answer; defer that branch instead of asking it in the same round.
 
 When a frontier question needs a fact from the environment, look it up yourself; never ask the user for something you could find. A running lookup is an unsettled prerequisite, so only the questions downstream of it wait; ask the rest now. Do the lookup inline by default. Start a subagent only when the search is large and independent, and count the start against the run's shared budget when one exists.
 

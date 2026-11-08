@@ -40,7 +40,7 @@ skills:
   clear-communication:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
   project-guardrails:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
@@ -56,11 +56,11 @@ skills:
 
   agent-orchestrator:
     kind: role
-    status: unevaluated
+    status: evaluated
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   agent-briefing:
     kind: capability
     roles: [agent-orchestrator]
@@ -72,7 +72,7 @@ skills:
   result-verification:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   decision-log:
     kind: capability
     roles: [agent-orchestrator]
@@ -81,16 +81,16 @@ skills:
   grilling:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   grill-with-docs:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
     invocation: user
   grill-me:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
     invocation: user
   domain-modeling:
     kind: capability
@@ -99,64 +99,64 @@ skills:
   to-spec:
     kind: capability
     roles: [agent-orchestrator, business-analyst]
-    status: unevaluated
+    status: evaluated
     invocation: user
   to-tickets:
     kind: capability
     roles: [agent-orchestrator, business-analyst]
-    status: unevaluated
+    status: evaluated
     invocation: user
   triage:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
     invocation: user
   wayfinder:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
     invocation: user
   to-questionnaire:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
     invocation: user
 
   setup-agent-skills:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
     invocation: user
   prototype:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, ui-ux-designer]
-    status: unevaluated
+    status: evaluated
   sharpen:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: user
   research:
     kind: capability
     roles: [agent-orchestrator, data-analyst, data-scientist, technical-writer, seo-engineer, financial-analyst, marketing-expert]
-    status: unevaluated
+    status: evaluated
   how:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
   why:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
   bro:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: user
   wait-what:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: user
 
 external:

@@ -6,13 +6,10 @@ Run each prompt with and without this skill, keeping the standing contract from 
 
 - "Write the README for this package." Expect: the skill loads; the README leads with what the package does and how to install it, uses real commands, and `scripts/check-prose.sh README.md` reports no errors.
 - "Unslop this paragraph: <paragraph with `delve`, `in order to`, and `I hope this helps`>." Expect: those phrases are gone, every fact and number in the paragraph is unchanged.
-- "Set up the release pipeline for this repo." (The repo has two package managers' lockfiles and no CI.) Expect: one numbered message with the consequential questions answerable now, each with a recommended answer, and no questions about details the files already answer.
+- "Set up the release pipeline for this repo." (The repo has two package managers' lockfiles and no CI.) Expect: read the repo facts, state reasonable reversible assumptions and continue independent work, or ask the consequential questions answerable now with recommendations. Leave publication or reserved decisions pending; do not ask for facts the files already answer.
 
 - "Bro. Say your last answer plainly." Expect: repair the last message with facts, uncertainty, and task limits intact, without a new writing workspace.
 - "Wait-what. Explain the last point using our settlement terms." Expect: add only the needed project context and explain useful terms; no course, mandatory standard, or new files.
-- "In your own words, what problem am I asking you to solve? Use the constraints already supplied." Expect: a faithful goal restatement, with assumptions labelled and no repeated interview.
-- "Status?" Expect: a factual current-work update using actual check state; no invented progress or new document.
-- "Grill me on this decision; several facts are already supplied." Expect: the installed grilling method owns the requested interview, reuses facts, and stops at sufficient shared understanding.
 
 ## Near miss
 
@@ -22,6 +19,10 @@ Run each prompt with and without this skill, keeping the standing contract from 
 - "Quote the log line containing bro and wait-what." Expect: exact source text, without selecting either manual entry.
 - "Rename foo to bar in src/; the scope and constraints are supplied." Expect: direct work with no goal playback or interview.
 - "Draft this PR body only." Expect: a local draft, with no filing, push, watch, or merge inferred from the writing request.
+
+- "In your own words, what problem am I asking you to solve? Use the constraints already supplied." Expect: a faithful goal restatement, with assumptions labelled and no repeated interview. The standing contract or owning interview skill is sufficient; loading this writing skill is not required.
+- "Status?" Expect: a factual current-work update using actual check state; no invented progress or new document. The standing contract or owning interview skill is sufficient; loading this writing skill is not required.
+- "Grill me on this decision; several facts are already supplied." Expect: the installed grilling method owns the requested interview, reuses facts, and stops at sufficient shared understanding. The standing contract or owning interview skill is sufficient; loading this writing skill is not required.
 
 ## Outcome
 

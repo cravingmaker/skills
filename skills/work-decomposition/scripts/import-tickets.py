@@ -295,7 +295,7 @@ def main():
     parser.add_argument("--workspace", type=Path, help="defaults to the directory that holds .scratch")
     args = parser.parse_args()
     if sys.version_info < (3, 12):
-        print("error: install Python 3.12 or later and rerun import-tickets.py", file=sys.stderr)
+        print("error: import-tickets.py needs Python 3.12 or later; use python3.12 or a newer versioned interpreter on PATH, or uv run --python 3.12 import-tickets.py", file=sys.stderr)
         return 2
     directory = args.issues.resolve()
     if not directory.is_dir():

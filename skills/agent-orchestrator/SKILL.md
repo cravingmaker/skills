@@ -1,6 +1,6 @@
 ---
 name: agent-orchestrator
-description: Equip this agent as the orchestrator of a fleet of AI agents, a product and project manager that plans, delegates, runs bounded debates, and verifies combined results. Use when the user invokes agent-orchestrator, asks the agent to manage, coordinate, or have other agents debate, or asks to resume a multi-agent run.
+description: "Coordinate a multi-agent run: plan, delegate, debate, and verify combined results. Use when asked to act as agent-orchestrator, manage agents, or pick up an earlier agent run and finish it; resume from its durable record."
 license: MIT
 metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/ask-matt/SKILL.md"

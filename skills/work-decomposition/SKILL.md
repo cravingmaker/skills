@@ -1,6 +1,6 @@
 ---
 name: work-decomposition
-description: Decide whether delegation earns its cost, then map tasks, dependencies, ownership, and a finite run budget. Use when planning work across agents or deciding whether a complex task should be split.
+description: "Plan execution across agents: decide whether delegation earns its cost, then map dependencies, ownership, and a finite run budget. Use for agent staffing or importing approved tickets into an execution plan; authoring tickets belongs to the `to-tickets` skill."
 license: MIT
 metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/in-progress/loop-me/SKILL.md"
@@ -22,7 +22,7 @@ Before dispatch, run the checker against the plan's JSON object or its single fe
 python3 <skill-dir>/scripts/check-plan.py <run-dir>/PLAN.md
 ```
 
-Python 3.12 or later is required; no packages are needed. Exit 0 means the recorded owners, proofs, reasons, dependency graph, literal write paths, and budget pass, with no unresolved `{{placeholder}}`; 1 names findings and fixes; 2 means usage or unreadable input. The checker compares every pair of unordered tasks, even when their owner names match, and resolves existing local symlink aliases. It cannot discover undeclared writes, enforce live host limits, establish authorization, or judge whether a delegation is useful. Read [references/plan-format.md](references/plan-format.md) when creating or changing the checked block.
+Python 3.12 or later is required; no packages are needed. Find `python3.12` or a newer versioned interpreter on PATH; if `python3` is older, use that interpreter or `uv run --python 3.12` before the script path. Exit 0 means the recorded owners, proofs, reasons, dependency graph, literal write paths, and budget pass, with no unresolved `{{placeholder}}`; 1 names findings and fixes; 2 means usage or unreadable input. The checker compares every pair of unordered tasks, even when their owner names match, and resolves existing local symlink aliases. It cannot discover undeclared writes, enforce live host limits, establish authorization, or judge whether a delegation is useful. Read [references/plan-format.md](references/plan-format.md) when creating or changing the checked block.
 
 ## Import approved tickets
 

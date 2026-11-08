@@ -229,7 +229,7 @@ def main():
     parser.add_argument("plan", type=Path)
     args = parser.parse_args()
     if sys.version_info < (3, 12):
-        print("error: install Python 3.12 or later and rerun check-plan.py", file=sys.stderr)
+        print("error: check-plan.py needs Python 3.12 or later; use python3.12 or a newer versioned interpreter on PATH, or uv run --python 3.12 check-plan.py", file=sys.stderr)
         return 2
     try:
         source = args.plan.read_text(encoding="utf-8")
