@@ -17,7 +17,9 @@ Checks:
   - with --prior, every finding open last round is closed, withdrawn, or
     still listed;
   - with --round, a finding open longer than --max-rounds carries an
-    Extension line naming the new evidence or material change.
+    Extension line naming the new evidence or material change;
+  - with --round, a finding carried from an earlier round has executed or
+    static evidence, not a hypothesis alone.
 
 Usage: check-review.py [--round N] [--max-rounds N] [--prior ID,ID] REPORT | -
 Exit status: 0 the report passes, 1 the report has defects, 2 usage error.
@@ -241,6 +243,12 @@ def check_findings(
                     f"{args.round - opened + 1} rounds (limit {args.max_rounds}). "
                     "Add 'Extension: <new evidence or material change>', "
                     "or bring it to the user as a decision."
+                )
+            if opened < args.round and set(finding.evidence) == {"hypothesis"}:
+                problems.append(
+                    f"line {finding.line}: {finding.id} is carried into round {args.round} "
+                    "on hypothesis evidence alone. Run the check it names and cite the result, "
+                    "or pause this finding as unresolved while the coordinator runs its spike; do not close it without evidence."
                 )
     for prior_id in args.prior_ids:
         if prior_id not in seen and prior_id not in prior_lines:

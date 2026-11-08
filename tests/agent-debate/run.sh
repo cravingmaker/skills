@@ -50,6 +50,16 @@ expect 1 "both open and marked" fail/open-and-closed.md
 expect 1 "has status 'STILL OPEN'" fail/invalid-prior-status.md
 expect 1 "open for 4 rounds (limit 3)" --round 4 fail/past-limit.md
 expect 0 "matches the format" --round 4 --max-rounds 4 fail/past-limit.md
+# A hypothesis may open an ID; later rounds need evidence and retain that ID.
+expect 1 "carried into round 2 on hypothesis evidence alone" --round 2 fail/hypothesis-carried.md
+expect 0 "matches the format" --round 1 fail/hypothesis-carried.md
+expect 1 "pause this finding as unresolved" --round 2 --prior R1-01 fail/hypothesis-carried.md
+expect 0 "matches the format" --round 2 --prior R1-01 pass/spike-resumed-executed.md
+expect 0 "matches the format" --round 2 --prior R1-01 pass/spike-resumed-static.md
+expect 0 "matches the format" --round 2 --prior R1-01 pass/spike-closed.md
+expect 0 "matches the format" --round 2 --prior R1-01 pass/spike-withdrawn.md
+expect 1 "R1-01 was open after the last round but is missing" --round 2 --prior R1-01 fail/spike-dropped.md
+expect 1 "R1-01 was open after the last round but is missing" --round 2 --prior R1-01 fail/spike-renumbered.md
 expect 1 "R1-03 was open after the last round but is missing" --prior R1-01,R1-03 pass/agreement.md
 expect 1 "numbered for round 2, after the current round 1" --round 1 pass/objections.md
 
@@ -65,7 +75,10 @@ expect 2 "is not an ID like R1-01" --prior r1 pass/agreement.md
 expect 2 "usage:" 
 
 for file in fail/*.md; do
-  [ "$file" = fail/past-limit.md ] && continue
+  # These reports fail only with their explicit --round or --prior context above.
+  case $file in
+    fail/past-limit.md|fail/hypothesis-carried.md|fail/spike-dropped.md|fail/spike-renumbered.md) continue ;;
+  esac
   if python3 "$check" "$file" >/dev/null 2>&1; then
     fail "$file should fail without arguments"
   fi

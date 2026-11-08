@@ -23,6 +23,7 @@ Four leading words govern every step:
 1. When a check can settle the question (a test, a benchmark, a source lookup, a calculation), run the check instead. One discriminating experiment beats another round.
 2. When the question has one checkable answer and answers are cheap, collect independent answers and compare them; that captures most of debate's benefit at lower cost.
 3. Debate pays for open design choices with real trade-offs, for reviewing a consequential artifact before acceptance, and for a second opinion from a different model family.
+4. Review an abstract plan once for contradictions and trade-offs. Turn each hypothesis-only finding into a spike that runs its check (step 5); pause debate on that finding until the spike supplies evidence.
 
 Done when the run record states in one line why debate beats a check for this question.
 
@@ -48,11 +49,12 @@ Resolve each required skill through the installed inventory and read its SKILL.m
    - **Accept** after verifying the claim at the source: rerun the command, open the file and line, read the cited text.
    - **Reject** with counter-evidence. Rejection is a normal outcome; log it like an acceptance.
    - **Partial**: state what you accept, what you reject, and why.
+   - **Spike** for a hypothesis-only finding whose check needs something built first, such as a prototype or a probe of the real system: add that check as a task through the `work-decomposition` skill and pause debate on that finding. Keep its ID unresolved in the run record and in `--prior`; resume review only when the spike supplies evidence. Scheduling a check neither closes the finding nor supplies agreement.
 
    Accepting without verification is sycophancy; rejecting without evidence is stubbornness. A re-raised objection keeps its original ID, so a new number never resets its rounds. Done when every open ID has a logged disposition and evidence.
 
 6. **Stop on a rule.** Stop when any of these holds, and log which:
-   - the verdict is `VERDICT: FULL AGREEMENT`;
+   - the verdict is `VERDICT: FULL AGREEMENT` and no required spike or acceptance check remains unresolved;
    - only nits remain, because nits never extend a round;
    - a finding reached its round limit without new evidence or a material change, so it goes to the user as a decision;
    - the budget is exhausted, which leaves an unresolved result;

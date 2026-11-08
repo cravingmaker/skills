@@ -50,6 +50,7 @@ Lines inside fenced code blocks are ignored, so a report can quote commands, fil
 | A `Change:` line per finding | Every objection is actionable |
 | With `--prior`, every listed ID appears as a finding or as `- <ID> CLOSED: <reason>` or `- <ID> WITHDRAWN: <reason>` | No open objection disappears silently |
 | With `--round N`, an `R<r>-<n>` finding open for more than `--max-rounds` rounds (default 3) has an `Extension:` line | The round limit holds unless new evidence or a material change justifies more |
+| With `--round N`, an `R<r>-<n>` finding carried from an earlier round has `executed` or `static` evidence | A hypothesis opens a finding but does not buy it another round: pause debate until its spike supplies evidence, retaining the unresolved ID |
 
 Field lines may start with `- ` or `* `. Prose between field lines is allowed.
 
@@ -77,7 +78,7 @@ Severity follows consequence, not frequency: a rare data-loss path can be a bloc
 | `static` | The inspectable text, contradiction, or source statement, with its location |
 | `hypothesis` | The concern and the check that would confirm or refute it |
 
-Static evidence is legitimate for architecture, licensing, permissions, naming, and readability. A finding never needs executed evidence to be raised; it needs the right label.
+Static evidence is legitimate for architecture, licensing, permissions, naming, and readability. A finding never needs executed evidence to be raised; it needs the right label. To stay open past the round that raised it, it needs executed or static evidence.
 
 ## What the checker leaves to judgment
 
@@ -86,3 +87,5 @@ Static evidence is legitimate for architecture, licensing, permissions, naming, 
 - Whether an `Extension:` line names real new evidence.
 - Whether the severity fits the consequence.
 - Whether the `Change:` line is exact enough to apply.
+
+A spike stays unresolved in the run record and retains its finding ID. Keep the ID in `--prior` when review resumes with evidence. Use CLOSED only when evidence resolves the finding, or WITHDRAWN when counter-evidence or an authorized scope change removes it. Pending required spikes prevent full agreement and final acceptance.

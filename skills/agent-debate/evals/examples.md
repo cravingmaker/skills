@@ -23,3 +23,5 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - Given an evaluator round where every finding is accepted, the log shows a source verification for each acceptance, and the report states the acceptance rate.
 - Given a finding the coordinator rejects with counter-evidence, the rejection is logged with that evidence, and the next round's brief carries it to the evaluator.
 - Each round's record states the artifact's net size change, and the final report states rounds and evaluator starts spent against the budget.
+- Given an abstract migration plan with nothing built yet, each hypothesis-only finding becomes a spike task that runs its check instead of a second round; `check-review.py --round 2` rejects a carried finding whose only evidence is a hypothesis.
+- Scheduling a spike preserves the unresolved finding ID; full agreement waits for evidence or an authorized scope withdrawal with its reason. A later review keeps the original ID and cites the new evidence.
