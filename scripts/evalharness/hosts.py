@@ -198,10 +198,10 @@ def events(path: Path) -> list[dict]:
 
 
 def body_read(command_text: str, path: str) -> bool:
-    """Recognize a body read in a simple command or successful && chain.
+    """Recognize a body read in one simple command.
 
-    Pipelines, redirections, conditional branches, and shell substitution need
-    manual trace review; a compound command's exit code cannot prove their reads.
+    Compound commands need trace review: their aggregate output cannot establish
+    which command supplied the visible body text, even in a successful && chain.
     """
     try:
         tokens = shlex.split(command_text)
@@ -210,24 +210,16 @@ def body_read(command_text: str, path: str) -> bool:
             if index is None or index + 1 >= len(tokens):
                 return False
             command_text = tokens[index + 1]
-        if "$(" in command_text or "`" in command_text:
+        if any(marker in command_text for marker in ("\n", "\r", "$(", "`")):
             return False
         lexer = shlex.shlex(command_text, posix=True, punctuation_chars=";&|()<>")
         lexer.whitespace_split = True
-        segments = [[]]
-        for token in lexer:
-            if token and all(character in ";&|()<>" for character in token):
-                if token != "&&" or not segments[-1]:
-                    return False
-                segments.append([])
-            else:
-                segments[-1].append(token)
-        for segment in segments:
-            if segment[:1] == ["command"]:
-                segment = segment[1:]
-            if segment and Path(segment[0]).name in ("cat", "sed", "head", "tail", "more", "less") and path in segment[1:]:
-                return True
-        return False
+        tokens = list(lexer)
+        if any(token and all(character in ";&|()<>" for character in token) for token in tokens):
+            return False
+        if tokens[:1] == ["command"]:
+            tokens = tokens[1:]
+        return bool(tokens and Path(tokens[0]).name in ("cat", "sed", "head", "tail", "more", "less") and path in tokens[1:])
     except ValueError:
         return False
 

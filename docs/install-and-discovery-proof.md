@@ -58,6 +58,8 @@ The replay preserves source names, descriptions, manual-only flags, and Codex `a
 
 The agreed design also calls for routing correctness with the existing inventory plus one role and several overlapping roles. This proof measures discovery and listing size only. Thirty distinct placeholders do not test shared-capability deduplication or model routing. Those acceptance checks remain open; record the role profiles, shared closure, fixed routing prompts, expected selections, observed selections, and host/model revisions before treating that part of the foundation as complete.
 
+F1-08 remains an acceptance gate for PR #2. Keep the foundation in draft until both hosts have the required overlap and routing evidence, or the user explicitly changes that scope. Waiting for the next real role can schedule the evidence work, but does not close the gate. A disposable distribution with overlapping role profiles can establish install deduplication without adding another role to this PR; the existing downstream role already permits the single-role routing trial.
+
 ## Reproduce and validate
 
 Run the current foundation probe against a separate source distribution containing the role. With the measured downstream commit available locally, export it without changing either checkout, then run from the temporary directory:
