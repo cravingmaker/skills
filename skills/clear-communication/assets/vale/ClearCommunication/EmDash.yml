@@ -1,0 +1,6 @@
+extends: existence
+message: "Replace the em dash with a period or a comma."
+level: error
+nonword: true
+tokens:
+  - '—'

@@ -1,0 +1,11 @@
+extends: existence
+message: "'%s' is a metaphor. Name the concrete thing instead."
+level: suggestion
+ignorecase: true
+tokens:
+  - north star
+  - flywheel
+  - paradigm
+  - nexus
+  - bedrock
+  - endgame
