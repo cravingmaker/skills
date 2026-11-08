@@ -45,11 +45,18 @@ For each ID, either close it (`- R1-01 CLOSED: <reason>`), withdraw it when the 
 
 ## Report
 
-Write the report to <report path>, in exactly this format, then return it verbatim:
+Write the full report to <report path> using this format. Return its status, verdict, and path in the host response, unless the caller explicitly requests the full report there:
 
 ```markdown
+<COMPLETE | PARTIAL | BLOCKED>: <what the review established; completeness is separate from agreement>
 REVIEWED: <artifact> at <revision>; scope: <what you read>
-CHECKS: <commands you ran and their results, or "none">
+CHECKS: <commands you ran and their results, or "none: reason">
+ARTIFACTS: <report path; exact input and output revisions; changed files, or none>
+SKILLS: <skills actually loaded and any missing prerequisite>
+UNRESOLVED: <unsupported claims and evidence gaps, or verified none>
+DECISIONS: <decisions needed and owners, or none>
+ASSUMPTIONS: <assumptions, deviations, surprises, and boundary conflicts, or none>
+USAGE: <measured usage with receipt, or unknown>
 
 ## Prior findings
 - <ID> CLOSED: <reason>

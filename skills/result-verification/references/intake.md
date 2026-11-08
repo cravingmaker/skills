@@ -36,9 +36,9 @@ An unresolved required task blocks the run's acceptance until it is reassigned w
 Integrated revision: <commit or hash>. Included: <task IDs>. Excluded: <task IDs and why>.
 Conflicts: <files or claims, and how each was settled>.
 
-| Acceptance criterion | Check | Command | Result |
+| Acceptance criterion | Check | Command or source/rubric | Result |
 | --- | --- | --- | --- |
-| <criterion> | <what proves it> | `<command>` | <exit code and the decisive output line> |
+| <criterion> | <what proves it> | <command or exact source/rubric> | <observed result and evidence> |
 ```
 
 ## Report to the user
@@ -46,7 +46,7 @@ Conflicts: <files or claims, and how each was settled>.
 ```markdown
 <Outcome: accepted | partly accepted | unresolved>, at <revision>.
 
-Acceptance: <criterion → command → result, one line each>.
+Acceptance: <criterion → performed check → result, one line each>.
 Verified: <reruns and source checks, and any claim found false>.
 Unresolved: <item, reason, and the decision or resource it needs>.
 Cost: <workers started, retries, review rounds, against the budget>.

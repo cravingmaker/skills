@@ -31,6 +31,8 @@ Change: <the exact change>
 VERDICT: OBJECTIONS REMAIN (1 blocker, 1 should, 0 nits)
 ```
 
+The evaluator template also carries the shared `agent-briefing` return fields: completion status, artifact identity, loaded skills, unresolved claims, decisions, assumptions, and usage. Completion status reports whether the review was performed; the verdict reports whether objections remain.
+
 Lines inside fenced code blocks are ignored, so a report can quote commands, files, or other reports. The `CHECKS:` line and the `Not checked` section are part of the evaluator brief but not enforced: write "none" rather than leaving them out.
 
 ## Rules the checker enforces

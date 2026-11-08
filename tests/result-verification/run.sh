@@ -98,6 +98,11 @@ printf 'x\n' > "$repo/build/out.bin"
 expect 0 "No changes since" -C "$repo" "$base"
 expect 1 "untracked    build/out.bin" --ignored -C "$repo" "$base"
 
+fresh damaged-index
+printf 'outside change\n' >> "$repo/docs/guide.md"
+printf 'broken index\n' > "$repo/.git/index"
+expect 2 "Git inspection failed" -C "$repo" "$base" "src/*"
+
 fresh rewritten
 git -C "$repo" checkout -q -b side
 printf 'b\n' >> "$repo/src/app.txt"

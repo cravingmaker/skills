@@ -18,7 +18,8 @@ Run each prompt with and without this skill, with the same host, models, fixture
 
 - `tests/result-verification/run.sh` passes: a clean tree passes the read-only check; committed, staged, unstaged, untracked, deleted, and changed-back paths outside the boundary fail; paths inside it pass; ignored files count only with `--ignored`; rewritten history fails; usage errors exit 2.
 - A read-only reviewer that wrote a file is caught: `check-ownership.sh <base>` exits 1 naming the path, and the file is not merged unexamined.
-- A child's cited command that fails on rerun is recorded as a false claim with both outputs, and that child's result is rejected or returned with the defect.
+- A cited command that fails on rerun is compared at the same revision and environment; a confirmed contradiction is rejected, while an unexplained environmental difference stays unresolved.
 - Three reviewers unanimously approve while the validator fails on the integrated revision: the result is not accepted, and the report shows the failing command and output.
 - A run whose budget ran out with one required task unfinished is reported as unresolved, naming the task and the decision it needs.
-- The final report maps each acceptance criterion to a command and its result at an exact revision.
+- The final report maps each acceptance criterion to an executed check or a direct source/rubric check and its result at an exact revision.
+- A research child with no shell commands is verified by opening its decisive sources; a static blocker is verified at its cited revision without inventing a command to satisfy intake.

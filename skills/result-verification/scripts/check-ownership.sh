@@ -16,7 +16,7 @@
 # Paths git must quote (tabs, newlines, quotes) never match a glob, so they fail.
 #
 # Exit status: 0 every change is inside the boundary, 1 a change is outside it or
-# HEAD does not descend from BASE, 2 usage error. Reads only; needs git.
+# HEAD does not descend from BASE, 2 usage or Git inspection error. Reads only; needs git.
 set -eu
 
 usage() {
@@ -62,18 +62,23 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 g() { git -C "$top" -c core.quotePath=false "$@"; }
 
-{
-  g log --no-renames --name-only --format= "$base_commit..HEAD"
-  g diff --no-renames --name-only "$base_commit" HEAD
-} | sort -u > "$tmp/committed"
-{
-  g diff --no-renames --name-only HEAD
-  g diff --no-renames --name-only --cached HEAD
-} | sort -u > "$tmp/uncommitted"
-{
-  g ls-files --others --exclude-standard
-  if [ "$ignored" -eq 1 ]; then g ls-files --others --ignored --exclude-standard; fi
-} | sort -u > "$tmp/untracked"
+collect() {
+  output=$1; shift
+  if ! g "$@" >> "$output"; then
+    echo "error: Git inspection failed ($*). Repair the repository or index and rerun; ownership is unresolved." >&2
+    exit 2
+  fi
+}
+for kind in committed uncommitted untracked; do : > "$tmp/$kind"; done
+collect "$tmp/committed" log --no-renames --name-only --format= "$base_commit..HEAD"
+collect "$tmp/committed" diff --no-renames --name-only "$base_commit" HEAD
+collect "$tmp/uncommitted" diff --no-renames --name-only HEAD
+collect "$tmp/uncommitted" diff --no-renames --name-only --cached HEAD
+collect "$tmp/untracked" ls-files --others --exclude-standard
+if [ "$ignored" -eq 1 ]; then collect "$tmp/untracked" ls-files --others --ignored --exclude-standard; fi
+for kind in committed uncommitted untracked; do
+  sort -u -o "$tmp/$kind" "$tmp/$kind"
+done
 
 : > "$tmp/outside"
 changed=0

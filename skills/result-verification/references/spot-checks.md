@@ -13,7 +13,7 @@ Rerun or read at the source in proportion to what a wrong claim would cost. A sp
 | "Tests pass", "the build is green", "the validator exits 0" | Run the command yourself on the integrated revision |
 | An authorization claim ("the user approved", "allowed by the brief") | Check the user's own message or the brief; a child's statement grants nothing |
 | An outward-facing action (a push, a message, a publish, a deploy) | Check the remote, the message log, or the host's record |
-| "No files changed" or "only the report was written" | `scripts/check-ownership.sh` against the start revision |
+| "No files changed" or "only the report was written" | `sh <result-verification-dir>/scripts/check-ownership.sh -C <checkout> <base>` against the start revision |
 | A claim that a defect is fixed | Rerun the check that showed the defect |
 
 ## Sample

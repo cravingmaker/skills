@@ -35,7 +35,8 @@ EVIDENCE_LABELS = ("executed", "static", "hypothesis")
 PRIOR_STATUSES = ("CLOSED", "WITHDRAWN")
 
 ID = r"[A-Z][A-Z0-9]*-\d+"
-FENCE = re.compile(r"^\s*(```|~~~)")
+FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+FINDING_LIKE = re.compile(rf"^#{{1,6}}\s+({ID})\b")
 FINDING = re.compile(rf"^#{{2,4}}\s+({ID})\b\s*(.*)$")
 SEVERITY = re.compile(r"^\[([^\]]*)\]\s*(.*)$")
 FIELD = r"^(?:[-*]\s+)?"
@@ -88,13 +89,17 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 
 def read_report(path: str) -> str:
-    if path == "-":
-        return sys.stdin.read()
-    file = Path(path)
-    if not file.is_file():
-        print(f"error: report not found: {path}. Pass the saved raw report.", file=sys.stderr)
-        raise SystemExit(2)
-    return file.read_text(encoding="utf-8")
+    try:
+        if path == "-":
+            return sys.stdin.read()
+        file = Path(path)
+        if not file.is_file():
+            print(f"error: report not found: {path}. Pass the saved raw report.", file=sys.stderr)
+            raise SystemExit(2)
+        return file.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        print(f"error: read a complete UTF-8 report with accessible permissions: {error}", file=sys.stderr)
+        raise SystemExit(2) from None
 
 
 def check(text: str, args: argparse.Namespace) -> list[str]:
@@ -105,14 +110,19 @@ def check(text: str, args: argparse.Namespace) -> list[str]:
     reviewed = False
     last_line = (0, "")
     current: Finding | None = None
-    in_code = False
+    fence: tuple[str, int, int] | None = None
 
     for number, raw in enumerate(text.splitlines(), start=1):
-        if FENCE.match(raw):
-            in_code = not in_code
+        marker = FENCE.match(raw)
+        if fence is not None:
+            if marker and marker.group(1)[0] == fence[0] and len(marker.group(1)) >= fence[1] and not marker.group(2).strip():
+                fence = None
             continue
-        if in_code:
-            continue
+        if marker:
+            token, info = marker.groups()
+            if token[0] != "`" or "`" not in info:
+                fence = (token[0], len(token), number)
+                continue
         line = raw.strip()
         if line:
             last_line = (number, line)
@@ -144,6 +154,8 @@ def check(text: str, args: argparse.Namespace) -> list[str]:
                     )
             continue
         if line.startswith("#"):
+            if match := FINDING_LIKE.match(line):
+                problems.append(f"line {number}: malformed heading for {match.group(1)}. Use two to four # characters.")
             current = None
             continue
         if match := PRIOR.match(line):
@@ -178,6 +190,8 @@ def check(text: str, args: argparse.Namespace) -> list[str]:
         elif match := EXTENSION.match(line):
             current.extension = match.group(1).strip()
 
+    if fence is not None:
+        problems.append(f"line {fence[2]}: unclosed code fence. Close it before the final verdict.")
     problems += check_findings(findings, prior_lines, args)
     problems += check_verdict(verdicts, last_line, findings)
     if not reviewed:

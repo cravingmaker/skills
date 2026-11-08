@@ -23,11 +23,14 @@ expect() {
 }
 
 expect 0 "matches the format" pass/agreement.md
+expect 0 "matches the format" pass/nested-fences.md
 expect 0 "matches the format" pass/objections.md
 expect 0 "matches the format" --round 2 --prior R1-01,R1-02 pass/objections.md
 expect 0 "matches the format" --round 4 --prior R1-01 pass/extension.md
 expect 0 "matches the format" - < pass/agreement.md
 
+expect 1 "malformed heading" fail/malformed-heading.md
+expect 1 "unclosed code fence" fail/unclosed-fence.md
 expect 1 "2 verdict lines" fail/two-verdicts.md
 expect 1 "no verdict line" fail/no-verdict.md
 expect 1 "malformed verdict" fail/malformed-verdict.md
@@ -50,6 +53,10 @@ expect 0 "matches the format" --round 4 --max-rounds 4 fail/past-limit.md
 expect 1 "R1-03 was open after the last round but is missing" --prior R1-01,R1-03 pass/agreement.md
 expect 1 "numbered for round 2, after the current round 1" --round 1 pass/objections.md
 
+input_dir=$(mktemp -d)
+trap 'rm -rf "$input_dir"' EXIT
+printf '\377' > "$input_dir/invalid-utf8.md"
+expect 2 "read a complete UTF-8 report" "$input_dir/invalid-utf8.md"
 expect 2 "report not found" no-such-report.md
 expect 2 "--round must be 1 or more" --round 0 pass/agreement.md
 expect 2 "is not an ID like R1-01" --prior r1 pass/agreement.md

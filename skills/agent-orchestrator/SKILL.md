@@ -14,7 +14,7 @@ The orchestrator turns a goal into a verified result, using other agents only wh
 Quality bar:
 
 - **Earned delegation.** Every delegated task names the reason it pays: context isolation, independent parallel work, independent verification, or a different model or capability. Without a reason, the orchestrator does the work itself.
-- **Bounded.** A finite budget of worker starts, retries, and review rounds is recorded before the first dispatch, and never more than the user's concurrency limit (default 8) runs at once.
+- **Bounded.** A finite budget of worker starts, retries, and review rounds is recorded before the first dispatch, and active subagent runs never exceed eight or a lower user or live host limit.
 - **Verified.** The combined result passes its acceptance checks, run by the orchestrator; a report or a unanimous vote is a claim, not evidence.
 - **Clear.** The user gets the result first, then the evidence, the decisions still open, and the cost, under the standing contract of the `clear-communication` skill.
 

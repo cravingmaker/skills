@@ -20,6 +20,8 @@ Four leading words govern every step:
 
 ## Steps
 
+Read the required `decision-log` skill from the installed inventory before using it; if missing, name it and stop that flow. Resolve `<result-verification-dir>` to this skill's installed directory. Read any named handoff before using it; a missing review checker leaves that check unresolved.
+
 1. **Save every raw report.** Before judging a report, save it verbatim in the run record (the `decision-log` skill), with the task ID and the time it arrived. A condensed version is a separate file marked as condensed. For each dispatched task with no report, record the task as unresolved with the reason. Done when every dispatched task has either a saved raw report or an unresolved entry.
 
 2. **Check each report against its brief.** Read the brief the child received, then confirm:
@@ -29,23 +31,23 @@ Four leading words govern every step:
    - **The write boundary** held. Run the ownership check against the revision the child started from, with the brief's allowed paths; with no paths it is a read-only check:
 
      ```sh
-     scripts/check-ownership.sh "$base" 'skills/agent-debate/*' 'tests/agent-debate/*'
-     scripts/check-ownership.sh "$base"      # read-only child: any change fails
+     sh <result-verification-dir>/scripts/check-ownership.sh -C "$checkout" "$base" 'skills/agent-debate/*' 'tests/agent-debate/*'
+     sh <result-verification-dir>/scripts/check-ownership.sh -C "$checkout" "$base"  # read-only child
      ```
 
-     Exit 1 lists each path outside the boundary: revert it or record why the boundary changes, and do not merge it unexamined. Exit 2 is a usage error. The check sees only this repository; confirm writes elsewhere, such as a report file in a scratch directory, by listing them.
+     Exit 1 lists each path outside the boundary: revert it or record why the boundary changes, and do not merge it unexamined. Exit 2 means usage or Git inspection failed; keep ownership unresolved until the check can run. The check sees only this repository; confirm writes elsewhere, such as a report file in a scratch directory, by listing them.
 
    Done when each report has a recorded result for outputs, contract, scope, and boundary. A report that fails any of them goes back once with the defect list, counted against the budget, or is recorded as unresolved.
 
-3. **Rerun what matters.** Rerun at least one cited command per child, and every claim a blocker rests on. Run it yourself, in the child's checkout or on the integrated tree, and compare the output with what the report says. A rerun that disagrees makes the claim false: record both outputs and treat the child's result as rejected until it is explained. Done when each child has at least one rerun recorded with its output, and every blocker-level claim has one.
+3. **Recheck what matters.** Rerun at least one cited command per child when commands support its result; otherwise check at least one decisive claim directly against its source. Verify every blocker-level claim using its evidence class: rerun executable evidence and inspect static evidence at the cited revision. Compare the inputs and environment before treating a different result as counter-evidence; an unexplained mismatch leaves the affected claim unresolved. Done when each child and every blocker-level claim has an independent check recorded with its result.
 
 4. **Verify claims at the source.** Choose by consequence, using [references/spot-checks.md](references/spot-checks.md). Always check claims that decide the outcome: the winning approach's premises, exact numbers and versions, quotations, authorization claims, and anything outward-facing. Sample the routine rest. Open the file and line, the cited page, or the registry; check that the source says what the report says, at the date or revision it claims. Three agents citing one page are one source. Done when every claim that decides the outcome is marked verified, false, or unverifiable, with what you opened.
 
-5. **Integrate, then run the acceptance checks.** Combine the accepted results yourself, then run every acceptance criterion's check on the integrated result, using the project's own commands: its validator, test suite, and CI on the exact revision. Map each criterion to a check before running, so nothing is accepted by reading. Done when every criterion has a command, its output, and the revision it ran on.
+5. **Integrate, then run the acceptance checks.** Combine the accepted results yourself, then check every acceptance criterion on that exact revision. Use the project's validator, tests, and required CI where executable checks apply; use direct source comparison or the fixed rubric for criteria that require judgment. A child's report alone satisfies neither. Done when every criterion has the check performed, its observed result, and the exact revision it covers.
 
 6. **Decide each task and the whole.** Mark each task accepted, rejected, or unresolved, with the evidence. The run is done only when every required task is accepted and every acceptance check passes on the integrated result. A required slice that failed stays a gap until it is reassigned or the user removes it from scope. Done when the run record shows the decision for each task and for the whole, with the evidence behind each.
 
-7. **Report.** Lead with the outcome: accepted, partly accepted, or unresolved. Then list, for each acceptance criterion, the check, the command, and its result; then what was rerun and verified at the source, and what was false; then every unresolved item with its reason and the decision it needs. Use the template in [references/intake.md](references/intake.md). Done when the user can tell complete, partial, and unresolved work apart from the report alone.
+7. **Report.** Lead with the outcome: accepted, partly accepted, or unresolved. Then list, for each acceptance criterion, the check, its command or source and rubric, and its result; then what was rerun and verified at the source, and what was false; then every unresolved item with its reason and the decision it needs. Use the template in [references/intake.md](references/intake.md). Done when the user can tell complete, partial, and unresolved work apart from the report alone.
 
 ## Edge cases
 
