@@ -1,6 +1,6 @@
 ---
 name: writing-for-agents
-description: Write instructions an agent can discover, follow, and finish correctly. Use when drafting or revising SKILL.md, AGENTS.md, CLAUDE.md, or a document reached from those instructions, especially when triggers, completion criteria, or repeated guidance need repair.
+description: Author or repair agent instruction content, triggers, and completion criteria in SKILL.md, AGENTS.md, CLAUDE.md, or their references. Use only for requested content changes. For finalized instructions, use the selected packager or installer directly without loading this skill.
 license: MIT
 metadata:
   requires: "clear-communication"

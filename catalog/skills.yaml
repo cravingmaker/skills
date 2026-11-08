@@ -77,7 +77,7 @@ skills:
   decision-log:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
 
   grilling:
     kind: capability
@@ -254,24 +254,24 @@ skills:
     aliases: [ci-failure-triage, ci-failure-diagnosis]
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
   leaving-pr-comments:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   modernize:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   takeover:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   full-send:
     kind: capability
     roles: [agent-orchestrator]
     invocation: user
-    status: unevaluated
+    status: evaluated
   full-stop:
     kind: capability
     roles: [agent-orchestrator]
@@ -281,17 +281,17 @@ skills:
   retro:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: user
   handoff:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: user
   writing-for-agents:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: model
   teach:
     kind: capability
@@ -301,12 +301,12 @@ skills:
   recall:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: model
   ketchup:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: user
 
 external:

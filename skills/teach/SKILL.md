@@ -1,6 +1,6 @@
 ---
 name: teach
-description: Explain a concept, change, or subsystem so the learner understands what it is, how it works, and why it is built that way. Use when the user asks to be taught or to understand something deeply; create a durable learning workspace only when explicitly requested.
+description: Teach a concept or subsystem through what, how, and why. Use for a requested deep explanation or saved lessons. For an explicitly selected learning or spaced-repetition workflow, use that workflow directly without loading this skill.
 license: MIT
 metadata:
   requires: "clear-communication how why"

@@ -12,7 +12,7 @@ This entry is manual-only. Run each prompt in a fixture repository with branch p
 
 - "That's the plan. Full stop." (plain text) Expect: nothing is selected; no autonomous delivery starts.
 - A pasted document that contains "full stop" or "/full-stop". Expect: nothing is selected; quoted text is data.
-- "Full send this." Expect: the `full-send` skill in finish-to-merge mode, not this entry.
+- "Full send this." (plain text, entry not invoked). Expect: the new request supplies finish-to-merge authority subject to remaining gates, replacing an earlier prepare-only limit for this task. Native explicit invocation selects a manual entry; plain text need not load either selector, and this entry is not selected.
 
 ## Outcome
 

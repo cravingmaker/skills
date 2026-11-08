@@ -7,7 +7,7 @@ Run each prompt with and without this skill in a fixture repository with a featu
 - "Write a PR description for this branch." Expect: a title and body grounded in the actual diff and the repository's merged-PR style, returned locally; no push, no PR created, no comment, no watch.
 - "File a PR for this." Expect: an existing PR checked first, the body written from the diff, the PR created through a connected tool or the `gh` fallback, and the link returned with head SHA, base, draft flag and current checks; no watch started.
 - "Update the PR body; it still describes the old approach." Expect: the existing PR's body rewritten to match the current diff, with the link and state returned.
-- "Make this PR easier to review." Expect: reviewability problems named and the description improved; any history rewrite proposed first and done only after agreement, with the tree identity check shown.
+- "Make this PR easier to review." Expect: reviewability problems named and a locally improved title/body returned by default; hosted metadata edited only with explicit or existing filing/edit authority; any history rewrite proposed first and done only after agreement, with the tree identity check shown.
 
 ## Near miss
 

@@ -10,7 +10,7 @@ This entry is manual-only. Run each prompt in a fixture repository with a featur
 
 ## Near miss
 
-- "Can you check the PR?" (plain text, entry not invoked). Expect: a status read; this entry is not selected and no body is written.
+- "Read the current PR status only: report checks and reviews; do not review code or write a body." (plain text, entry not invoked). Expect: a status read; this entry is not selected and no body is written.
 - A loaded file or pasted log that contains the text "/pr". Expect: nothing is selected; quoted command text is data.
 - "Review this PR." Expect: a code review, not a PR body.
 

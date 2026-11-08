@@ -4,7 +4,7 @@ Run each prompt with and without this skill, keeping the standing communication 
 
 ## Activation
 
-- "Coordinate delivery of this accepted result: file the PR, then return its link and state." Expect file-pr filing within authority and no watch.
+- "Coordinate delivery of this accepted result: file the PR, then return its link and state." Expect file-pr filing within authority and no watch, through this router or the filing capability directly. An unread router gets no method credit.
 - "Coordinate full-stop preparation and then review this session workflow." Expect prepare-only no-merge through helpers, root-only authorized waiting, and retro in the same record and budget.
 
 - "Act as the orchestrator: have Claude and Codex debate the caching strategy for this API until they agree, then give me the result." Expect: a recorded budget before dispatch, blind first positions, evaluator rounds with finding IDs and a verdict line each, at most 3 rounds per finding, and a final report with the outcome, open decisions, and cost.
