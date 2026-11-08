@@ -56,7 +56,10 @@ class ImportTests(unittest.TestCase):
             self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
             self.assertIn(fragment, result.stdout + result.stderr)
             self.assertNotIn("Traceback", result.stderr)
+            if expected:
+                self.assertEqual(result.stdout, "")
         self.assertEqual(results[0].stdout, results[1].stdout)
+        self.assertEqual(results[0].stderr, results[1].stderr)
         self.assertEqual({p: p.read_bytes() for p in self.root.rglob("*") if p.is_file()}, before)
         return json.loads(results[0].stdout) if expected == 0 else None
 
@@ -213,6 +216,23 @@ class ImportTests(unittest.TestCase):
                 else:
                     self.assertEqual(self.imported()["tasks"][2]["depends_on"], ["02-search-page"])
 
+    def test_unknown_labeled_blockers_never_resolve_as_titles(self):
+        path = self.issues / "01-index-products.md"
+        original = path.read_text()
+        for label in ("99: Search page", "99 - Search page", "#99: Search page", "ticket 99: Search page"):
+            path.write_text(original.replace("# 01: Index products", f"# 01: {label}"))
+            for blocked in (label, f"02, {label}", f"02 and {label}"):
+                with self.subTest(blocked=blocked):
+                    self.ticket("03-filter-by-price.md", "# 03: Filter by price\nStatus: ready-for-agent\n"
+                                f"Blocked by: {blocked}\n- [ ] Results are filtered\n")
+                    self.imported(1, f"cannot resolve blocker {label!r}")
+        for title in ("Legacy: Search page", "99 bottles"):
+            with self.subTest(title=title):
+                path.write_text(original.replace("# 01: Index products", f"# 01: {title}"))
+                self.ticket("03-filter-by-price.md", "# 03: Filter by price\nStatus: ready-for-agent\n"
+                            f"Blocked by: {title}\n- [ ] Results are filtered\n")
+                self.assertEqual(self.imported()["tasks"][2]["depends_on"], ["01-index-products"])
+
     def test_duplicate_empty_and_partially_consumed_blockers_fail(self):
         for blocked in ("01, 01", "1, 01", "01,,02", "01,", ",01", "01/02", "01 02", "01_", "01: wrong title"):
             with self.subTest(blocked=blocked):
@@ -260,6 +280,23 @@ class ImportTests(unittest.TestCase):
         self.assertEqual(self.imported()["tasks"][1]["proof"], proof)
         path = self.issues / "02-search-page.md"
         path.write_text("```html\n<!--\n```\n" + path.read_text())
+        self.assertEqual(self.imported()["tasks"][1]["proof"], proof)
+
+    def test_unmatched_backticks_do_not_disable_comment_stripping(self):
+        path = self.issues / "02-search-page.md"
+        original = path.read_text()
+        without = "\n".join(line for line in original.splitlines() if not line.startswith("Proof:")) + "\n"
+        for prefix in ("`", "``", "`not closed ", "``mismatched` "):
+            with self.subTest(prefix=prefix):
+                path.write_text(without + f"\n{prefix}<!--\nProof: Hidden evidence\n-->\n")
+                self.imported(1, "non-empty 'Proof:'")
+        for fence in ("```", "~~~"):
+            with self.subTest(fence=fence):
+                path.write_text(f"{fence}html <!--\nProof: Fake\n{fence}\n" + original)
+                self.assertEqual(self.imported()["tasks"][1]["proof"],
+                                 "Open the search page and enter lamp; Lamp is listed")
+        proof = "Read the template; its marker is ``literal ` and <!-- placeholder -->``"
+        path.write_text(original.replace("Open the search page and enter lamp; Lamp is listed", proof))
         self.assertEqual(self.imported()["tasks"][1]["proof"], proof)
 
     def test_usage_and_unreadable_input(self):

@@ -26,6 +26,7 @@ FIELD = re.compile(
 )
 CHECKBOX = re.compile(r"\s*[-*]\s+\[[ xX]\]\s+(.+?)\s*")
 NUMBER = re.compile(r"(?:#|ticket\s+)?(\d+)\b", re.I)
+NUMERIC_REFERENCE = re.compile(r"(?:#|ticket\s+)?\d+(?:\s*[:-]\s*.+)?", re.I)
 READY = {"ready-for-agent", "ready-for-human"}
 FINISHED = {"done", "closed", "resolved"}
 
@@ -40,21 +41,29 @@ def shown(path, workspace):
 
 def visible_line(line, in_comment):
     """Strip HTML comments while retaining literal markers inside inline code."""
-    parts, start, code_ticks = [], 0, 0
-    for match in re.finditer(r"(?<!\\)(`+|<!--|-->)", line):
-        token = match[0]
+    parts, start, position = [], 0, 0
+    while position < len(line):
         if in_comment:
-            if token == "-->":
-                in_comment = False
-                start = match.end()
-        elif token.startswith("`"):
-            if not code_ticks:
-                code_ticks = len(token)
-            elif len(token) == code_ticks:
-                code_ticks = 0
-        elif token == "<!--" and not code_ticks:
-            parts.append(line[start:match.start()])
+            end = line.find("-->", position)
+            if end < 0:
+                return "".join(parts), True
+            in_comment = False
+            position = start = end + 3
+        elif line[position] == "\\":
+            position += 2
+        elif line.startswith("<!--", position):
+            parts.append(line[start:position])
             in_comment = True
+            position += 4
+        elif line[position] == "`":
+            end = position + 1
+            while end < len(line) and line[end] == "`":
+                end += 1
+            closing = re.search(r"(?<!`)" + re.escape(line[position:end]) + r"(?!`)", line[end:])
+            # An unmatched backtick run is literal text, not an open code span.
+            position = end + closing.end() if closing else end
+        else:
+            position += 1
     if not in_comment:
         parts.append(line[start:])
     return "".join(parts), in_comment
@@ -71,6 +80,10 @@ def parse(path, text):
             marker = re.match(r"^\s*(`{3,}|~{3,})", line)
             if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence):
                 fence = None
+            continue
+        # A fence's info string is literal, including any HTML comment marker.
+        if not in_comment and (marker := re.match(r"^\s*(`{3,}|~{3,})", line)):
+            fence = marker[1]
             continue
         line, in_comment = visible_line(line, in_comment)
         if marker := re.match(r"^\s*(`{3,}|~{3,})", line):
@@ -124,8 +137,7 @@ def blockers(value, numbers, titles):
         number = int(match[1])
         return ([number], []) if number in numbers else ([], [text])
     parts = re.split(r"\s*(?:,|;|\band\b)\s*", text, flags=re.I)
-    numbered = all(re.fullmatch(r"(?:#|ticket\s+)?\d+(?:\s*[:-]\s*.+)?", part.strip(), re.I)
-                   for part in parts)
+    numbered = all(NUMERIC_REFERENCE.fullmatch(part.strip()) for part in parts)
     if not numbered and text.casefold() in titles:
         matches = titles[text.casefold()]
         return (matches, []) if len(matches) == 1 else ([], [text])
@@ -145,7 +157,7 @@ def blockers(value, numbers, titles):
                 found.append(number)
             else:
                 unresolved.append(part)
-        elif NUMBER.fullmatch(part):
+        elif NUMERIC_REFERENCE.fullmatch(part):
             unresolved.append(part)
         elif part.casefold() in titles and len(titles[part.casefold()]) == 1:
             found.extend(titles[part.casefold()])
