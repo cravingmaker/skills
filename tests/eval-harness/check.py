@@ -269,7 +269,7 @@ class IsolationTests(unittest.TestCase):
         # pattern, but its copy of a candidate line cannot prove the candidate read.
         sibling = arm.config / "skills/sibling-skill/SKILL.md"
         sibling.parent.mkdir()
-        sibling.write_text("---\nname: sibling-skill\ndescription: Test sibling.\n---\n\n# Sibling skill body\n")
+        sibling.write_text('---\nname: sibling-skill\ndescription: "See # Clear communication for writing rules."\n---\n\n# Sibling skill body\n- # Clear communication\n')
         echo = arm.config / "skills/echo-skill/SKILL.md"
         echo.parent.mkdir()
         echo.write_text("".join(line + "\n" for line in candidate.read_text().split("\n---\n", 1)[1].splitlines()))
@@ -287,11 +287,44 @@ class IsolationTests(unittest.TestCase):
             (f"cat {path} {shlex.quote(str(sibling))}", True),
             (f"sed -n '1,200p' {shlex.quote(str(sibling))} {path}", True),
             (f"head -n 1 {path} {shlex.quote(str(echo))}", False),
+            (f"head -n 3 {path} {shlex.quote(str(sibling))}", False),
+            (f"sed -n '3p' {shlex.quote(str(sibling))} {path}", False),
+            (f"tail -c 22 {path} {shlex.quote(str(sibling))}", False),
         ]
         for inner, expected in commands:
             command = f"/bin/sh -c {shlex.quote(inner)}"
             with self.subTest(command=command):
                 self.assertEqual(shlex.split(command), ["/bin/sh", "-c", inner])
+                result = subprocess.run(["/bin/sh", "-c", command], cwd=arm.work, capture_output=True, text=True, timeout=5)
+                self.assertEqual((result.returncode, result.stderr), (0, ""))
+                events = [
+                    {"type": "thread.started", "thread_id": "test-session"},
+                    {"type": "item.completed", "item": {"type": "command_execution", "command": command, "exit_code": result.returncode, "aggregated_output": result.stdout}},
+                    {"type": "turn.completed", "usage": {}},
+                ]
+                (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in events))
+                self.assertEqual(hosts.observe(arm, "codex", "clear-communication")["activation"], expected)
+
+    def test_relative_reader_inputs_are_unclassified(self):
+        _, arms = self.pair("codex")
+        arm = arms[0]
+        candidate = arm.config / "skills/clear-communication/SKILL.md"
+        path = shlex.quote(str(candidate))
+        session = arm.config / "sessions/test.jsonl"
+        session.parent.mkdir()
+        session.write_text(json.dumps({"type": "turn_context", "payload": {"model": "test-model"}}) + "\n")
+        (arm.work / "unrelated.txt").write_text("# Clear communication\n")
+        commands = [
+            (f"cat {path}", True),
+            (f"cat {path} {path}", True),
+            (f"cat {path} {shlex.quote(str(arm.work / 'README.md'))}", False),
+            (f"head -n 1 {path} unrelated.txt", False),
+            (f"cat {path} README.md", False),
+            (f"cat {path} {shlex.quote(os.path.relpath(candidate, arm.work))}", False),
+        ]
+        for inner, expected in commands:
+            command = f"/bin/sh -c {shlex.quote(inner)}"
+            with self.subTest(command=command):
                 result = subprocess.run(["/bin/sh", "-c", command], cwd=arm.work, capture_output=True, text=True, timeout=5)
                 self.assertEqual((result.returncode, result.stderr), (0, ""))
                 events = [

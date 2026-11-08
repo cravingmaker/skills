@@ -263,8 +263,8 @@ def body_in_output(path: str, output: str, others: tuple[str, ...] = ()) -> bool
     text = Path(path).read_text(encoding="utf-8")
     parts = text.split("\n---\n", 1)
     body = parts[1] if text.startswith("---\n") and len(parts) == 2 else text
-    shared = {line.strip() for other in others for line in Path(other).read_text(encoding="utf-8").splitlines()}
-    return any(len(line.strip()) >= 12 and line.strip() not in shared and line.strip() in output for line in body.splitlines())
+    other_text = "\n".join(Path(other).read_text(encoding="utf-8") for other in others)
+    return any(len(line.strip()) >= 12 and line.strip() not in other_text and line.strip() in output for line in body.splitlines())
 
 
 def candidate_read(command_text: str, path: str, output: str, skills: Path) -> bool:
@@ -277,7 +277,7 @@ def candidate_read(command_text: str, path: str, output: str, skills: Path) -> b
     if not inputs or path not in inputs:
         return False
     root = os.path.normpath(skills)
-    if any(os.path.commonpath([root, os.path.normpath(value)]) != root or not Path(value).is_file() for value in inputs):
+    if any(not os.path.isabs(value) or os.path.commonpath([root, os.path.normpath(value)]) != root or not Path(value).is_file() for value in inputs):
         return False
     return body_in_output(path, output, tuple(value for value in dict.fromkeys(inputs) if value != path))
 

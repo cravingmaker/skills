@@ -54,7 +54,7 @@ The adapter sets both the child process's home and `CODEX_HOME`. This controls `
 
 The adapter copies only `auth.json` into the temporary home and selects the file credential store. It calls the local app server's `skills/list` without creating a model turn and verifies enabled skill names and paths against the computed inventory. A mismatch rejects the comparison before either model call. CLI execution uses `codex exec --json --skip-git-repo-check --ignore-rules`; each run creates a new session.
 
-Codex has no `Skill` tool in this trace format. The adapter counts one successful, simple read command whose inputs are all installed skill files, include the absolute candidate `SKILL.md` path, and whose output shows a candidate body line that none of the other inputs contains. Agents often read several skills in one `cat`, so several installed inputs are allowed. The accepted readers are:
+Codex has no `Skill` tool in this trace format. The adapter counts one successful, simple read command whose inputs are all absolute paths to installed skill files, include the candidate `SKILL.md` path, and whose output shows a candidate body line that none of the other inputs contains. Agents often read several skills in one `cat`, so several installed inputs are allowed. Relative input paths remain unclassified. The accepted readers are:
 
 - `cat`, `more`, or `less` with no options.
 - `head` or `tail` with no options, a `-N` count, or `-n N` or `-c N`.
