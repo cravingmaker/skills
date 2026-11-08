@@ -56,11 +56,11 @@ skills:
 
   agent-orchestrator:
     kind: role
-    status: evaluated
+    status: unevaluated
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]
-    status: evaluated
+    status: unevaluated
   agent-briefing:
     kind: capability
     roles: [agent-orchestrator]
