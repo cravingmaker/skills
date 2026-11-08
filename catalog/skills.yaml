@@ -45,11 +45,11 @@ skills:
   project-guardrails:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
   toolchain-upgrade:
     kind: capability
     roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
   correct:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
@@ -61,19 +61,19 @@ skills:
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   agent-briefing:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   agent-debate:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   result-verification:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   decision-log:
     kind: capability
     roles: [agent-orchestrator]
@@ -96,7 +96,7 @@ skills:
   domain-modeling:
     kind: capability
     roles: [agent-orchestrator, ui-ux-designer, business-analyst]
-    status: unevaluated
+    status: evaluated
   to-spec:
     kind: capability
     roles: [agent-orchestrator, business-analyst]
@@ -177,7 +177,7 @@ skills:
   implement:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: user
   implement-spec:
     kind: capability
@@ -229,7 +229,7 @@ skills:
   create-verification-skill:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: model
   maintain-verification-skill:
     kind: capability
@@ -240,16 +240,16 @@ skills:
   file-pr:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   pr:
     kind: capability
     roles: [agent-orchestrator]
     invocation: user
-    status: unevaluated
+    status: evaluated
   babysit-pr:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   fix-ci:
     aliases: [ci-failure-triage, ci-failure-diagnosis]
     kind: capability
@@ -276,7 +276,7 @@ skills:
     kind: capability
     roles: [agent-orchestrator]
     invocation: user
-    status: unevaluated
+    status: evaluated
 
   retro:
     kind: capability
@@ -296,7 +296,7 @@ skills:
   teach:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: user
   recall:
     kind: capability

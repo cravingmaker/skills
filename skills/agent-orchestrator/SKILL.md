@@ -21,7 +21,7 @@ Quality bar:
 - **Verified.** The combined result passes its acceptance checks, run by the orchestrator; a report or a unanimous vote is a claim, not evidence.
 - **Clear.** The user gets the result first, then the evidence, the decisions still open, and the cost, under the standing contract of the `clear-communication` skill.
 
-Before relying on a capability below, read its `SKILL.md`; the summaries here are orientation only. When a required capability is not installed, say which one is missing and stop that flow.
+Before relying on a capability below, resolve its installed entry and read its `SKILL.md`; the summaries here are orientation only. Confirm absence in the complete installed inventory, including entries selected only by explicit invocation, before reporting a required capability as missing. An omitted automatic suggestion is not evidence of absence. When absence is confirmed, name the missing capability and stop that flow.
 
 ## Flows
 
