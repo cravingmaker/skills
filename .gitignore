@@ -5,3 +5,7 @@ __pycache__/
 node_modules/
 .env
 .env.*
+
+# Raw evaluation evidence (traces, environment, workspace copies) stays local;
+# commit only the summary records in evals/results/*.md.
+skills/*/evals/results/*/
