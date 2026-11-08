@@ -93,9 +93,8 @@ def dependency_sources(root: Path, candidate: str, extra: list[str]) -> dict[str
     result = {}
     visiting = set()
     def visit(name: str):
-        if name in visiting:
-            raise InvalidComparison(f"dependency cycle reaches {name}; fix metadata.requires")
-        if name in result:
+        # Mutually required skills install together, as scripts/install-skills.py does.
+        if name in visiting or name in result:
             return
         path = overrides.get(name, root / "skills" / name)
         if not (path / "SKILL.md").is_file():

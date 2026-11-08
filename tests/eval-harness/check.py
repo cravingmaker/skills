@@ -116,6 +116,14 @@ class IsolationTests(unittest.TestCase):
         with self.assertRaisesRegex(InvalidComparison, "required skill missing is missing"):
             dependency_sources(root, "example", [])
 
+    def test_mutually_required_skills_resolve_as_one_set(self):
+        root = self.base / "repo"
+        for name, other in (("first", "second"), ("second", "first")):
+            skill = root / "skills" / name
+            skill.mkdir(parents=True)
+            (skill / "SKILL.md").write_text(f'---\nname: {name}\ndescription: Example\nmetadata:\n  requires: "{other}"\n---\n')
+        self.assertEqual(sorted(dependency_sources(root, "first", [])), ["first", "second"])
+
     def test_dependencies_constant_in_both_arms(self):
         dependency = self.base / "dep-source"
         dependency.mkdir()
