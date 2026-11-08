@@ -16,6 +16,7 @@ Exit status: 0 when every directory passes, 1 when any rule fails.
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
 
@@ -57,6 +58,16 @@ def check_metadata(frontmatter: dict) -> list[str]:
     ]
 
 
+def is_source_url(value: object) -> bool:
+    if not isinstance(value, str) or any(character.isspace() for character in value):
+        return False
+    try:
+        parsed = urlsplit(value)
+        return bool(parsed.scheme and parsed.netloc and parsed.hostname)
+    except ValueError:
+        return False
+
+
 def check_provenance(skill_dir: Path, frontmatter: dict) -> list[str]:
     metadata = frontmatter.get("metadata")
     metadata = metadata if isinstance(metadata, dict) else {}
@@ -70,8 +81,8 @@ def check_provenance(skill_dir: Path, frontmatter: dict) -> list[str]:
     if has_license and license_value != "MIT" and not license_files:
         problems.append("a non-MIT license needs a LICENSE-<upstream> file in the skill folder")
     if "source" in metadata:
-        if not isinstance(source, str) or not source.strip():
-            problems.append("metadata.source must be a non-empty upstream URL")
+        if not is_source_url(source):
+            problems.append("metadata.source must be an absolute upstream URL, such as https://github.com/owner/repo")
         revision = metadata.get("source-revision")
         if not isinstance(revision, str) or REVISION.fullmatch(revision) is None:
             problems.append("metadata.source needs metadata.source-revision set to a full 40-character commit SHA")

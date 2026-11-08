@@ -24,8 +24,17 @@ for file in protected.md protected.txt; do
   [ -z "$output" ] || fail "$file should report nothing, got: $output"
 done
 
-expect_exit 1 "prose outside quotation" "$check" outside-source.md
-[ "$(grep -c 'ClearCommunication.Filler' <<<"$output")" -eq 1 ] || fail "only prose outside the quotation should be flagged"
+for file in outside-source.md outside-source.txt; do
+  expect_exit 1 "prose outside quotation in $file" "$check" "$file"
+  [ "$(grep -c 'ClearCommunication.Filler' <<<"$output")" -eq 1 ] || fail "prose outside the quotation should be flagged"
+  [ "$(grep -c 'ClearCommunication\.' <<<"$output")" -eq 1 ] || fail "the quotation in $file should report nothing"
+done
+
+expect_exit 0 "protected stdin" sh -c "$check - < protected.md"
+[ -z "$output" ] || fail "protected stdin should report nothing, got: $output"
+expect_exit 1 "prose outside quotation on stdin" sh -c "$check - < outside-source.md"
+[ "$(grep -c 'ClearCommunication.Filler' <<<"$output")" -eq 1 ] || fail "stdin prose outside the quotation should be flagged"
+[ "$(grep -c 'ClearCommunication\.' <<<"$output")" -eq 1 ] || fail "stdin quotation should report nothing"
 
 expect_exit 1 "unquoted contraction" "$check" unquoted-contraction.md
 grep -q "ClearCommunication.Filler" <<<"$output" || fail "apostrophes must not hide unquoted prose"

@@ -39,7 +39,7 @@ Done when every consequential ambiguity is resolved, assumed and stated, or aske
 3. Name the mechanism, the number, or the command instead of the feeling. Use the plain word, the active voice, and one name per thing.
 4. Cut every word that does no work. Keep the small words that carry structure, and expand any over-compressed fragment into a whole sentence.
 5. Apply the rule catalog in [references/editing-rules.md](references/editing-rules.md) for anything longer than a short answer.
-6. When the text lives in a file or can be piped, run the mechanical check. Keep source quotations in blockquotes or wrap inline quotations in `<span class="quoted-source">...</span>` in the lint input. For output that cannot contain markup, lint a temporary Markdown copy and preserve the original output. Never rewrite source text to clear a lint error:
+6. When the text lives in a file or can be piped, run the mechanical check. If the text contains source quotations, lint a temporary Markdown copy with each quotation replaced by `SOURCE_QUOTATION`, then apply only unquoted prose fixes to the original. Never rewrite source text to clear a lint error:
 
    ```sh
    scripts/check-prose.sh path/to/file.md

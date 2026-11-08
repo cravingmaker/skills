@@ -1,1 +1,1 @@
-The source says, <span class="quoted-source">"In order to start, press Enter."</span> In order to finish, press Escape.
+The source says, SOURCE_QUOTATION. In order to finish, press Escape. SOURCE_QUOTATION
