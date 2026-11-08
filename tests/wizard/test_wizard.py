@@ -200,7 +200,7 @@ def test_unrelated_keys_and_repeats() -> None:
     env_file.write_text(UNRELATED)
     result = write(work, "TARGET", "O'Reilly")
     check(result.returncode == 0, f"unrelated: write exits 0 ({result.stderr.strip()})")
-    expected = UNRELATED.replace("TARGET = 'old'", 'TARGET="O\'Reilly"').replace("export TARGET=dup\n", "") + "\n"
+    expected = UNRELATED.replace("TARGET = 'old'", 'export TARGET="O\'Reilly"').replace("export TARGET=dup\n", "")
     check(env_file.read_text() == expected, "unrelated: only the TARGET assignments change")
     values = dotenv_values(env_file)
     check(values.get("TARGET") == "O'Reilly", "unrelated: python-dotenv sees the new TARGET")
@@ -288,9 +288,65 @@ def test_cli() -> None:
     check(subprocess.run([BASH, "-n", str(TEMPLATE)]).returncode == 0, "template passes bash -n")
 
 
+def test_quoted_continuations() -> None:
+    work = fresh()
+    path = work / ".env"
+    original = 'OTHER="first\ncontains \\"quote\nTARGET=embedded\nlast"\nTARGET=old\n'
+    path.write_text(original)
+    before = dotenv_values(path)
+    result = write(work, "TARGET", "DUMMY_new")
+    after = dotenv_values(path)
+    check(result.returncode == 0 and after.get("TARGET") == "DUMMY_new", "escaped multiline: target survives at the top level")
+    check(after.get("OTHER") == before.get("OTHER"), "escaped multiline: unrelated parsed value is unchanged")
+    check(path.read_text() == original.replace("TARGET=old", "TARGET='DUMMY_new'"), "escaped multiline: only the actual assignment changes")
+    saved = path.read_bytes()
+    write(work, "TARGET", "DUMMY_new")
+    check(path.read_bytes() == saved, "escaped multiline: repeated update is byte-stable")
+    path.write_text('OTHER="unterminated\nTARGET=embedded\n')
+    saved = path.read_bytes()
+    result = write(work, "TARGET", "DUMMY_new")
+    check(result.returncode == 1 and path.read_bytes() == saved, "unterminated quoted input: reject before writing")
+
+
+def test_resolved_destinations() -> None:
+    work, outside = fresh(), fresh()
+    (work / "linked").symlink_to(outside, target_is_directory=True)
+    target = outside / ".env"
+    target.write_text("TARGET=outside\n")
+    result = write(work, "TARGET", "DUMMY_new", ENV_FILE="linked/.env")
+    check(result.returncode == 1 and target.read_text() == "TARGET=outside\n", "symlink parent: cannot escape the scoped directory")
+    (work / ".env").symlink_to(target)
+    result = write(work, "TARGET", "DUMMY_new", WIZARD_ENV_FOLLOW_SYMLINK="1")
+    check(result.returncode == 1 and target.read_text() == "TARGET=outside\n", "symlink opt-in: cannot override destination scope")
+    if shutil.which("git"):
+        work = fresh()
+        subprocess.run(["git", "init", "-q"], cwd=work, check=True)
+        target = work / "tracked.env"
+        target.write_text("TARGET=tracked\n")
+        subprocess.run(["git", "add", "tracked.env"], cwd=work, check=True)
+        (work / ".env").symlink_to(target)
+        result = write(work, "TARGET", "DUMMY_new", WIZARD_ENV_FOLLOW_SYMLINK="1")
+        check(result.returncode == 1 and target.read_text() == "TARGET=tracked\n", "resolved target: tracking policy is checked on the actual file")
+
+
+def test_shell_export_and_final_newline() -> None:
+    work = fresh()
+    path = work / ".env"
+    path.write_text("export TARGET=old\n")
+    result = write(work, "TARGET", "DUMMY_new", ENV_FORMAT="shell")
+    child = subprocess.run(["sh", "-c", '. "$1"; env', "sh", str(path)], capture_output=True, text=True)
+    check(result.returncode == 0 and "TARGET=DUMMY_new" in child.stdout.splitlines(), "shell update: child processes receive the exported value")
+    path.write_bytes(b"TARGET=old\nLAST=no-newline")
+    result = write(work, "TARGET", "DUMMY_new")
+    check(result.returncode == 0 and path.read_bytes() == b"TARGET='DUMMY_new'\nLAST=no-newline", "existing assignment: preserve unrelated final-line bytes")
+    result = write(work, "ADDED", "new")
+    check(result.returncode == 0 and dotenv_values(path).get("ADDED") == "new", "append after unterminated last line: insert the required separator")
+
+
 def main() -> int:
     for test in (test_dotenv_round_trips, test_dotenv_refusals, test_shell_format, test_unrelated_keys_and_repeats,
-                 test_permissions_and_symlinks, test_destination_scope, test_hidden_input_and_secret_safe_output, test_cli):
+                 test_permissions_and_symlinks, test_destination_scope, test_hidden_input_and_secret_safe_output, test_cli,
+                 test_quoted_continuations, test_resolved_destinations, test_shell_export_and_final_newline):
         test()
     version = subprocess.run([BASH, "-c", "echo $BASH_VERSION"], capture_output=True, text=True).stdout.strip()
     node = "checked" if node_available() else "skipped (node 20.12+ not found)"

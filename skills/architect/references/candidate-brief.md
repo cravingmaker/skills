@@ -15,7 +15,7 @@ Apply this discipline; candidates are compared on these points:
 - **Validate at trust boundaries, trust types inside.** Business logic as pure functions; the shell stays thin. Keep the checks that real trust transitions require.
 - **One source of truth per invariant.** Derive instead of syncing.
 - **Idempotent state transitions** where applicable: ask what happens if the operation runs twice or crashes halfway.
-- **Short call chains.** If tracing the flow needs more than three files, flatten it.
+- **Short call chains.** A flow spanning several files is a cue to inspect reader cost. Flatten only when it improves local understanding while preserving ownership, trust boundaries, compatibility and required checks.
 - **Compatibility.** State which existing callers change and how; public consumers need an expand-then-contract path.
 
 Produce the best design you can under your lens. Don't hedge toward a safe middle: the differences between candidates are what the comparison uses.

@@ -62,7 +62,7 @@ Resolve tracker and domain paths from the project's configuration; pass the exac
 
 ## Stops
 
-Stop and ask only for: an irreversible or destructive operation, a security-sensitive action, an outward-facing action not already authorized, or a graph so broken that every path forward is a guess. Decide everything else, record the ruling, and continue. Budget exhaustion is a stop with unresolved work, never an approval.
+Stop and ask only when a required action lacks existing authority, including an irreversible, destructive, security-sensitive or outward-facing action, or when the graph is so broken that every path forward is a guess. Reuse explicit authority already granted for the same action and scope; do not request it again. Decide everything else, record the ruling, and continue. Budget exhaustion is a stop with unresolved work, never an approval.
 
 ## Provenance
 

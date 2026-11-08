@@ -10,6 +10,8 @@ Run each prompt with and without this skill. Record the observed behavior agains
 
 ## Near miss
 
+- "Use the installed debug command explicitly." Expect: the selected host command keeps its route; diagnosing-bugs is not substituted.
+
 - "Walk me through a structured incident postmortem for yesterday's outage." Expect: the skill does not load; incident response (the engineering incident-response skill) fits.
 - "Add a retry to this HTTP call." Expect: ordinary implementation, no diagnosis loop.
 - "This test fails only when run after another test." Expect: test-order pollution is specialist flaky-test work; this skill does not reproduce the polluter-bisection recipe.

@@ -82,9 +82,12 @@ def findings(data: object) -> list[str]:
         for key in REQUIRED:
             if key not in candidate:
                 problems.append(f"{where}.{key} is missing")
-        if candidate.get("strength") not in STRENGTHS:
+        for key in ("id", "title", "problem", "solution"):
+            if not isinstance(candidate.get(key), str) or not candidate[key].strip():
+                problems.append(f"{where}.{key} must be a non-empty string")
+        if not isinstance(candidate.get("strength"), str) or candidate["strength"] not in STRENGTHS:
             problems.append(f"{where}.strength must be one of {', '.join(STRENGTHS)}")
-        if candidate.get("dependency") not in DEPENDENCIES:
+        if not isinstance(candidate.get("dependency"), str) or candidate["dependency"] not in DEPENDENCIES:
             problems.append(f"{where}.dependency must be one of {', '.join(sorted(DEPENDENCIES))}")
         for key in ("files", "evidence", "wins"):
             if key not in candidate:
@@ -101,16 +104,21 @@ def findings(data: object) -> list[str]:
                 continue
             if not all(isinstance(m, str) for m in side["modules"]):
                 problems.append(f"{where}.{key}.modules must hold strings")
-            for edge in side.get("edges", []):
-                if not (isinstance(edge, list) and len(edge) in (2, 3) and all(isinstance(e, str) for e in edge)):
+            edges = side.get("edges", [])
+            if not isinstance(edges, list):
+                problems.append(f"{where}.{key}.edges must be a list")
+                edges = []
+            for edge in edges:
+                if not (isinstance(edge, list) and len(edge) in (2, 3) and all(isinstance(e, str) for e in edge) and (len(edge) == 2 or edge[2] == "leak")):
                     problems.append(f"{where}.{key}.edges entries must be [from, to] or [from, to, \"leak\"]")
             if "mermaid" in side and not isinstance(side["mermaid"], str):
                 problems.append(f"{where}.{key}.mermaid must be a string")
-        ids.append(candidate.get("id"))
+        if isinstance(candidate.get("id"), str):
+            ids.append(candidate["id"])
     if len(set(ids)) != len(ids):
         problems.append("candidate ids must be unique")
     top = data.get("top")
-    if not isinstance(top, dict) or top.get("id") not in ids or not isinstance(top.get("why"), str):
+    if not isinstance(top, dict) or not isinstance(top.get("id"), str) or top["id"] not in ids or not isinstance(top.get("why"), str) or not top["why"].strip():
         problems.append("top must name an existing candidate id and give a why string")
     return problems
 
@@ -200,7 +208,11 @@ def main(argv: list[str]) -> int:
         return 1
     page = render(data, args.mermaid_cdn)
     if args.output:
-        Path(args.output).write_text(page, encoding="utf-8")
+        try:
+            Path(args.output).write_text(page, encoding="utf-8")
+        except OSError as error:
+            print(f"cannot write {args.output}: {error}; choose a writable output path", file=sys.stderr)
+            return 2
         print(str(Path(args.output).resolve()))
     else:
         sys.stdout.write(page)

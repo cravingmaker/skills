@@ -105,6 +105,27 @@ def main() -> int:
     check(render("{not json").returncode == 2, "unreadable JSON exits 2")
     result = render(sample(), "--check")
     check(result.returncode == 0 and json.loads(result.stdout)["valid"], "--check passes valid input")
+    for path, value in (
+        (("strength",), {}), (("dependency",), []), (("id",), []), (("id",), None),
+        (("title",), {}), (("before", "edges"), None), (("after", "edges"), "not a list"),
+    ):
+        bad = sample()
+        target = bad["candidates"][0]
+        for key in path[:-1]:
+            target = target[key]
+        target[path[-1]] = value
+        result = render(bad, "--check")
+        try:
+            report = json.loads(result.stdout)
+        except ValueError:
+            report = {}
+        check(result.returncode == 1 and report.get("valid") is False and report.get("findings"),
+              f"malformed {path}: structured findings, not a traceback")
+        check("Traceback" not in result.stderr, f"malformed {path}: no exception escapes")
+    result = render(sample(), "--output", str(Path(tempfile.mkdtemp(prefix="arch-missing-")) / "missing" / "report.html"))
+    check(result.returncode == 2 and not result.stdout and "cannot write" in result.stderr and "Traceback" not in result.stderr,
+          "unwritable output: actionable usage diagnostic")
+
     doc = (ROOT / "skills" / "improve-codebase-architecture" / "references" / "report-format.md").read_text(encoding="utf-8")
     example = doc.split("```json\n", 1)[1].split("```", 1)[0]
     result = render(example, "--check")

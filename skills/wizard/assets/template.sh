@@ -199,8 +199,26 @@ _env_decode() {
 # raw value text). Accepts KEY=, KEY =, and export KEY= forms.
 _env_split() {
   local line="$1" re='^[[:space:]]*(export[[:space:]]+)?([A-Za-z_][A-Za-z0-9_]*)[[:space:]]*=(.*)$'
-  _K=""; _V=""
-  if [[ "$line" =~ $re ]]; then _K="${BASH_REMATCH[2]}"; _V="${BASH_REMATCH[3]}"; fi
+  _K=""; _V=""; _EXPORT=""
+  if [[ "$line" =~ $re ]]; then
+    _EXPORT="${BASH_REMATCH[1]}"; _K="${BASH_REMATCH[2]}"; _V="${BASH_REMATCH[3]}"
+  fi
+}
+
+# _env_quote_closes TEXT QUOTE finds a closing quote, honoring escaped quotes
+# in dotenv and shell double quotes. Backslashes are literal in shell single quotes.
+_env_quote_closes() {
+  local text="$1" quote="$2" char escaped=0 i
+  for (( i=0; i<${#text}; i++ )); do
+    char="${text:i:1}"
+    if (( escaped )); then escaped=0; continue; fi
+    if [[ "$char" == '\' && ( "$ENV_FORMAT" != shell || "$quote" != "'" ) ]]; then
+      escaped=1
+    elif [[ "$char" == "$quote" ]]; then
+      return 0
+    fi
+  done
+  return 1
 }
 
 # _env_opens_block RAW: succeeds when RAW starts a quoted value that does not
@@ -211,8 +229,7 @@ _env_opens_block() {
   q="${raw:0:1}"
   [[ "$q" == "'" || "$q" == '"' || "$q" == '`' ]] || return 1
   rest="${raw:1}"
-  [[ "$q" == '"' ]] && rest="${rest//\\\"/}"
-  [[ "$rest" != *"$q"* ]] || return 1
+  _env_quote_closes "$rest" "$q" && return 1
   _Q="$q"
 }
 
@@ -222,7 +239,7 @@ _existing() {
   local key="$1" line found=1 value="" block=""
   [[ -f "$ENV_FILE" ]] || return 1
   while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ -n "$block" ]]; then [[ "$line" == *"$block"* ]] && block=""; continue; fi
+    if [[ -n "$block" ]]; then _env_quote_closes "$line" "$block" && block=""; continue; fi
     _env_split "$line"
     [[ -n "$_K" ]] || continue
     if _env_opens_block "$_V"; then
@@ -240,7 +257,7 @@ _existing() {
 # _env_destination_ok refuses an ENV_FILE outside the current directory, a
 # symlink, a non-regular file, or a file git tracks, unless opted in above.
 _env_destination_ok() {
-  local dir
+  local dir root resolved parent link hops=0
   case "$ENV_FILE" in
     ''|/*) _die "ENV_FILE must be a path inside this directory, got '$ENV_FILE'" ;;
   esac
@@ -252,14 +269,36 @@ _env_destination_ok() {
   if [[ -L "$ENV_FILE" && "${WIZARD_ENV_FOLLOW_SYMLINK:-0}" != 1 ]]; then
     _die "$ENV_FILE is a symlink; set WIZARD_ENV_FOLLOW_SYMLINK=1 to write through it"
   fi
+  root=$(pwd -P)
+  parent=$(CDPATH='' cd -P -- "$dir" && pwd -P) || _die "cannot resolve the directory for $ENV_FILE"
+  case "$parent/" in
+    "${root%/}/"*) ;;
+    *) _die "the resolved directory for $ENV_FILE leaves this directory" ;;
+  esac
+  resolved="$parent/$(basename -- "$ENV_FILE")"
+  while [[ -L "$resolved" ]]; do
+    hops=$((hops + 1))
+    (( hops <= 40 )) || _die "$ENV_FILE has a symlink loop; use a regular file inside this directory"
+    link=$(readlink "$resolved") || _die "cannot resolve $ENV_FILE; use a regular file"
+    case "$link" in
+      /*) resolved="$link" ;;
+      *) resolved="$(dirname -- "$resolved")/$link" ;;
+    esac
+    parent=$(CDPATH='' cd -P -- "$(dirname -- "$resolved")" && pwd -P) || _die "cannot resolve $ENV_FILE"
+    case "$parent/" in
+      "${root%/}/"*) ;;
+      *) _die "the symlink target for $ENV_FILE leaves this directory" ;;
+    esac
+    resolved="$parent/$(basename -- "$resolved")"
+  done
   if [[ -e "$ENV_FILE" && ! -f "$ENV_FILE" ]]; then
     _die "$ENV_FILE is not a regular file"
   fi
   if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    if git ls-files --error-unmatch -- "$ENV_FILE" >/dev/null 2>&1; then
+    if git ls-files --error-unmatch -- "$resolved" >/dev/null 2>&1; then
       [[ "${WIZARD_ENV_ALLOW_TRACKED:-0}" == 1 ]] ||
         _die "$ENV_FILE is tracked by git, so its values would be committed; untrack it or set WIZARD_ENV_ALLOW_TRACKED=1"
-    elif ! git check-ignore -q -- "$ENV_FILE" 2>/dev/null; then
+    elif ! git check-ignore -q -- "$resolved" 2>/dev/null; then
       warn "$ENV_FILE is not ignored by git; add it to .gitignore before committing"
     fi
   fi
@@ -303,7 +342,7 @@ ask_secret() {
 # Refuses (exit 1, file unchanged) a value the format cannot hold, a KEY that
 # is part of a multi-line value, or an unsafe destination. Never prints VALUE.
 write_env() {
-  local key="$1" value="$2" newline reason line block="" placed=0
+  local key="$1" value="$2" newline reason line block="" placed=0 exported=0 terminated=1 last_terminated=1
   _env_key_ok "$key" || { printf 'write_env: invalid key %s\n' "$key" >&2; exit 2; }
   if ! newline=$(_env_encode "$key" "$value"); then
     reason="$newline"
@@ -312,14 +351,17 @@ write_env() {
   _env_destination_ok
   if [[ -f "$ENV_FILE" ]]; then
     while IFS= read -r line || [[ -n "$line" ]]; do
-      if [[ -n "$block" ]]; then [[ "$line" == *"$block"* ]] && block=""; continue; fi
+      if [[ -n "$block" ]]; then _env_quote_closes "$line" "$block" && block=""; continue; fi
       _env_split "$line"
+      [[ "$_K" == "$key" && -n "$_EXPORT" ]] && exported=1
       if [[ -n "$_K" ]] && _env_opens_block "$_V"; then
         [[ "$_K" == "$key" ]] && _die "not saved: $key in $ENV_FILE spans several lines; edit it by hand"
         block="$_Q"
       fi
     done < "$ENV_FILE"
+    [[ -z "$block" ]] || _die "not saved: $ENV_FILE has an unterminated quoted value; repair it first"
   fi
+  (( exported )) && newline="export $newline"
   if (( WIZARD_DRY_RUN )); then
     printf -v "$key" '%s' "$value"
     printf '  %s∘ would write%s %s → %s\n' "$DIM" "$RESET" "$key" "$ENV_FILE"
@@ -330,18 +372,36 @@ write_env() {
   cp -p "$ENV_FILE" "$_ENV_TMP" 2>/dev/null || true
   {
     block=""
-    while IFS= read -r line || [[ -n "$line" ]]; do
-      if [[ -n "$block" ]]; then printf '%s\n' "$line"; [[ "$line" == *"$block"* ]] && block=""; continue; fi
+    while :; do
+      terminated=1
+      IFS= read -r line || terminated=0
+      [[ -n "$line" ]] || (( terminated )) || break
+      if [[ -n "$block" ]]; then
+        printf '%s' "$line"
+        (( terminated )) && printf '\n'
+        last_terminated=$terminated
+        _env_quote_closes "$line" "$block" && block=""
+        continue
+      fi
       _env_split "$line"
       if [[ -n "$_K" ]] && _env_opens_block "$_V"; then block="$_Q"; fi
       if [[ "$_K" == "$key" ]]; then
-        (( placed )) || printf '%s\n' "$newline"
+        if (( ! placed )); then
+          printf '%s' "$newline"
+          (( terminated )) && printf '\n'
+          last_terminated=$terminated
+        fi
         placed=1
       else
-        printf '%s\n' "$line"
+        printf '%s' "$line"
+        (( terminated )) && printf '\n'
+        last_terminated=$terminated
       fi
     done < "$ENV_FILE"
-    (( placed )) || printf '%s\n' "$newline"
+    if (( ! placed )); then
+      (( last_terminated )) || printf '\n'
+      printf '%s\n' "$newline"
+    fi
   } > "$_ENV_TMP"
   if [[ -L "$ENV_FILE" ]]; then
     cat "$_ENV_TMP" > "$ENV_FILE"; rm -f "$_ENV_TMP"

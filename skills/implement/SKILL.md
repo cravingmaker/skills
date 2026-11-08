@@ -36,7 +36,7 @@ Implement the one piece of work described in the spec, ticket or agreed change. 
 
 ## Stops
 
-Four things stop you: an irreversible or destructive operation, a security-sensitive action, a side effect outside your task's authority (a merge, a push to a shared branch, a publish), and work so contradictory that every path forward is a guess. Report BLOCKED with what you tried and what you need. Decide everything else, record the ruling, and keep going.
+Stop when a required action is outside the task's existing authority, including an irreversible, destructive, security-sensitive or outward-facing action, or when the work is so contradictory that every path forward is a guess. Reuse explicit authority already granted for the same action and scope; do not request it again. Report BLOCKED with what you tried and what you need. Decide everything else, record the ruling, and keep going.
 
 Done when the slice's Proof passes with observed evidence, the relevant suite ran, the diff is clean, your review is recorded, and nothing outside the slice changed.
 

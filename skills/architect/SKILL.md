@@ -57,7 +57,7 @@ If implementation keeps producing friction the sketch can't absorb, don't bolt f
 
 Use judgment. A few edge cases don't condemn an architecture, and complexity in the data is not complexity in the design.
 
-When the pattern holds, redesign as if the new constraints had been day-one assumptions: re-ground on what's been built, subtract before adding (the new sketch should be smaller than the old one before it grows), and return to Phase B within the declared budget. Propagate the change through every reference: types, docs, examples and rationale. Present the redesign as a proposal; rewrite built code only within the authorized scope, and deliver it in increments that each keep the contract.
+When the pattern holds, redesign as if the new constraints had been day-one assumptions: re-ground on what's been built, consider removing redundant mechanisms before adding new ones, preserving required behavior, trust boundaries and compatibility even when the sketch must grow, and return to Phase B within the declared budget. Propagate the change through every reference: types, docs, examples and rationale. Present the redesign as a proposal; rewrite built code only within the authorized scope, and deliver it in increments that each keep the contract.
 
 ## Provenance
 

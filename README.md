@@ -48,7 +48,6 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [grill-me](skills/grill-me) | Manual no-doc entry into the owned grilling interview. |
 | [bro](skills/bro) | Manual entry that repairs the last answer through clear-communication. |
 | [wait-what](skills/wait-what) | Manual entry that explains the last unclear point using the user's context. |
-
 | [codebase-design](skills/codebase-design) | Designs deep modules, precise interfaces and testable seams while preserving real trust boundaries. |
 | [architect](skills/architect) | Compares grounded interface sketches and records a bounded design with trade-offs and rationale. |
 | [improve-codebase-architecture](skills/improve-codebase-architecture) | Surveys architecture candidates and renders an escaped, offline report before product changes. |

@@ -1,6 +1,6 @@
 ---
 name: diagnosing-bugs
-description: Diagnosis loop for hard bugs and performance regressions; reproduce the symptom, rank and test hypotheses, fix the proven cause and rerun the original repro. Use when the user says "diagnose" or "debug this", or reports something broken, throwing, failing or slow.
+description: Diagnose bugs and performance regressions through reproduction, ranked hypotheses and causal checks. Use for failures, slow behavior or "debug this"; an explicitly selected host debug command keeps its route.
 license: MIT
 metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/diagnosing-bugs/SKILL.md"
