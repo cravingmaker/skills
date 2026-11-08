@@ -66,6 +66,7 @@ A refused value stops the wizard with exit 1 and a message that names the key, n
 - **The loader is not one the formats cover** (a YAML or JSON config, a custom parser): write that format's serializer into the copied library and round-trip it through the real parser, or have the wizard print where the human pastes the value.
 - **A value the format refuses** is common for private keys and Windows paths. Point the human to the project's secret store or a manual edit; do not loosen the refusal without a round-trip test that proves the loader reads the new form.
 - **A key that already spans several lines** in the file is refused rather than rewritten; other multi-line values are preserved byte for byte.
+- **Existing dotenv quote escapes with ambiguous boundaries** are refused before rewriting. In particular, an even run of backslashes before a quote can end the value in one loader and continue it in another; edit that file by hand.
 
 ## Provenance
 

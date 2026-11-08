@@ -205,6 +205,30 @@ _env_split() {
   fi
 }
 
+# _env_quotes_safe RAW [QUOTE] rejects dotenv quote boundaries that disagree
+# between supported parsers. Python-dotenv can keep a quote escaped after an
+# even backslash run while Node closes it. Refuse before choosing target lines.
+# With QUOTE, RAW is a continuation; otherwise RAW includes its opening quote.
+_env_quotes_safe() {
+  [[ "$ENV_FORMAT" == dotenv ]] || return 0
+  local raw="$1" quote="${2:-}" char slashes=0 i
+  if [[ -z "$quote" ]]; then
+    raw="${raw#"${raw%%[![:space:]]*}"}"
+    quote="${raw:0:1}"; raw="${raw:1}"
+  fi
+  [[ "$quote" == "'" || "$quote" == '"' ]] || return 0
+  for (( i=0; i<${#raw}; i++ )); do
+    char="${raw:i:1}"
+    if [[ "$char" == '\' ]]; then slashes=$((slashes + 1)); continue; fi
+    if [[ "$char" == "$quote" ]]; then
+      if (( slashes > 0 && slashes % 2 == 0 )); then return 1; fi
+      (( slashes == 0 )) && return 0
+    fi
+    slashes=0
+  done
+  return 0
+}
+
 # _env_quote_closes TEXT QUOTE finds a closing quote, honoring escaped quotes
 # in dotenv and shell double quotes. Backslashes are literal in shell single quotes.
 _env_quote_closes() {
@@ -239,9 +263,14 @@ _existing() {
   local key="$1" line found=1 value="" block=""
   [[ -f "$ENV_FILE" ]] || return 1
   while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ -n "$block" ]]; then _env_quote_closes "$line" "$block" && block=""; continue; fi
+    if [[ -n "$block" ]]; then
+      _env_quotes_safe "$line" "$block" || return 1
+      _env_quote_closes "$line" "$block" && block=""
+      continue
+    fi
     _env_split "$line"
     [[ -n "$_K" ]] || continue
+    _env_quotes_safe "$_V" || return 1
     if _env_opens_block "$_V"; then
       block="$_Q"; [[ "$_K" == "$key" ]] && found=2
       continue
@@ -351,8 +380,13 @@ write_env() {
   _env_destination_ok
   if [[ -f "$ENV_FILE" ]]; then
     while IFS= read -r line || [[ -n "$line" ]]; do
-      if [[ -n "$block" ]]; then _env_quote_closes "$line" "$block" && block=""; continue; fi
+      if [[ -n "$block" ]]; then
+        _env_quotes_safe "$line" "$block" || _die "not saved: $ENV_FILE has ambiguous dotenv quote escapes; edit it by hand"
+        _env_quote_closes "$line" "$block" && block=""
+        continue
+      fi
       _env_split "$line"
+      [[ -z "$_K" ]] || _env_quotes_safe "$_V" || _die "not saved: $ENV_FILE has ambiguous dotenv quote escapes; edit it by hand"
       [[ "$_K" == "$key" && -n "$_EXPORT" ]] && exported=1
       if [[ -n "$_K" ]] && _env_opens_block "$_V"; then
         [[ "$_K" == "$key" ]] && _die "not saved: $key in $ENV_FILE spans several lines; edit it by hand"

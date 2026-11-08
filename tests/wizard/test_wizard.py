@@ -343,10 +343,63 @@ def test_shell_export_and_final_newline() -> None:
     check(result.returncode == 0 and dotenv_values(path).get("ADDED") == "new", "append after unterminated last line: insert the required separator")
 
 
+
+def test_ambiguous_dotenv_quote_boundaries() -> None:
+    read_stage = '''run_wizard() {
+wizard_init "$@"
+_existing TARGET > "$WIZ_OUT"
+}
+run_wizard "$@"; exit
+'''
+    for quote in ('"', "'"):
+        for slashes in (1, 2, 3, 4):
+            for continuation in (False, True):
+                work = fresh()
+                path = work / ".env"
+                original = ("OTHER=" + quote + "first" + ("\n" if continuation else "")
+                            + "contains " + "\\" * slashes + quote + "quote\nTARGET=embedded\nlast"
+                            + quote + "\nTARGET=old\n")
+                path.write_text(original)
+                before = dotenv_values(path)
+                check(before.get("TARGET") == "old" and "TARGET=embedded" in before.get("OTHER", ""),
+                      "quote-boundary fixture: actual python-dotenv parses the multiline value")
+                label = f"quote boundary {quote!r}, {slashes} backslashes, continuation={continuation}"
+                for _ in range(2):
+                    result = write(work, "TARGET", "DUMMY_new")
+                    if slashes % 2 == 0:
+                        check(result.returncode == 1 and path.read_text() == original,
+                              f"{label}: ambiguous input refuses before modification on every run")
+                        check("ambiguous dotenv quote escapes" in result.stderr and "DUMMY_new" not in result.stdout + result.stderr,
+                              f"{label}: actionable diagnostic does not expose the value")
+                    else:
+                        after = dotenv_values(path)
+                        check(result.returncode == 0 and after.get("TARGET") == "DUMMY_new"
+                              and after.get("OTHER") == before.get("OTHER")
+                              and path.read_text() == original.replace("TARGET=old", "TARGET='DUMMY_new'"),
+                              f"{label}: supported input preserves the unrelated value on every run")
+                if slashes % 2 == 0:
+                    path.write_text(original.removesuffix("TARGET=old\n"))
+                    out = work / "saved-default"
+                    result = run(work, read_stage, {"WIZ_OUT": str(out)})
+                    check(result.returncode == 1 and not out.read_bytes(),
+                          f"{label}: embedded assignment never becomes a saved default")
+
+    work = fresh()
+    path = work / ".env"
+    original = 'OTHER="ends' + "\\" * 2 + '"\nexport TARGET=old\n'
+    path.write_text(original)
+    before = sh_value(path, "OTHER")
+    result = write(work, "TARGET", "DUMMY_new", ENV_FORMAT="shell")
+    check(result.returncode == 0 and sh_value(path, "OTHER") == before
+          and sh_value(path, "TARGET") == "DUMMY_new",
+          "shell quote boundary: even backslashes keep shell semantics")
+
+
 def main() -> int:
     for test in (test_dotenv_round_trips, test_dotenv_refusals, test_shell_format, test_unrelated_keys_and_repeats,
                  test_permissions_and_symlinks, test_destination_scope, test_hidden_input_and_secret_safe_output, test_cli,
-                 test_quoted_continuations, test_resolved_destinations, test_shell_export_and_final_newline):
+                 test_quoted_continuations, test_resolved_destinations, test_shell_export_and_final_newline,
+                 test_ambiguous_dotenv_quote_boundaries):
         test()
     version = subprocess.run([BASH, "-c", "echo $BASH_VERSION"], capture_output=True, text=True).stdout.strip()
     node = "checked" if node_available() else "skipped (node 20.12+ not found)"
