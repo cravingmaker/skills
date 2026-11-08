@@ -206,12 +206,11 @@ def body_read(command_text: str, path: str) -> bool:
     try:
         tokens = shlex.split(command_text)
         if tokens and Path(tokens[0]).name in ("sh", "bash", "zsh", "dash"):
-            index = next((i for i in (1, 2) if i < len(tokens) and tokens[i] in ("-c", "-lc")), None)
-            # Unwrap only a complete invocation; outer commands or redirects
-            # can supply output that did not come from the inner reader.
-            if index is None or index + 2 != len(tokens):
+            # Only this exact form identifies the executed command. Other
+            # options, script operands, or outer syntax need trace review.
+            if len(tokens) != 3 or tokens[1] not in ("-c", "-lc"):
                 return False
-            command_text = tokens[index + 1]
+            command_text = tokens[2]
         if any(marker in command_text for marker in ("\n", "\r", "$(", "`")):
             return False
         lexer = shlex.shlex(command_text, posix=True, punctuation_chars=";&|()<>")

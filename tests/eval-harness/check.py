@@ -221,6 +221,39 @@ class IsolationTests(unittest.TestCase):
                 (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in events))
                 self.assertFalse(hosts.observe(arm, "codex", "clear-communication")["activation"])
 
+    def test_shell_prefixes_cannot_borrow_a_skill_body_line(self):
+        _, arms = self.pair("codex")
+        arm = arms[0]
+        path = shlex.quote(str(arm.config / "skills/clear-communication/SKILL.md"))
+        session = arm.config / "sessions/test.jsonl"
+        session.parent.mkdir()
+        session.write_text(json.dumps({"type": "turn_context", "payload": {"model": "test-model"}}) + "\n")
+        helper = arm.work / "outer-output.sh"
+        helper.write_text("printf '%s\\n' '# Clear communication'\n")
+        (arm.work / "-c").write_text(helper.read_text())
+        empty_read = shlex.quote(f"sed -n '99999,100000p' {path}")
+        comment_read = f"sed -n '# Clear communication' {path}"
+        control = subprocess.run(["/bin/sh", "-c", comment_read], cwd=arm.work, capture_output=True, text=True, timeout=5)
+        self.assertEqual((control.returncode, control.stdout, control.stderr), (0, "", ""))
+        commands = [
+            f"/bin/sh {shlex.quote(str(helper))} -c {empty_read}",
+            f"/bin/sh -- -c {empty_read}",
+            f"/bin/sh -x -c {shlex.quote(comment_read)}",
+        ]
+        for command in commands:
+            with self.subTest(command=command):
+                result = subprocess.run(["/bin/sh", "-c", command], cwd=arm.work, stdout=subprocess.PIPE,
+                                        stderr=subprocess.STDOUT, text=True, timeout=5)
+                self.assertEqual(result.returncode, 0)
+                self.assertIn("# Clear communication", result.stdout)
+                events = [
+                    {"type": "thread.started", "thread_id": "test-session"},
+                    {"type": "item.completed", "item": {"type": "command_execution", "command": command, "exit_code": result.returncode, "aggregated_output": result.stdout}},
+                    {"type": "turn.completed", "usage": {}},
+                ]
+                (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in events))
+                self.assertFalse(hosts.observe(arm, "codex", "clear-communication")["activation"])
+
     def test_codex_activation_requires_visible_body_output(self):
         _, arms = self.pair("codex")
         path = str(arms[0].config / "skills/clear-communication/SKILL.md")
