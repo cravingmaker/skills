@@ -1,6 +1,6 @@
 ---
 name: agent-debate
-description: Find the best approach through structured disagreement between agents, with blind first positions, evidence-backed findings, verdict lines, and bounded rounds. Use when asked to have agents debate or review each other until they agree, or to get an independent second opinion from another model.
+description: Find the best approach through structured disagreement between agents, with blind first positions, evidence-backed findings, verdict lines, and bounded rounds. Use when asked to have agents debate, review each other, or keep reviewing until they agree, or to get an independent second opinion from another model.
 license: MIT
 metadata:
   requires: "agent-briefing decision-log work-decomposition"
