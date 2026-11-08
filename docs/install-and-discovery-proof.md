@@ -2,7 +2,7 @@
 
 Copy and symlink installs made exactly the seven `agent-orchestrator` profile skills discoverable on both real hosts outside this checkout. The installer rejected an incomplete distribution with a named prerequisite error.
 
-Measured on macOS on 2026-11-08 at foundation head `822565a127508fe88dd0909a7d9587a81d304c3e`, using Codex CLI `0.167.0` and Claude Code `2.1.311`.
+Measured on macOS on 2026-11-08 using the downstream `feat/role-agent-orchestrator` tree at `822565a127508fe88dd0909a7d9587a81d304c3e`, Codex CLI `0.167.0`, and Claude Code `2.1.311`. The foundation branch contains no role router or generated role profile; these measurements require that downstream source distribution.
 
 ## Method and isolation
 
@@ -54,22 +54,28 @@ The wider Codex cache replay includes top-level cached packages' declared skills
 
 The replay preserves source names, descriptions, manual-only flags, and Codex `agents/openai.yaml` policy, but installs metadata as standalone skills. Plugin namespaces and original plugin paths can add characters in a live plugin session. Server-managed plugin enablement, usage-based ranking, and routing correctness are outside this local listing proof. Cache contents and host versions can change, so reruns retain their own source hashes and counts.
 
+## Remaining foundation acceptance evidence
+
+The agreed design also calls for routing correctness with the existing inventory plus one role and several overlapping roles. This proof measures discovery and listing size only. Thirty distinct placeholders do not test shared-capability deduplication or model routing. Those acceptance checks remain open; record the role profiles, shared closure, fixed routing prompts, expected selections, observed selections, and host/model revisions before treating that part of the foundation as complete.
+
 ## Reproduce and validate
 
-Run from the checkout once to locate it, then run the proof from a separate directory:
+Run the current foundation probe against a separate source distribution containing the role. With the measured downstream commit available locally, export it without changing either checkout, then run from the temporary directory:
 
 ```sh
 repo=$(pwd -P)
 proof_root=$(mktemp -d)
+mkdir "$proof_root/source"
+git -C "$repo" archive 822565a127508fe88dd0909a7d9587a81d304c3e | tar -x -C "$proof_root/source"
 cd "$proof_root"
 export UV_CACHE_DIR="$proof_root/uv-cache" PYTHONDONTWRITEBYTECODE=1
 for host in codex claude; do
   for mode in copy symlink; do
-    "$repo/scripts/measure-skill-discovery.py" --host "$host" --mode "$mode" \
+    "$repo/scripts/measure-skill-discovery.py" --root "$proof_root/source" --host "$host" --mode "$mode" \
       --output "$proof_root/$host-$mode.json"
   done
 done
-"$repo/scripts/measure-skill-discovery.py" --host codex --placeholders 30 \
+"$repo/scripts/measure-skill-discovery.py" --root "$proof_root/source" --host codex --placeholders 30 \
   --output "$proof_root/codex-synthetic.json"
 ```
 

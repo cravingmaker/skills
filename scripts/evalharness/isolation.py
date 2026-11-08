@@ -152,7 +152,7 @@ def check_fixture(fixture: Path) -> None:
             index = path.parts.index(".claude")
             if path.parts[index + 1:index + 2] != ("skills",):
                 raise InvalidComparison(f"fixture contains {relative}; only .claude/skills is supported")
-        if path.name in ("AGENTS.md", "CLAUDE.md", "CLAUDE.local.md"):
+        if path.name in ("AGENTS.md", "AGENTS.override.md", "CLAUDE.md", "CLAUDE.local.md"):
             raise InvalidComparison(f"fixture contains {relative}; put task context in README.md; the harness supplies host instructions")
 
 
@@ -180,7 +180,7 @@ def inventory(arm: Arm, host: str) -> list[dict]:
     roots.append(("home", arm.home / ".agents/skills"))
     for directory in [arm.work, *arm.work.parents]:
         if not directory.is_relative_to(arm.base):
-            for relative in ("AGENTS.md", "CLAUDE.md", "CLAUDE.local.md", ".claude/commands", ".codex/config.toml", ".git"):
+            for relative in ("AGENTS.md", "AGENTS.override.md", "CLAUDE.md", "CLAUDE.local.md", ".claude/commands", ".codex/config.toml", ".git"):
                 if (directory / relative).exists():
                     raise InvalidComparison(f"uncontrolled ancestor context {directory / relative}; choose a temporary directory outside configured projects")
         for scope in (".agents/skills", ".claude/skills"):

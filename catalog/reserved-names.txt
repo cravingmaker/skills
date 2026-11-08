@@ -113,3 +113,25 @@ writing-beats
 writing-for-agents
 writing-fragments
 writing-shape
+
+# Additional installed names in the 2026-11-08 host snapshot used by
+# docs/install-and-discovery-proof.md.
+built-in-browser
+chrome-browser
+computer-use
+create-plugin
+deep-research
+docs
+documents
+excel-live-control
+google-workspace
+imagegen
+import-memory
+learn
+openai-docs
+prepare-plugin-submission
+review-agent
+skill-installer
+starter-workflow
+update-plugin
+visualize

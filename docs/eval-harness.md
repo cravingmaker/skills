@@ -24,7 +24,7 @@ Required skills are installed in both arms through the candidate's transitive `m
 
 ## Prepare a fixture
 
-Use a small directory containing the task's inputs and real commands. Host instruction files are supplied by the harness; put task context in `README.md`. The harness rejects symlinks, special files, Git metadata, credential filenames, existing host instruction files, and custom host configuration. It supports project skill folders under `.claude/skills` and `.agents/skills`, including nested folders.
+Use a small directory containing the task's inputs and real commands. Host instruction files are supplied by the harness; put task context in `README.md`. The harness rejects symlinks, special files, Git metadata, credential filenames, existing host instruction files (including `AGENTS.override.md`), and custom host configuration. It supports project skill folders under `.claude/skills` and `.agents/skills`, including nested folders.
 
 Every project copy whose frontmatter names the candidate is excluded from both restored fixtures, regardless of its folder name. The treatment receives one copy of the candidate in its temporary user skill folder. The record lists the excluded paths and hashes. Other project skills and declared dependencies stay identical. The source fixture and the user's installed skill folders are never modified.
 
@@ -34,7 +34,7 @@ The harness snapshots fixture bytes before creating either arm. It checks file h
 
 ## Discovery and authentication
 
-Both adapters start from an environment allowlist. They set the child process's home, host configuration directory, cache directory, and temporary directory to private paths. Inherited provider settings, session identifiers, shell startup hooks, and plugin settings are excluded. The temporary homes are deleted on success and failure. Authentication files have mode `0600` and are never included in artifacts or logs. Known credential token values are checked before evidence is exported; evidence containing them is withheld.
+Both adapters start from an environment allowlist. They set the child process's home, host configuration directory, cache directory, and temporary directory to private paths. Inherited provider settings, session identifiers, shell startup hooks, and plugin settings are excluded. The temporary homes are deleted on success and failure. Authentication files have mode `0600` and are never included in artifacts or logs. Known credential token values are checked in arm files, shared record fields, and the rendered public Markdown before evidence is exported; evidence containing them is withheld.
 
 ### Claude Code
 
@@ -54,7 +54,7 @@ The adapter sets both the child process's home and `CODEX_HOME`. This controls `
 
 The adapter copies only `auth.json` into the temporary home and selects the file credential store. It calls the local app server's `skills/list` without creating a model turn and verifies enabled skill names and paths against the computed inventory. A mismatch rejects the comparison before either model call. CLI execution uses `codex exec --json --skip-git-repo-check --ignore-rules`; each run creates a new session.
 
-Codex has no `Skill` tool in this trace format. The adapter detects a successful `cat`, `sed`, `head`, `tail`, `more`, or `less` command containing the absolute candidate `SKILL.md` path. Other read mechanisms remain unclassified and require trace review. A failed command, a search result, or a prose claim does not count. The local session rollout records the effective model and is exported separately from the CLI trace.
+Codex has no `Skill` tool in this trace format. The adapter detects a successful `cat`, `sed`, `head`, `tail`, `more`, or `less` command containing the absolute candidate `SKILL.md` path and visible body text. It accepts a simple command or a body read within an `&&` chain. Redirections, other compound commands, and other read mechanisms remain unclassified and require trace review. A failed command, a search result, or a prose claim does not count. The local session rollout records the effective model and is exported separately from the CLI trace.
 
 OpenAI documents [skill locations and enablement](https://learn.chatgpt.com/docs/build-skills), [configuration controls](https://learn.chatgpt.com/docs/config-file/config-reference), and the [app server inventory API](https://learn.chatgpt.com/docs/app-server). These pages and the installed CLI help were checked on 2026-11-08. Fetched documentation informs the adapter; it is never added to an evaluated model's instructions.
 

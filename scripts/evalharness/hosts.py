@@ -198,16 +198,27 @@ def events(path: Path) -> list[dict]:
 
 
 def body_read(command_text: str, path: str) -> bool:
-    """Recognize a body reader, rather than an echo/search mentioning its name."""
+    """Recognize a body read in a simple command or successful && chain.
+
+    Pipelines, redirections, conditional branches, and shell substitution need
+    manual trace review; a compound command's exit code cannot prove their reads.
+    """
     try:
         tokens = shlex.split(command_text)
-        if tokens and Path(tokens[0]).name in ("sh", "bash", "zsh", "dash") and any(flag in tokens[1:3] for flag in ("-c", "-lc")):
-            command_text = tokens[-1]
-        lexer = shlex.shlex(command_text, posix=True, punctuation_chars=";&|()")
+        if tokens and Path(tokens[0]).name in ("sh", "bash", "zsh", "dash"):
+            index = next((i for i in (1, 2) if i < len(tokens) and tokens[i] in ("-c", "-lc")), None)
+            if index is None or index + 1 >= len(tokens):
+                return False
+            command_text = tokens[index + 1]
+        if "$(" in command_text or "`" in command_text:
+            return False
+        lexer = shlex.shlex(command_text, posix=True, punctuation_chars=";&|()<>")
         lexer.whitespace_split = True
         segments = [[]]
         for token in lexer:
-            if token and all(character in ";&|()" for character in token):
+            if token and all(character in ";&|()<>" for character in token):
+                if token != "&&" or not segments[-1]:
+                    return False
                 segments.append([])
             else:
                 segments[-1].append(token)
@@ -219,6 +230,14 @@ def body_read(command_text: str, path: str) -> bool:
         return False
     except ValueError:
         return False
+
+
+def body_in_output(path: str, output: str) -> bool:
+    """Require visible skill-body text, not output from another command."""
+    text = Path(path).read_text(encoding="utf-8")
+    parts = text.split("\n---\n", 1)
+    body = parts[1] if text.startswith("---\n") and len(parts) == 2 else text
+    return any(len(line.strip()) >= 12 and line.strip() in output for line in body.splitlines())
 
 
 def observe(arm: Arm, host: str, candidate: str) -> dict:
@@ -276,7 +295,8 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
                 text = item.get("command", "")
                 # A mention in prose or a grep result is not a skill activation.
                 # Codex has no Skill tool: require a successful body read command.
-                if item.get("exit_code") == 0 and item.get("aggregated_output") and body_read(text, candidate_path):
+                if (item.get("exit_code") == 0 and item.get("aggregated_output") and body_read(text, candidate_path)
+                        and body_in_output(candidate_path, item["aggregated_output"])):
                     activation.append({"event": "command_execution", "id": item.get("id"), "command": text})
             if event.get("type") == "item.completed" and item.get("type") == "agent_message":
                 messages.append(item.get("text", ""))
@@ -296,6 +316,20 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
     if not finished:
         raise InvalidComparison(f"{host} {arm.name} did not emit a successful completion")
     return {"activation": bool(activation), "activation_evidence": activation, "tool_calls": tool_count, "models": sorted(models), "sessions": sorted(sessions), "response": "\n\n".join(messages), "usage": usage, "effective_inventory": inventory_result}
+
+
+def safe_value(value, tokens: list[bytes]) -> None:
+    """Check shared record fields as well as each arm's retained files."""
+    if isinstance(value, str):
+        if any(token in value.encode() for token in tokens):
+            raise InvalidComparison("credential material appeared in evidence; evidence is withheld and the temporary environment will be deleted")
+    elif isinstance(value, dict):
+        for key, child in value.items():
+            safe_value(key, tokens)
+            safe_value(child, tokens)
+    elif isinstance(value, (list, tuple)):
+        for child in value:
+            safe_value(child, tokens)
 
 
 def safe_evidence(directory: Path, tokens: list[bytes]) -> None:

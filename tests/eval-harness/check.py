@@ -94,6 +94,19 @@ class IsolationTests(unittest.TestCase):
         with self.assertRaisesRegex(InvalidComparison, "uncontrolled ancestor"):
             inventory(arms[1], "codex")
 
+    def test_codex_instruction_override_is_rejected(self):
+        fixture = self.base / "fixture"
+        fixture.mkdir()
+        (fixture / "AGENTS.override.md").write_text("Replace the standing contract.\n")
+        with self.assertRaisesRegex(InvalidComparison, "host instructions"):
+            check_fixture(fixture)
+
+    def test_ancestor_instruction_override_is_rejected(self):
+        _, arms = self.pair("codex")
+        (self.base / "AGENTS.override.md").write_text("Replace the standing contract.\n")
+        with self.assertRaisesRegex(InvalidComparison, "uncontrolled ancestor"):
+            inventory(arms[0], "codex")
+
     def test_symlink_is_rejected(self):
         fixture = self.base / "fixture"
         fixture.mkdir()
@@ -153,7 +166,7 @@ class IsolationTests(unittest.TestCase):
         session.parent.mkdir()
         session.write_text(json.dumps({"type": "turn_context", "payload": {"model": "test-model"}}) + "\n")
         self.assertFalse(hosts.observe(arm, "codex", "clear-communication")["activation"])
-        events.insert(2, {"type": "item.completed", "item": {"type": "command_execution", "command": f"sed -n '1,200p' {arm.config}/skills/clear-communication/SKILL.md", "exit_code": 0, "aggregated_output": "# Skill body"}})
+        events.insert(2, {"type": "item.completed", "item": {"type": "command_execution", "command": f"sed -n '1,200p' {arm.config}/skills/clear-communication/SKILL.md", "exit_code": 0, "aggregated_output": (arm.config / "skills/clear-communication/SKILL.md").read_text()}})
         (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in events))
         self.assertTrue(hosts.observe(arm, "codex", "clear-communication")["activation"])
 
@@ -167,8 +180,19 @@ class IsolationTests(unittest.TestCase):
         self.assertFalse(hosts.body_read(f"echo cat {path}", path))
         self.assertFalse(hosts.body_read(f"cat README.md; echo {path}", path))
         self.assertFalse(hosts.body_read(f"rg name {path}", path))
+        self.assertFalse(hosts.body_read(f"false && cat {path}; echo harmless", path))
+        self.assertFalse(hosts.body_read(f"cat {path} >/dev/null; echo harmless", path))
+        self.assertFalse(hosts.body_read(f"true || cat {path}", path))
+        self.assertFalse(hosts.body_read(f"cat {path} | head -n 0", path))
+        self.assertTrue(hosts.body_read(f"cat {path} && echo done", path))
         self.assertTrue(hosts.body_read(f"/bin/zsh -lc 'cat {path}'", path))
         self.assertTrue(hosts.body_read(f"pwd && sed -n '1,200p' {path}", path))
+
+    def test_codex_activation_requires_visible_body_output(self):
+        _, arms = self.pair("codex")
+        path = str(arms[0].config / "skills/clear-communication/SKILL.md")
+        self.assertFalse(hosts.body_in_output(path, "harmless\n"))
+        self.assertTrue(hosts.body_in_output(path, Path(path).read_text()))
 
     def test_failed_claude_skill_tool_is_not_activation(self):
         _, arms = self.pair("claude")
@@ -194,6 +218,23 @@ class IsolationTests(unittest.TestCase):
         (evidence / "trace.jsonl").write_bytes(marker)
         with self.assertRaisesRegex(InvalidComparison, "evidence is withheld"):
             hosts.safe_evidence(evidence, [marker])
+
+    def test_shared_prompt_secret_is_withheld_without_model_calls(self):
+        root = self.base / "repo"
+        copy_tree(self.sources["clear-communication"], root / "skills/clear-communication", skill=True)
+        marker = "synthetic-private-token-for-prompt-test"
+        prompt = self.base / "prompt.txt"
+        prompt.write_text("Return OK. " + marker)
+        with patch("evalharness.hosts.version", return_value="test-host 1"), \
+             patch("evalharness.hosts.credentials", return_value=[marker.encode()]), \
+             patch("evalharness.hosts.codex_inventory", side_effect=InvalidComparison("test preflight failure")), \
+             patch("evalharness.hosts.execute", side_effect=AssertionError("model call")), \
+             contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            code = main(["--root", str(root), "--skill", "clear-communication", "--host", "codex", "--binary", sys.executable,
+                         "--example", "near-miss-1", "--fixture", str(ROOT / "tests/eval-harness/fixtures/package"),
+                         "--prompt-file", str(prompt)])
+        self.assertEqual(code, 1)
+        self.assertFalse((root / "skills/clear-communication/evals/results").exists())
 
     def test_invalid_comparison_is_recorded_without_model_calls(self):
         # Use a temporary repository so the fixture test never writes results to

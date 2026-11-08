@@ -37,5 +37,31 @@ elif ! grep -q "nope is required" <<<"$out"; then
 fi
 [ ! -e "$work/missing" ] || fail "a failed install must not create the target"
 
+# A forced reinstall must never delete its own source, including a parent alias.
+cp -R "$fixtures/pass/consistent" "$work/source"
+ln -s "$work/source/skills" "$work/source-alias"
+for mode in copy symlink; do
+  for target in "$work/source/skills" "$work/source-alias" "$work/source/skills/cap-a/nested"; do
+    if out="$("$installer" --root "$work/source" --target "$target" --mode "$mode" --force cap-a 2>&1)"; then
+      fail "overlapping $mode install should fail: $target"
+    elif ! grep -q "overlaps the source" <<<"$out"; then
+      fail "overlap should name the safe fix: $out"
+    fi
+    [ -f "$work/source/skills/cap-a/SKILL.md" ] || fail "overlap rejection deleted its source"
+    [ ! -e "$work/source/skills/cap-a/nested" ] || fail "overlap rejection wrote inside its source"
+  done
+done
+# Replacing an installed link with a copy remains supported.
+out="$("$installer" --root "$fixtures/pass/consistent" --target "$work/link" --force cap-a 2>&1)" || fail "replacing installed links failed: $out"
+[ -f "$work/link/cap-a/SKILL.md" ] && [ ! -L "$work/link/cap-a" ] || fail "link replacement did not create a copy"
+
+# Omit only evals/results; other resources named results are part of the skill.
+mkdir -p "$work/source/skills/cap-a/assets/results" "$work/source/skills/cap-a/evals/results"
+printf '%s\n' '{"expected": true}' > "$work/source/skills/cap-a/assets/results/expected.json"
+printf '%s\n' 'private evaluation evidence' > "$work/source/skills/cap-a/evals/results/private.md"
+out="$("$installer" --root "$work/source" --target "$work/assets" cap-a 2>&1)" || fail "resource copy failed: $out"
+cmp "$work/source/skills/cap-a/assets/results/expected.json" "$work/assets/cap-a/assets/results/expected.json" || fail "copy omitted or changed a required resource"
+[ ! -e "$work/assets/cap-a/evals/results" ] || fail "copy included eval evidence"
+
 [ "$status" -eq 0 ] && echo "Installer behaves as expected."
 exit "$status"

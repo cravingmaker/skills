@@ -66,6 +66,7 @@ def closure(repo: Repo, role: str) -> tuple[list[str], list[str]]:
     """Return (repository skills, external skills) a role needs, following `requires` transitively."""
     seen: set[str] = set()
     external: set[str] = set()
+    missing: set[str] = set()
     pending = [role]
     while pending:
         name = pending.pop()
@@ -76,4 +77,8 @@ def closure(repo: Repo, role: str) -> tuple[list[str], list[str]]:
             pending.extend(repo.names(name, "requires"))
         elif name in repo.external:
             external.add(name)
+        else:
+            missing.add(name)
+    if missing:
+        raise ValueError(f"{role}: missing required skills {', '.join(sorted(missing))}; restore them or fix metadata.requires before generating profiles")
     return sorted(seen), sorted(external)

@@ -39,11 +39,15 @@ def main(arguments: list[str]) -> int:
 
     repo = skillcatalog.load(root)
     profiles = root / "catalog" / "profiles"
-    wanted = {
-        f"{name}.txt": render(repo, name)
-        for name, entry in repo.entries.items()
-        if (entry or {}).get("kind") == "role" and name in repo.frontmatter
-    }
+    try:
+        wanted = {
+            f"{name}.txt": render(repo, name)
+            for name, entry in repo.entries.items()
+            if (entry or {}).get("kind") == "role" and name in repo.frontmatter
+        }
+    except ValueError as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 1
     existing = {path.name: path.read_text(encoding="utf-8") for path in profiles.glob("*.txt")} if profiles.is_dir() else {}
 
     if check:

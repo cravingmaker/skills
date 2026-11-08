@@ -230,6 +230,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", required=True, choices=["codex", "claude"])
     parser.add_argument("--role", default="agent-orchestrator")
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parent.parent,
+                        help="source distribution containing the requested role and its generated profile")
     parser.add_argument("--mode", choices=["copy", "symlink"], default="copy")
     parser.add_argument("--extra-skill", type=Path, action="append", default=[])
     parser.add_argument("--plugin-root", type=Path, action="append", default=[])
@@ -239,7 +241,11 @@ def main():
     binary = shutil.which(args.host)
     if not binary:
         parser.error(f"{args.host} is not installed; install the host CLI first")
-    repo = Path(__file__).resolve().parent.parent
+    tools_root = Path(__file__).resolve().parent.parent
+    repo = args.root.expanduser().resolve()
+    profile_file = repo / "catalog/profiles" / f"{args.role}.txt"
+    if not profile_file.is_file():
+        parser.error(f"{profile_file} is missing; pass --root DIR with this role and run scripts/build-profiles.py there first")
     managed_sources(args.host)
     with tempfile.TemporaryDirectory(prefix="fleet-discovery-") as temporary:
         base = Path(temporary).resolve()
@@ -254,13 +260,12 @@ def main():
             (config / "settings.json").write_text(json.dumps(arm.settings))
         env = environment(arm, args.host)
         env["PYTHONDONTWRITEBYTECODE"] = "1"
-        argv = [sys.executable, str(repo / "scripts/install-skills.py"), "--target", str(config / "skills"),
-                "--mode", args.mode, args.role]
+        argv = [sys.executable, str(tools_root / "scripts/install-skills.py"), "--root", str(repo),
+                "--target", str(config / "skills"), "--mode", args.mode, args.role]
         installed = subprocess.run(argv, cwd=arm.work, env=env, capture_output=True, text=True, timeout=20)
         if installed.returncode:
             raise ValueError(installed.stderr)
         profile = sorted(path.name for path in (config / "skills").iterdir())
-        profile_file = repo / "catalog/profiles" / f"{args.role}.txt"
         expected = sorted(line for line in profile_file.read_text().splitlines() if line and not line.startswith("#"))
         if profile != expected:
             raise ValueError("installer output differs from the generated profile; rebuild the profile first")

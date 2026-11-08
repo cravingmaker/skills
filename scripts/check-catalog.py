@@ -10,6 +10,7 @@ Usage: check-catalog.py [--root DIR]
 Exit status: 0 when consistent, 1 when any rule fails, 2 on usage errors.
 """
 
+import re
 import sys
 from pathlib import Path
 
@@ -17,6 +18,36 @@ import skillcatalog
 
 KINDS = {"capability", "role"}
 STATUSES = {"unevaluated", "evaluated"}
+
+
+def missing_evaluations(directory: Path, records: list[Path]) -> list[str]:
+    """Require a valid, completed pair for each activation and near-miss prompt.
+
+    This checks the public record structure, not whether a result passed its
+    behavioral expectation; that remains a review decision.
+    """
+    expected, counts, section = set(), {}, ""
+    for line in (directory / "examples.md").read_text(encoding="utf-8").splitlines():
+        if line.startswith("## "):
+            section = line[3:].strip().lower().replace(" ", "-")
+        elif line.startswith("- ") and section in ("activation", "near-miss"):
+            counts[section] = counts.get(section, 0) + 1
+            expected.add(f"{section}-{counts[section]}")
+    completed = set()
+    for path in records:
+        text = path.read_text(encoding="utf-8")
+        if not re.search(r"^Comparison: \*\*valid\*\*\.", text, re.MULTILINE):
+            continue
+        source = re.search(r"^- \*\*Source example\.\*\* `([^`]+)`", text, re.MULTILINE)
+        arms = set()
+        for line in text.splitlines():
+            fields = [field.strip() for field in line.split("|")[1:-1]]
+            if (len(fields) == 5 and fields[0] in ("treatment", "baseline")
+                    and fields[2] in ("true", "false") and fields[3].isdigit() and fields[4] == "0"):
+                arms.add(fields[0])
+        if source and arms == {"treatment", "baseline"}:
+            completed.add(source[1])
+    return sorted(expected - completed) if expected else ["no activation or near-miss examples"]
 
 
 def check(repo: skillcatalog.Repo) -> list[str]:
@@ -44,8 +75,15 @@ def check(repo: skillcatalog.Repo) -> list[str]:
             problems.append(f"{name}: kind must be one of {sorted(KINDS)}")
         if entry.get("status") not in STATUSES:
             problems.append(f"{name}: status must be one of {sorted(STATUSES)}")
-        if entry.get("status") == "evaluated" and not any((repo.root / "skills" / name / "evals" / "results").glob("*.md")):
-            problems.append(f"{name}: status is evaluated, but skills/{name}/evals/results/ has no recorded runs")
+        if entry.get("status") == "evaluated":
+            directory = repo.root / "skills" / name / "evals"
+            records = list((directory / "results").glob("*.md"))
+            if not records:
+                problems.append(f"{name}: status is evaluated, but skills/{name}/evals/results/ has no recorded runs")
+            elif not (directory / "examples.md").is_file():
+                problems.append(f"{name}: evaluated skill has no evals/examples.md")
+            elif missing := missing_evaluations(directory, records):
+                problems.append(f"{name}: status is evaluated, but missing valid completed paired runs for {', '.join(missing)}; record them or mark unevaluated")
         if kind == "role":
             if name not in roles:
                 problems.append(f"{name}: kind role, but it is not in the catalog's roles list")

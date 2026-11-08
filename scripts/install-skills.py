@@ -69,7 +69,18 @@ def main(arguments: list[str]) -> int:
             print(f"error: {name} is required but is neither in {root / 'skills'} nor an external skill in the catalog", file=sys.stderr)
         return 1
 
-    target = Path(options.target).expanduser()
+    target = Path(options.target).expanduser().resolve()
+    # Resolve parent aliases, but not a destination skill symlink: replacing an
+    # installed symlink is safe because we unlink the link, not its source.
+    protected = [(root / "skills").resolve(), *(
+        (root / "skills" / name).resolve() for name in repo.frontmatter
+    )]
+    for name in install:
+        destination = target / name
+        if any(destination.is_relative_to(source) or source.is_relative_to(destination)
+               for source in protected):
+            print(f"error: {destination} overlaps the source skills; choose a target outside the source tree", file=sys.stderr)
+            return 1
     conflicts = [name for name in install if (target / name).exists() or (target / name).is_symlink()]
     if conflicts and not options.force:
         for name in conflicts:
@@ -87,7 +98,9 @@ def main(arguments: list[str]) -> int:
         if options.mode == "symlink":
             destination.symlink_to(source, target_is_directory=True)
         else:
-            shutil.copytree(source, destination, ignore=shutil.ignore_patterns("results"))
+            def omit_eval_results(directory, names):
+                return {"results"} if Path(directory) == source / "evals" else set()
+            shutil.copytree(source, destination, ignore=omit_eval_results)
         print(f"installed {name} ({options.mode}) -> {destination}")
 
     for name in external:

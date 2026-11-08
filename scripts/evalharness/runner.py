@@ -95,6 +95,7 @@ def record(options, data: dict, arms: list, tokens: list[bytes]) -> Path:
         raise InvalidComparison(f"{markdown} already exists; choose a new --record-id to preserve earlier evidence")
     # Export only the workspaces and deliberate trace files. Host homes and
     # authentication are never included in the retained evidence tree.
+    hosts.safe_value(data, tokens)
     for arm in arms:
         hosts.safe_evidence(arm.evidence, tokens)
         hosts.safe_evidence(arm.work, tokens)
@@ -126,7 +127,9 @@ def record(options, data: dict, arms: list, tokens: list[bytes]) -> Path:
             lines.extend(["## Invalid comparison", "", *[f"- {error}" for error in data["errors"]], ""])
         for arm in arms:
             lines.extend([f"## {arm.name.capitalize()} evidence", "", f"- [Raw JSON trace]({name}/{arm.name}/trace.jsonl)", f"- [Standard error]({name}/{arm.name}/stderr.txt)", f"- [Observed response]({name}/{arm.name}/response.txt)", f"- [Input and discovery manifest]({name}/{arm.name}/manifest.json)", f"- Artifacts: `{name}/{arm.name}/artifacts/`.", ""])
-        markdown.write_text("\n".join(lines), encoding="utf-8")
+        rendered = "\n".join(lines)
+        hosts.safe_value(rendered, tokens)
+        markdown.write_text(rendered, encoding="utf-8")
     except BaseException:
         shutil.rmtree(destination)
         markdown.unlink(missing_ok=True)

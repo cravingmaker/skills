@@ -72,13 +72,14 @@ Copy the template to a folder named after the skill. The folder name must match 
 cp -r template skills/my-skill
 ```
 
-Set `name`, write a `description` that says what the skill does and when to use it, and fill in `evals/examples.md`. Then validate, which needs [uv](https://docs.astral.sh/uv/) and, for the prose tests, [Vale](https://vale.sh) 3.26.0:
+Set `name`, write a `description` that says what the skill does and when to use it, and fill in `evals/examples.md`. Add the skill to [catalog/skills.yaml](catalog/skills.yaml) and update [catalog/coverage.md](catalog/coverage.md). Generate the profiles, then validate with [uv](https://docs.astral.sh/uv/) and, for the prose tests, [Vale](https://vale.sh) 3.26.0:
 
 ```bash
+scripts/build-profiles.py
 ./scripts/validate.sh
 ```
 
-Add the skill to [catalog/skills.yaml](catalog/skills.yaml) and the table in [Skills](#skills). The [authoring guide](docs/authoring-guide.md) sets the bar every skill meets; [AGENTS.md](AGENTS.md) lists the repository rules.
+Add the skill to the table in [Skills](#skills). The [authoring guide](docs/authoring-guide.md) sets the bar every skill meets; [AGENTS.md](AGENTS.md) lists the repository rules.
 
 ## Contributing and security
 
