@@ -54,11 +54,81 @@ The wider Codex cache replay includes top-level cached packages' declared skills
 
 The replay preserves source names, descriptions, manual-only flags, and Codex `agents/openai.yaml` policy, but installs metadata as standalone skills. Plugin namespaces and original plugin paths can add characters in a live plugin session. Server-managed plugin enablement, usage-based ranking, and routing correctness are outside this local listing proof. Cache contents and host versions can change, so reruns retain their own source hashes and counts.
 
-## Remaining foundation acceptance evidence
+## Routing correctness with existing skills
 
-The agreed design also calls for routing correctness with the existing inventory plus one role and several overlapping roles. This proof measures discovery and listing size only. Thirty distinct placeholders do not test shared-capability deduplication or model routing. Those acceptance checks remain open; record the role profiles, shared closure, fixed routing prompts, expected selections, observed selections, and host/model revisions before treating that part of the foundation as complete.
+All 32 valid routing trials matched the selection sets fixed before execution: eight prompts, two profile scenarios, and both hosts. There were no unexpected first selections or diversions into the existing installed skills. This supplies the routing observations requested by F2-02 and fleet-design-v3 §F4 for the scenarios below; it does not establish a general routing error rate.
 
-F1-08 remains an acceptance gate for PR #2. Keep the foundation in draft until both hosts have the required overlap and routing evidence, or the user explicitly changes that scope. Waiting for the next real role can schedule the evidence work, but does not close the gate. A disposable distribution with overlapping role profiles can establish install deduplication without adding another role to this PR; the existing downstream role already permits the single-role routing trial.
+Measured on 2026-11-08 against the downstream `feat/role-agent-orchestrator` worktree at `10fa1016a0a87e8c1c501d1adde11a9bde6fd683`. Claude Code `2.1.311` reported effective model `claude-opus-5-5`; Codex CLI `0.167.0` reported `gpt-6.1-sol`. Both used the host default in a clean generated configuration. Claude's `system.init` and Codex's session rollout establish those model names; no more specific backend weight revision was exposed.
+
+### Profiles and shared dependency closures
+
+The single-role scenario installed `agent-orchestrator` alongside the user's existing installed skills. The overlap scenario installed it with three synthetic role routers from a disposable distribution outside every repository. The synthetic skills are test fixtures, not shipped roles.
+
+| Profile | Complete required closure |
+| --- | --- |
+| `agent-orchestrator` | `agent-briefing`, `agent-debate`, `agent-orchestrator`, `clear-communication`, `decision-log`, `result-verification`, `work-decomposition` |
+| `proof-quality-lead` | `agent-briefing`, `agent-debate`, `clear-communication`, `decision-log`, `proof-quality-lead`, `proof-quality-review`, `result-verification`, `work-decomposition` |
+| `proof-release-lead` | `clear-communication`, `decision-log`, `proof-release-lead`, `proof-release-plan`, `work-decomposition` |
+| `proof-design-chair` | `agent-briefing`, `agent-debate`, `clear-communication`, `decision-log`, `proof-design-chair`, `proof-design-options`, `work-decomposition` |
+
+The four closures contain 27 entries in total and resolve to 13 distinct skill directories, avoiding 14 duplicate copies. Each shared capability appeared once in each installed profile inventory. In particular, `agent-debate` is shared by the orchestrator, quality lead, and design chair. The synthetic capabilities deliberately resemble `result-verification`, `work-decomposition`, and `agent-debate` in their descriptions, while their bodies distinguish human QA, human releases, and proposed design comparisons.
+
+Every model session used the real `install-skills.py --root DISTRIBUTION --target PRIVATE_SKILLS --mode copy NAME...` from a fresh workspace outside the checkout. The installer received one role name or all four together; its output and installed bytes were checked against the declared union. Optional handoffs were not added to the profile closure.
+
+The existing inventory was copied with full skill bodies, resources, and original visibility fields, including Codex `agents/openai.yaml`. Its source set matches the registered-plugin/system or synced snapshot used above: 42 existing Codex skill names and 43 Claude skill names. All 85 source `SKILL.md` hashes still matched after the experiment. Existing plugin execution, connectors, hooks, and personal settings were excluded; these were standalone copies of the installed skills.
+
+| Host | Single-role inventory | Overlapping-role inventory |
+| --- | ---: | ---: |
+| Claude Code | 50 user skill names | 56 user skill names |
+| Codex | 50 records, 49 distinct names | 56 records, 55 distinct names |
+
+The extra Codex record is a byte-identical `starter-workflow` template nested inside the existing `create-plugin` assets as well as installed at top level; it is unrelated to profile dependencies. Claude additionally advertised the SDK-declared built-in `doctor` skill in every valid startup trace; it was never invoked. The discovery and startup inventories were checked for uncontrolled sources.
+
+### Fixed prompts and expected selections
+
+The prompt set and selection rubric were written at `2026-11-08T10:04:29Z`, before the first model start at `10:05:43Z`. The SHA-256 of the sorted JSON case set is `b27947959471894da745bbd6843176ed63fc75ddc59002767791aa71e4eb9718`. Each session received the same standing communication contract and a routing-only boundary: select and read relevant skills, give the next action, and stop before executing the larger task, writing artifacts, or dispatching workers.
+
+The first confirmed activation must be in the stated set. `None` requires no skill activation; the absent-role controls also require reporting that role unavailable. Subsequent reads may load required prerequisites or justified task-relevant capabilities. The ambiguous prompts deliberately allow several acceptable entry points; they do not test a unique winning skill.
+
+| ID | Exact prompt | Expected first selection, single role | Expected first selection, overlap |
+| --- | --- | --- | --- |
+| R1 | Act as agent-orchestrator. Plan a fleet of three AI agents to compare data-migration approaches, with one integration owner, disjoint write paths, at most two concurrent workers, and six total worker starts. Give the initial plan only; do not dispatch. | `agent-orchestrator` | `agent-orchestrator` |
+| R2 | Coordinate a resumed multi-agent run. One worker report is saved, a second worker has no receipt, and two incompatible approaches remain. Describe reconciliation and the next step before starting more agents. | `agent-orchestrator` or `decision-log` | Same |
+| R3 | Act as proof-quality-lead. Assess this human QA handoff: the criterion is that all five exports open; the handoff says exports pass but supplies screenshots for only two. Identify the acceptance gap and next check. If that role is unavailable, report it unavailable and stop. | None; role unavailable | `proof-quality-lead` |
+| R4 | Act as proof-release-lead. Plan a human release with database, documentation, and support owners; database and documentation both change release-notes.md, and the release budget is not yet set. Identify ownership, order, and the first budget decision. If that role is unavailable, report it unavailable and stop. | None; role unavailable | `proof-release-lead` |
+| R5 | Compare two proposed database migration approaches with an evidence rubric and a bounded disagreement process. Give the process only; no workers or live checks. | `agent-debate` | `agent-debate`, `proof-design-chair`, or `proof-design-options` |
+| R6 | The plan has tasks, owners, shared files, and an unknown worker budget. Check whether splitting it is worthwhile and identify the first budget decision. Do not start anyone. | `work-decomposition` or `agent-orchestrator` | Same |
+| R7 | What does the English word 'orchestrator' mean? Answer in one sentence. | None | None |
+| R8 | Compute 19 + 23. Reply with only the number. | None | None |
+
+### Observed selections and trace evidence
+
+| Prompt | Claude, single | Codex, single | Claude, overlap | Codex, overlap |
+| --- | --- | --- | --- | --- |
+| R1 | `agent-orchestrator` | `agent-orchestrator` | `agent-orchestrator` | `agent-orchestrator` |
+| R2 | `agent-orchestrator` | `agent-orchestrator` | `agent-orchestrator` | `agent-orchestrator` |
+| R3 | None; unavailable | None; unavailable | `proof-quality-lead` | `proof-quality-lead` |
+| R4 | None; unavailable | None; unavailable | `proof-release-lead` | `proof-release-lead` |
+| R5 | `agent-debate` | `agent-debate` | `proof-design-options` | `proof-design-options` |
+| R6 | `work-decomposition` | `work-decomposition` | `work-decomposition` | `work-decomposition` |
+| R7 | None | None | None | None |
+| R8 | None | None | None | None |
+
+A successful Claude `Skill` call or direct `Read` of the installed body counts as activation. Codex needs a successful simple reader command containing the absolute `SKILL.md` path and visible body text, using the harness's rule. Skill names in answers, searches, failed commands, and inventory entries do not count. All 60 recorded activation events were checked against their raw trace lines. The only unclassified Codex command, single-role R4 at trace line 5, was `rg --files`; manual inspection confirmed that it listed paths without reading a skill body, so no activation was added.
+
+The raw evidence stays outside this public repository, as raw eval evidence does: the frozen experiment, run ledger, integrity checks, each run's activation sequence, raw trace, and result record, the profiles, exact prompts, source hashes, configurations, effective inventories, models, sessions, usage, installer output, and the manual trace decision. Codex records also include the session rollout. None of the 32 valid fixtures changed, and all sessions were distinct.
+
+### Misroutes, budget, and limits
+
+No unexpected first selection occurred under the fixed rubric. Both hosts changed R5 from `agent-debate` to `proof-design-options` when the overlap profiles were present; that was an allowed selection. The synthetic description closely matches the prompt's evidence-rubric and bounded-disagreement wording, a likely explanation for the shift rather than a demonstrated causal result. This does not establish that a role router should always take precedence over a directly matching capability.
+
+The absent-role controls exposed a separate output issue: Claude looked for native agent definitions and suggested a `.claude/agents` file for the missing role. It still loaded no skill and met the routing expectation, but that suggestion does not reproduce this repository's role-skill installation workflow. Codex sometimes reread a capability body, including `agent-debate` during resumption; those extra reads are retained in the report rather than counted as new skill selections.
+
+There were 33 model starts, including one discarded Claude startup-validation trial, with a peak of two active runs and seven starts left under the 40-run cap. The first local parser incorrectly rejected the declared built-in `doctor` entry. That first trial's trace was not retained and supports no routing claim; R1 was repeated once. R2's retained trace was reclassified after the parser correction without another model call, with its initial parser record preserved. No prompt or expected selection changed. Four initial discovery preflights used zero model turns.
+
+These are single trials per host, prompt, and profile scenario, with different host-default models. They test initial selection, not completed delegation, exhaustive prerequisite reading, final deliverable quality, or a causal effect of descriptions. The generic routing boundary explicitly asks models to read relevant instructions, so the observations are not an unprompted activation-rate estimate. Plugin namespaces, plugin tools, server-managed discovery, dormant cached packages, and production routing with live plugin configuration are not reproduced. There was no production-model listing-budget measurement in these trials. The existing discovery-cost captures above remain separate evidence.
+
+Each run used a fresh private home, configuration, cache, temporary directory, and workspace with the eval harness's environment allowlist and generated host settings. Only authentication was copied into mode-0600 temporary files; it was never exported or printed. Exported evidence was checked for the known credential values. All private host homes were removed, and the retained evidence contains no authentication files. The user's installed folders received no writes.
 
 ## Reproduce and validate
 
@@ -83,4 +153,6 @@ done
 
 For the installed snapshot, add `--plugin-root /absolute/cache/package/version` for each selected registration and `--extra-skill /absolute/SKILL.md` for system or synced metadata. Add `--placeholders 30` to that same command for the combined synthetic case. The worker report retains the exact expanded commands and source names with description lengths. Each JSON record includes the host version, installer result, discovery rows, listing text and hash, policy flags, and per-description outcomes; snapshot records also include hashes of the existing source files.
 
-All nine [offline probe tests](../tests/discovery-cost.py), installer fixtures, and 17 eval-harness isolation tests passed without model calls. `./scripts/validate.sh` exited `0`, including the pinned skill validator, catalog/profile checks, skill fixtures, freshness checks, and zizmor. Vale was not installed, so the suite skipped prose lint; the separate prose command exited `2` with that setup diagnostic. Run `uv run --script tests/discovery-cost.py`, `tests/install/run.sh`, and `tests/eval-harness/run.sh` to repeat the focused checks.
+All nine [offline probe tests](../tests/discovery-cost.py), installer fixtures, and 22 eval-harness isolation tests passed without model calls. `./scripts/validate.sh` exited `0`, including the pinned skill validator, catalog/profile checks, skill fixtures, freshness checks, and zizmor. Vale was not installed, so the suite skipped prose lint; the separate prose command exited `2` with that setup diagnostic. Run `uv run --script tests/discovery-cost.py`, `tests/install/run.sh`, and `tests/eval-harness/run.sh` to repeat the focused checks.
+
+The routing experiment used a one-off local driver built on the existing harness adapters and the real installer; no new repository script was needed. The driver preserved the frozen prompts, refused to overwrite run records, checked the source snapshot before preparing, rejected unmanaged inventory changes, reserved each model start in a ledger before launch, and removed each host home on success or failure. It is not a supported public routing harness, so a replay needs a new driver and a new, explicitly allocated budget of 32 model sessions.
