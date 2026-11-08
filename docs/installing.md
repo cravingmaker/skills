@@ -29,7 +29,7 @@ Only user entries get `agents/openai.yaml` with `policy.allow_implicit_invocatio
 
 ## Claude Code
 
-Use explicit host, skill target, actual settings target, scope, and project root. For a personal install, `<config-dir>` is `CLAUDE_CONFIG_DIR` if set, otherwise `$HOME/.claude`. For project and local scopes, the skill target is `<project>/.claude/skills`; settings are respectively `<project>/.claude/settings.json` and `<project>/.claude/settings.local.json`.
+Use explicit host, skill target, actual settings target, scope, and project root. The adapter supports a standalone project or the main checkout root. Linked Git worktrees, separate Git directories and repository subdirectories fail before writes because their effective local settings may live elsewhere. For a personal install, `<config-dir>` is `CLAUDE_CONFIG_DIR` if set, otherwise `$HOME/.claude`. For project and local scopes, the skill target is `<project>/.claude/skills`; settings are respectively `<project>/.claude/settings.json` and `<project>/.claude/settings.local.json`.
 
 ```sh
 scripts/install-skills.py --host claude --target <config-dir>/skills --settings <config-dir>/settings.json --settings-scope user --project-root <project> <name> <other-name>

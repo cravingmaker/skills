@@ -66,7 +66,16 @@ def support(binary: str) -> dict:
 def plan(repo, names: list[str], target: Path, settings: Path, scope: str,
          project: Path, binary: str) -> dict:
     config = Path(os.environ.get("CLAUDE_CONFIG_DIR", str(Path.home() / ".claude"))).expanduser().resolve()
-    project_config = project.resolve() / ".claude"
+    project = project.resolve()
+    # This minimal adapter supports the main checkout root or a non-Git project.
+    # Claude can read local settings from the main checkout for linked worktrees.
+    for ancestor in (project, *project.parents):
+        marker = ancestor / ".git"
+        if marker.exists() or marker.is_symlink():
+            if ancestor != project or marker.is_symlink() or not marker.is_dir():
+                raise ValueError("Claude settings in linked Git worktrees, separate Git directories or repository subdirectories are unsupported; use the main checkout root or a standalone project")
+            break
+    project_config = project / ".claude"
     layers = [config / "settings.json", project_config / "settings.json", project_config / "settings.local.json"]
     if len(set(layers)) != 3:
         raise ValueError("Claude user and project settings overlap; choose a separate project root")
@@ -118,13 +127,14 @@ def plan(repo, names: list[str], target: Path, settings: Path, scope: str,
         higher = next((value for value in reversed(values[index + 1:]) if value is not None), None)
         if higher in ("on", "name-only"):
             raise ValueError(f"{name}: a higher-precedence Claude settings file exposes this user entry; preview/apply at that scope instead")
-        if current in ("off", "user-invocable-only") or higher in ("off", "user-invocable-only"):
-            continue
-        # Avoid overriding a disabled value at a lower precedence with user-only.
+        # Recheck disabled lower settings before accepting an existing override.
         lower = next((value for value in reversed(values[:index]) if value is not None), None)
         if lower == "off":
-            if current is not None:
+            effective = higher if higher is not None else current
+            if effective not in (None, "off"):
                 raise ValueError(f"{name}: this scope would relax a lower disabled setting; reconcile it explicitly")
+            continue
+        if current in ("off", "user-invocable-only") or higher in ("off", "user-invocable-only"):
             continue
         owned.setdefault(name, {"written": "user-invocable-only", "previous": current})
         overrides[name] = "user-invocable-only"

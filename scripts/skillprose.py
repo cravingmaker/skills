@@ -9,6 +9,26 @@ POINTER = re.compile(r"\bthe\s+(?:(?P<provider>[a-z0-9-]+)\s+)?`(?P<name>[^`\n]+
 LINK = re.compile(r"\[[^\]\n]*\]\(([^)\s]+)(?:\s+[^)]*)?\)")
 
 
+REFERENCE_DEFINITION = re.compile(r"^ {0,3}\[([^\]\n]+)\]:[ \t]*(?:<([^>\n]+)>|(\S+))[^\n]*$", re.M)
+REFERENCE_LINK = re.compile(r"\[([^\]\n]+)\](?:\[([^\]\n]*)\])?(?!\()")
+
+
+def link_targets(body: str) -> list[str]:
+    """Resolve inline and used full, collapsed or shortcut reference links."""
+    def label(value):
+        return " ".join(value.split()).casefold()
+    definitions = {}
+    for match in REFERENCE_DEFINITION.finditer(body):
+        definitions.setdefault(label(match[1]), match[2] or match[3])
+    text = REFERENCE_DEFINITION.sub("", body)
+    targets = [match[1] for match in LINK.finditer(text)]
+    for match in REFERENCE_LINK.finditer(text):
+        target = definitions.get(label(match[2] or match[1]))
+        if target is not None:
+            targets.append(target)
+    return targets
+
+
 def prose(text: str) -> str:
     """Blank fenced code and explicitly marked historical crosswalks, keeping lines."""
     result, fence, historical = [], None, False
@@ -39,8 +59,8 @@ def linked_resources(skill_dir: Path) -> tuple[list[Path], list[str]]:
     """Only one level from SKILL.md; links must stay inside owned resources."""
     body = prose((skill_dir / "SKILL.md").read_text(encoding="utf-8"))
     paths, problems = set(), []
-    for match in LINK.finditer(body):
-        value = unquote(urlsplit(match[1].strip("<>")).path)
+    for target in link_targets(body):
+        value = unquote(urlsplit(target.strip("<>")).path)
         relative = Path(value)
         if relative.parts[:1] not in (("references",), ("assets",)):
             continue

@@ -179,6 +179,22 @@ When needed, read the `cap-b` skill.
         path.write_text(path.read_text() + "\nRead the `unknown-after-history` skill.\n")
         self.assertIn("unknown prose skill unknown-after-history", "\n".join(self.checked()))
 
+    def test_prose_reference_links_check_only_directly_used_resources(self):
+        path = self.root / "skills/cap-a/SKILL.md"
+        original = path.read_text()
+        (path.parent / "references").mkdir()
+        guide = path.parent / "references/method.md"
+        for pointer in ("[guide][METHOD]", "[method][]", "[method]"):
+            with self.subTest(pointer=pointer):
+                path.write_text(original + "\nRead " + pointer + ".\n\n[method]: references/method.md\n[unused]: references/absent.md\n")
+                guide.write_text("Use the `unknown-future-helper` skill.\n")
+                self.assertIn("unknown prose skill unknown-future-helper", "\n".join(self.checked()))
+                guide.write_text("Use the `cap-b` skill.\n")
+                self.assertEqual(self.checked(), [])
+                self.assertEqual(self.checked(), [])
+        guide.unlink()
+        self.assertIn("linked resource references/method.md is missing", "\n".join(self.checked()))
+
     def test_prose_one_level_owned_reference_and_asset(self):
         path = self.root / "skills/cap-a/SKILL.md"
         path.write_text(path.read_text() + "\nRead [guide](references/guide.md) for the narrow case and [data](assets/note.txt).\n")
@@ -325,6 +341,22 @@ When needed, read the `cap-b` skill.
         self.claude("--apply", "--force", "cap-a")
         self.assertEqual(json.loads(path.read_text())["skillOverrides"], {"cap-b": "user-invocable-only", "unrelated": "off"})
 
+    def test_settings_new_lower_off_rejects_owned_manual_override(self):
+        self.mode()
+        self.claude("--apply", "cap-a", scope="project")
+        user = self.write_settings({"skillOverrides": {"cap-a": "off"}})
+        project = self.project / ".claude/settings.json"
+        state = project.with_name(project.name + ".skills-installer.json")
+        before = user.read_bytes(), project.read_bytes(), state.read_bytes()
+        _, error = self.claude("--apply", "cap-a", scope="project", code=1)
+        self.assertIn("lower disabled setting", error)
+        self.assertEqual((user.read_bytes(), project.read_bytes(), state.read_bytes()), before)
+        project.write_text('{}')  # The user explicitly reconciles the conflict.
+        for _ in range(2):
+            output, _ = self.claude("--apply", "cap-a", scope="project")
+            self.assertEqual(json.loads(output)["settings"]["effective"]["cap-a"], "off")
+            self.assertEqual(user.read_bytes(), before[0])
+
     def test_settings_mode_change_restores_previous_and_preserves_user_edits(self):
         self.mode()
         path = self.write_settings({"skillOverrides": {"cap-a": "name-only"}})
@@ -348,6 +380,22 @@ When needed, read the `cap-b` skill.
             self.claude("--apply", "--force", "cap-a")
             self.assertEqual(json.loads(path.read_text())["skillOverrides"]["cap-a"], value)
             self.mode()
+
+    def test_settings_rejects_worktree_before_writes(self):
+        self.mode()
+        main = self.base / "main"
+        subprocess.run(["git", "init", "-q", str(main)], check=True, capture_output=True)
+        subprocess.run(["git", "-C", str(main), "worktree", "add", "--orphan", str(self.project)], check=True, capture_output=True)
+        (main / ".claude").mkdir()
+        local = main / ".claude/settings.local.json"
+        local.write_text('{"skillOverrides":{"cap-a":"on"}}')
+        user = self.write_settings({"theme": "preserved"})
+        before = user.read_bytes(), local.read_bytes()
+        _, error = self.claude("--apply", "cap-a", code=1)
+        self.assertIn("linked Git worktrees", error)
+        self.assertEqual((user.read_bytes(), local.read_bytes()), before)
+        self.assertFalse((self.config / "skills").exists())
+        self.assertFalse(user.with_name(user.name + ".skills-installer.json").exists())
 
     def test_settings_all_scopes_and_effective_precedence(self):
         self.mode()

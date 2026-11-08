@@ -261,11 +261,11 @@ def main():
         env = environment(arm, args.host)
         env["PYTHONDONTWRITEBYTECODE"] = "1"
         argv = [sys.executable, str(tools_root / "scripts/install-skills.py"), "--root", str(repo),
-                "--target", str(config / "skills"), "--mode", args.mode, args.role]
+                "--target", str(config / "skills"), "--mode", args.mode, "--apply", args.role]
         installed = subprocess.run(argv, cwd=arm.work, env=env, capture_output=True, text=True, timeout=20)
         if installed.returncode:
             raise ValueError(installed.stderr)
-        profile = sorted(path.name for path in (config / "skills").iterdir())
+        profile = sorted(path.name for path in (config / "skills").iterdir() if path.name != ".skills-installer.json")
         expected = sorted(line for line in profile_file.read_text().splitlines() if line and not line.startswith("#"))
         if profile != expected:
             raise ValueError("installer output differs from the generated profile; rebuild the profile first")

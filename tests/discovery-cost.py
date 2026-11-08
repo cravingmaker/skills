@@ -11,6 +11,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 spec = importlib.util.spec_from_file_location("discovery", Path(sys.path[0]) / "measure-skill-discovery.py")
@@ -19,6 +20,21 @@ spec.loader.exec_module(discovery)
 
 
 class DiscoveryEvidence(unittest.TestCase):
+    def test_probe_applies_real_installer_and_excludes_its_receipt(self):
+        root = Path(__file__).resolve().parent.parent
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "result.json"
+            arguments = ["measure-skill-discovery.py", "--host", "codex", "--root", str(root), "--output", str(output)]
+            def reached(arm, binary):
+                expected = sorted(line for line in (root / "catalog/profiles/agent-orchestrator.txt").read_text().splitlines() if line and not line.startswith("#"))
+                self.assertEqual(sorted(row["name"] for row in arm.inventory), expected)
+                self.assertTrue((arm.config / "skills/.skills-installer.json").is_file())
+                self.assertTrue(all((arm.config / "skills" / name / "SKILL.md").is_file() for name in expected))
+                raise RuntimeError("installed profile verified before host discovery")
+            with patch.object(sys, "argv", arguments), patch.object(discovery.shutil, "which", return_value=sys.executable), patch.object(discovery, "managed_sources", return_value=[]), patch.object(discovery, "codex_inventory", side_effect=reached):
+                with self.assertRaisesRegex(RuntimeError, "installed profile verified"):
+                    discovery.main()
+
     def test_codex_extracts_dynamic_roots_and_rows(self):
         block = "### Skill roots\n- `r0` = `/private/home/skills`\n### Available skills\n- sample: Review data (file: r0/sample/SKILL.md)"
         request = {"input": [{"content": [{"text": "<skills_instructions>Static instructions\n" + block + "\n</skills_instructions>"}]}]}
