@@ -63,6 +63,7 @@ def is_source_url(value: object) -> bool:
         return False
     try:
         parsed = urlsplit(value)
+        _ = parsed.port  # Reading this property validates the port.
         return bool(parsed.scheme and parsed.netloc and parsed.hostname)
     except ValueError:
         return False
