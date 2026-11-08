@@ -1,7 +1,7 @@
 Portions of this skill are adapted from pstack (cursor/plugins),
 https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack
 at revision 6b0300214a09fd6029cfb7077043125758cd1fd2, and modified.
-Adapted material: references/editing-rules.md (from the unslop and technical-writing skills) and SKILL.md sections drawn from the bro, teach, and in-your-own-words skills.
+Adapted material: references/editing-rules.md (from unslop, technical-writing, and teach); assets/vale/ClearCommunication/*.yml (rules derived from unslop); and SKILL.md sections drawn from bro, teach, and in-your-own-words.
 
 The upstream license follows.
 

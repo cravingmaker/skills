@@ -44,7 +44,12 @@ def check_metadata(frontmatter: dict) -> list[str]:
     metadata = frontmatter["metadata"]
     if not isinstance(metadata, dict):
         return ["metadata must be a mapping of strings to strings"]
-    return [
+    key_problems = [
+        f"metadata key {key!r} must be a string; quote it"
+        for key in metadata
+        if not isinstance(key, str)
+    ]
+    return key_problems + [
         f"metadata.{key} must be a string, got {type(value).__name__}"
         + ("; quote it" if not isinstance(value, (dict, list)) else "")
         for key, value in metadata.items()
@@ -56,16 +61,24 @@ def check_provenance(skill_dir: Path, frontmatter: dict) -> list[str]:
     metadata = frontmatter.get("metadata")
     metadata = metadata if isinstance(metadata, dict) else {}
     source = metadata.get("source")
-    license_files = sorted(path.name for path in skill_dir.glob("LICENSE*"))
+    license_files = sorted(path.name for path in skill_dir.glob("LICENSE-*") if path.is_file())
+    license_value = frontmatter.get("license")
+    has_license = isinstance(license_value, str) and bool(license_value.strip())
     problems = []
-    if source is not None:
+    if "license" in frontmatter and not has_license:
+        problems.append("license must be a non-empty string")
+    if has_license and license_value != "MIT" and not license_files:
+        problems.append("a non-MIT license needs a LICENSE-<upstream> file in the skill folder")
+    if "source" in metadata:
+        if not isinstance(source, str) or not source.strip():
+            problems.append("metadata.source must be a non-empty upstream URL")
         revision = metadata.get("source-revision")
         if not isinstance(revision, str) or REVISION.fullmatch(revision) is None:
             problems.append("metadata.source needs metadata.source-revision set to a full 40-character commit SHA")
         if not license_files:
-            problems.append("metadata.source is set, so the skill folder needs the upstream license notice (a LICENSE* file)")
-        if "license" not in frontmatter:
-            problems.append("adapted skills need a license field in the frontmatter")
+            problems.append("metadata.source is set, so the skill folder needs the upstream license notice (a LICENSE-<upstream> file)")
+        if not has_license:
+            problems.append("adapted skills need a non-empty license field in the frontmatter")
     elif license_files:
         problems.append(f"{', '.join(license_files)} present without metadata.source; declare where the material comes from")
     return problems

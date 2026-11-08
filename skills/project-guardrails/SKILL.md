@@ -6,6 +6,8 @@ metadata:
   source: https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack
   source-revision: 6b0300214a09fd6029cfb7077043125758cd1fd2
   source-license: MIT, see LICENSE-pstack
+  source-files: "pstack/skills/create-verification-skill/SKILL.md"
+  local-changes: "Kept a conditional launch, doctor, drive, evidence, and cleanup recipe; omitted feature sweeps and maintenance loops."
 ---
 
 # Project guardrails

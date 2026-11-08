@@ -19,6 +19,22 @@ expect_exit() {
 expect_exit 0 "pass.md" "$check" pass.md
 [ -z "$output" ] || fail "pass.md should report nothing, got: $output"
 
+for file in protected.md protected.txt; do
+  expect_exit 0 "$file" "$check" "$file"
+  [ -z "$output" ] || fail "$file should report nothing, got: $output"
+done
+
+expect_exit 1 "prose outside quotation" "$check" outside-source.md
+[ "$(grep -c 'ClearCommunication.Filler' <<<"$output")" -eq 1 ] || fail "only prose outside the quotation should be flagged"
+
+expect_exit 1 "unquoted contraction" "$check" unquoted-contraction.md
+grep -q "ClearCommunication.Filler" <<<"$output" || fail "apostrophes must not hide unquoted prose"
+
+expect_exit 2 "missing input file" "$check" no-such-fixture.md
+expect_exit 2 "missing config argument" "$check" --config
+expect_exit 2 "mixed stdin and files" sh -c "printf 'Press Enter.\n' | $check - errors.md"
+expect_exit 2 "missing Vale" env VALE_BIN=/no-such-vale "$check" pass.md
+
 expect_exit 1 "errors.md" "$check" errors.md
 for rule in ChatbotPhrases Filler CurlyQuotes HeadingEmoji; do
   grep -q "ClearCommunication.$rule" <<<"$output" || fail "errors.md should trigger $rule"

@@ -6,6 +6,8 @@ metadata:
   source: https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack
   source-revision: 6b0300214a09fd6029cfb7077043125758cd1fd2
   source-license: MIT, see LICENSE-pstack
+  source-files: "pstack/skills/{unslop,technical-writing,bro,teach,in-your-own-words}/SKILL.md"
+  local-changes: "Combined clarification and writing guidance; added house style and Vale checks; kept technical terms and em dashes by default; omitted mandatory teaching workflows."
 ---
 
 # Clear communication
@@ -37,14 +39,14 @@ Done when every consequential ambiguity is resolved, assumed and stated, or aske
 3. Name the mechanism, the number, or the command instead of the feeling. Use the plain word, the active voice, and one name per thing.
 4. Cut every word that does no work. Keep the small words that carry structure, and expand any over-compressed fragment into a whole sentence.
 5. Apply the rule catalog in [references/editing-rules.md](references/editing-rules.md) for anything longer than a short answer.
-6. When the text lives in a file or can be piped, run the mechanical check:
+6. When the text lives in a file or can be piped, run the mechanical check. Keep source quotations in blockquotes or wrap inline quotations in `<span class="quoted-source">...</span>` in the lint input. For output that cannot contain markup, lint a temporary Markdown copy and preserve the original output. Never rewrite source text to clear a lint error:
 
    ```sh
    scripts/check-prose.sh path/to/file.md
    printf '%s\n' "$draft" | scripts/check-prose.sh -
    ```
 
-   Exit status 1 means errors: fix every one. Suggestions are advice: fix each one or keep it on purpose. Exit status 2 means Vale is missing; say so and continue with the catalog.
+   Exit status 1 means errors: fix every one. Suggestions are advice: fix each one or keep it on purpose. Exit status 2 means a usage or setup failure; read the diagnostic and fix it. If Vale is unavailable, say so and continue with the catalog.
 
 Done when the check reports no errors, every suggestion is fixed or kept on purpose, and every fact, number, and identifier still matches its source.
 
@@ -54,4 +56,4 @@ For a consequential long document (a README, a design doc, a report someone acts
 
 ## Repair your own last message
 
-When the user signals confusion ("what?", "simpler", "say that plainly"), restate your previous message in plain language, shorter, with the jargon replaced by the mechanism it names. Keep every fact.
+When the user signals confusion ("what?", "simpler", "say that plainly"), restate your previous message in plain language, with the jargon replaced by the mechanism it names. Keep every fact and use the fewest words that make it clear; an over-compressed message may need to grow.

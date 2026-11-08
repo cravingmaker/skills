@@ -6,6 +6,8 @@ metadata:
   source: https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/correct
   source-revision: 6b0300214a09fd6029cfb7077043125758cd1fd2
   source-license: MIT, see LICENSE-pstack
+  source-files: "pstack/skills/correct/SKILL.md"
+  local-changes: "Limited work to evidenced recurrence and authorized remedies; removed history sweeps, mandatory commits, approval and expiry ceremonies, and automatic instruction edits."
 ---
 
 # Correct
