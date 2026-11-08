@@ -91,7 +91,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 def read_report(path: str) -> str:
     try:
         if path == "-":
-            return sys.stdin.read()
+            return sys.stdin.buffer.read().decode("utf-8")
         file = Path(path)
         if not file.is_file():
             print(f"error: report not found: {path}. Pass the saved raw report.", file=sys.stderr)

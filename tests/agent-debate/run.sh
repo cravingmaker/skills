@@ -57,6 +57,8 @@ input_dir=$(mktemp -d)
 trap 'rm -rf "$input_dir"' EXIT
 printf '\377' > "$input_dir/invalid-utf8.md"
 expect 2 "read a complete UTF-8 report" "$input_dir/invalid-utf8.md"
+printf 'REVIEWED: stdin-fixture at abc; scope: whole file\ninvalid: \377\nVERDICT: FULL AGREEMENT\n' > "$input_dir/invalid-stdin.md"
+expect 2 "read a complete UTF-8 report" - < "$input_dir/invalid-stdin.md"
 expect 2 "report not found" no-such-report.md
 expect 2 "--round must be 1 or more" --round 0 pass/agreement.md
 expect 2 "is not an ID like R1-01" --prior r1 pass/agreement.md
