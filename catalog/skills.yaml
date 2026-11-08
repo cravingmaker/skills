@@ -41,7 +41,7 @@ skills:
   clear-communication:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
   project-guardrails:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
@@ -57,7 +57,7 @@ skills:
 
   agent-orchestrator:
     kind: role
-    status: unevaluated
+    status: evaluated
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]

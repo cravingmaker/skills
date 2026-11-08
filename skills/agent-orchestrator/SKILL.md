@@ -38,6 +38,8 @@ Enter at the step the task needs; no flow is a mandatory pipeline.
 
 Read the `implement-spec` skill and use it as the single approved-code-ticket runner. Resolve the exact approved spec, ticket source and closure rules from the configured tracker contract, and the configured domain paths; preserve lazy absent glossary or ADR files. Import stable IDs, status, blockers, source hashes and named Proof through the `work-decomposition` skill without a second interview or decomposition.
 
+When required dispatch or host-owned isolation is unavailable, keep this flow at source-bound preflight and report worker execution and integrated acceptance as blocked.
+
 Continue under this same coordinator, PLAN.md/LOG.md/DECISIONS.md and remaining finite budget. The runner owns dependency-frontier scheduling, host-owned isolation, leaf briefs, scoped review/fix rounds, worker acceptance and integration proof. It adds no second controller or ledger. Close tickets only after worker and integrated evidence are accepted, and only within current tracker authority. A child returns artifact/check state; monitoring belongs to the root only when requested or while an already authorized action waits.
 
 For one authorized slice, use the `implement` skill; an accepted testing seam can use the `tdd` skill. Generic non-code coordination continues through the flow below. A mixed run keeps one graph and budget, with code-ticket execution assigned to the same runner.
