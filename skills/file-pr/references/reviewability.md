@@ -1,0 +1,56 @@
+# Reviewability
+
+Read this when an existing PR is hard to review, or before shaping commits and stacks for a new one. The default goal is reviewability without behavior changes.
+
+## Inspect
+
+1. Resolve the target PR from the user's link or the current branch.
+2. Inspect the commits, diff size, changed paths, generated files and the current description.
+3. Name the reviewability problems: noisy commits, a stale description, unrelated changes, mechanical and logic changes mixed together, missing tests, or no clear entry point for the reviewer.
+
+## Improve the description first
+
+When code behavior should stay untouched, prefer the description and review notes:
+
+- A short summary that matches the actual diff.
+- Core files separated from generated or mechanical files.
+- Risky behavior changes, migration order, rollout plan and test coverage called out.
+- Links to the issue, dashboard or design doc when they explain intent.
+
+If the PR is too large to make reviewable with notes, recommend splitting it instead of polishing around the problem.
+
+## Commits and stacks
+
+- Prefer several narrow PRs to one large one. Each commit is landable and ordered to tell the story; a commit body does not restate its subject.
+- A stack is a base-branch chain: the root targets trunk, and each child rebases onto its parent's exact tip and targets the parent's branch. Branch from trunk only for independent work.
+- Good commit groupings usually follow dependency order: schema, storage or generated API definitions; core logic; wiring and integration; UI or surface behavior; tests.
+- Before committing from a worktree that other agents may use, make sure no other live agent still holds it, then read `git status` of the tree you are about to ship.
+
+## History cleanup
+
+Rewrite history only when the user asks for it or agrees to the plan, and only on a branch you may rewrite. Propose the plan before rewriting or force-pushing.
+
+Before rewriting, record the original tree and the remote head:
+
+```bash
+gh pr view <PR> --json title,headRefName,baseRefName,state,commits
+git fetch origin <headRefName> <baseRefName>
+ORIGINAL_TREE=$(git rev-parse "origin/<headRefName>^{tree}")
+REMOTE_HEAD=$(git rev-parse "origin/<headRefName>")
+```
+
+After rewriting, verify content identity:
+
+```bash
+echo "Original tree: $ORIGINAL_TREE"
+echo "Current tree:  $(git rev-parse 'HEAD^{tree}')"
+git diff "origin/<headRefName>" --stat
+```
+
+Do not push if the tree changed unintentionally. Push with a lease on the recorded head: `git push --force-with-lease=<headRefName>:$REMOTE_HEAD origin HEAD:<headRefName>`. Preserve authorship and co-author trailers through the rewrite.
+
+## Guardrails
+
+- Never hide meaningful behavior changes inside "cleanup".
+- Do not bypass hooks unless the user explicitly asks.
+- Keep code comments that carry rationale, constraints or legal notices; reviewability work does not strip comments.

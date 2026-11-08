@@ -12,7 +12,9 @@ grilling
 implement
 implement-spec
 result-verification
+retro
 tdd
 to-spec
 to-tickets
 work-decomposition
+writing-for-agents

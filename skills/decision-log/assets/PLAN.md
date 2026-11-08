@@ -33,9 +33,11 @@ This is an unconfigured scaffold, not a started or completed run. Populate the e
 
 Plan revision: {{revision and timestamp}}. Phase: {{unstarted, active, checkpointed, or closed}}. Last reconciled event: {{LOG.md event ID or none}}. Budget ledger: {{current authoritative section or file, same run ID}}.
 
-| Task | State | Owner | Input / output revision | Host run / request key | Raw report | Evidence gap / next action |
-| --- | --- | --- | --- | --- | --- | --- |
-| {{task}} | {{planned, dispatching, active, reported, verified, integrated, accepted, blocked, failed, cancelled, superseded, or uncertain}} | {{owner}} | {{hashes or commits}} | {{receipt or unresolved intent}} | {{path or missing}} | {{next step}} |
+| Task | State | Owner | Input / output revision | Host run / request key | Raw report | Evidence | Evidence gap / next action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| {{task}} | {{planned, dispatching, active, reported, verified, integrated, accepted, blocked, failed, cancelled, superseded, or uncertain}} | {{owner}} | {{hashes or commits}} | {{receipt or unresolved intent}} | {{path or missing}} | {{exact source/artifact pointer and content identity, or unresolved}} | {{claim gap and next step}} |
+
+Evidence cells contain resolvable pointers; claims, reasons, commands and observed results belong in LOG.md or the linked report. Retain the work graph and named Proof fields required by the current plan contract.
 
 ## Ownership and dependencies
 

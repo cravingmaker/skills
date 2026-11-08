@@ -13,6 +13,10 @@ Use only the branch the current request needs. Reuse accepted artifacts and deci
 | One authorized code slice needs building | Read the `implement` skill; use the `tdd` skill at appropriate accepted seams. |
 | The interface shape is unresolved | Read the `architect` skill, optionally using the `agent-debate` skill for independent alternatives. |
 | A code change needs judgment | Read the `change-review` skill for a report; the `sol-loop` skill owns an authorized fix loop. |
+| A PR body or authorized filing is requested | Read the `file-pr` skill; body-only is local, and filing returns links/state without an automatic watch. |
+| Monitoring is requested or an authorized action still waits | Only the root uses the `babysit-pr` skill; children return state. |
+| The user requests finish-to-merge or prepare-without-merge | Read the `full-send` skill or the `full-stop` skill respectively; preserve the finish mode in all helpers. |
+| A session retrospective is requested | Read the `retro` skill; use available evidence and existing change authority. |
 | Actual acceptance proof is missing | Read the `result-verification` skill; retain a missing observation as unresolved. |
 
 At a phase boundary, check that the downstream owner has the actual accepted inputs, a checkable result and sufficient authority. Resolve only missing consequential information. A file's existence or an agent's confidence cannot establish readiness.

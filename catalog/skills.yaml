@@ -3,6 +3,7 @@
 # skills.<name>:
 #   kind: capability | role       A role is a router that equips an agent for a role.
 #   roles: [role names]           Capability only: the roles whose routers use it.
+#   aliases: [search names]      Optional; search aliases never install another package.
 #   invocation: model | user     Optional; model is the default.
 #   status: unevaluated | evaluated   Evaluated means paired runs are recorded in evals/results/.
 #
@@ -236,11 +237,79 @@ skills:
     status: evaluated
     invocation: user
 
+  file-pr:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  pr:
+    kind: capability
+    roles: [agent-orchestrator]
+    invocation: user
+    status: unevaluated
+  babysit-pr:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  fix-ci:
+    aliases: [ci-failure-triage, ci-failure-diagnosis]
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
+    status: unevaluated
+  leaving-pr-comments:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  modernize:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  takeover:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  full-send:
+    kind: capability
+    roles: [agent-orchestrator]
+    invocation: user
+    status: unevaluated
+  full-stop:
+    kind: capability
+    roles: [agent-orchestrator]
+    invocation: user
+    status: unevaluated
+
+  retro:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: user
+  handoff:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: user
+  writing-for-agents:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: model
+  teach:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: user
+  recall:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: model
+  ketchup:
+    kind: capability
+    roles: [all]
+    status: unevaluated
+    invocation: user
+
 external:
-  mattpocock-skills:
-    source: https://github.com/mattpocock/skills
-    install: Claude Code plugin mattpocock-skills from claude-plugins-official, or the skills CLI
-    skills: [writing-for-agents, handoff, retro]
   android-skills:
     source: https://github.com/android/skills
     install: skills CLI from the source repository

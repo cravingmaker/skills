@@ -64,6 +64,21 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [benchmark-checklist](skills/benchmark-checklist) | Checks comparable workloads, correctness, sensitivity, noise and measurement meaning. |
 | [create-verification-skill](skills/create-verification-skill) | Authors one namespaced project driver in bounded-gap or full-feature-map mode. |
 | [maintain-verification-skill](skills/maintain-verification-skill) | Audits an existing driver and declared feature map, separating drift from product regressions. |
+| [file-pr](skills/file-pr) | Drafts a diff-grounded PR body or files and updates within authority, returning links and state. |
+| [pr](skills/pr) | Manual body-only entry into file-pr; remote filing requires its own task authority. |
+| [babysit-pr](skills/babysit-pr) | Watches only at the root on request or for a pending authorized action, preserving required gates and old feedback. |
+| [fix-ci](skills/fix-ci) | Triages the actual CI failure and applies an evidenced repair or one bounded retry. |
+| [leaving-pr-comments](skills/leaving-pr-comments) | Collects, verifies and answers exact review threads within posting authority. |
+| [modernize](skills/modernize) | Restores an aging PR against its real base with intent checks, conflict proof and captured leases. |
+| [takeover](skills/takeover) | Reconstructs inherited work and verifies current claims before continuing the scoped task. |
+| [full-send](skills/full-send) | Carries explicit finish authority through proof, review, filing, root waiting and guarded merge. |
+| [full-stop](skills/full-stop) | Manual prepare-only entry that propagates no-merge and verifies no owned pending merge remains. |
+| [retro](skills/retro) | Compares session evidence with the requested workflow and identifies the smallest supported improvement. |
+| [handoff](skills/handoff) | Writes a temporary continuation note with exact pointers, proof limits, remaining budget and next action. |
+| [writing-for-agents](skills/writing-for-agents) | Crafts discoverable instructions with clear completion criteria, progressive detail and honest evaluation. |
+| [teach](skills/teach) | Explains grounded mechanism and intent; durable learning artifacts require an explicit workspace request. |
+| [recall](skills/recall) | Finds an unknown prior-run locator through scoped supported history search and exact evidence. |
+| [ketchup](skills/ketchup) | Reports read-only since-last-human state and every pending user choice, with current evidence. |
 
 See [the catalog](catalog/skills.yaml) for evaluation status and each skill's `evals/results/` for outcomes and limits. Explicit entries use the catalog's `invocation: user`; host policy grants no additional task authority.
 
@@ -83,7 +98,7 @@ scripts/install-skills.py --target ~/.claude/skills --apply clear-communication
 scripts/install-skills.py --target ~/.claude/skills --mode symlink --apply <role-or-skill>
 ```
 
-The default prints a JSON preview; `--apply` writes. See [installation and host policy](docs/installing.md) for explicit Claude settings, Codex generation, ownership conflicts and temporary-host checks. It lists any upstream skills a role relies on so you can install them from their source. To install one skill by hand, copy its folder from `skills/` into the agent's skills directory, for example `~/.claude/skills/` for Claude Code.
+The default prints a JSON preview; `--apply` writes. For the gated upstream replacement, use [the cutover checklist](docs/cutover.md). See [installation and host policy](docs/installing.md) for explicit Claude settings, Codex generation, ownership conflicts and temporary-host checks. It lists any upstream skills a role relies on so you can install them from their source. To install one skill by hand, copy its folder from `skills/` into the agent's skills directory, for example `~/.claude/skills/` for Claude Code.
 
 For everyday answers to follow the communication rules without loading a skill, paste the standing contract from [clear-communication/references/house-style.md](skills/clear-communication/references/house-style.md) into your AGENTS.md or CLAUDE.md.
 

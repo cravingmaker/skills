@@ -24,7 +24,7 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | ui-ux-designer | UI and UX design | `prototype`, `domain-modeling`; remaining methods planned | none | planned |
 | qa-engineer | Quality assurance and testing | `tdd`, `change-review`; remaining QA methods planned | none | planned |
 | devops-engineer | Shell: zsh on macOS, bash on Linux | planned | none | planned |
-| devops-engineer | CI/CD | planned | none | planned |
+| devops-engineer | CI/CD | `fix-ci`; remaining delivery methods planned | none | planned |
 | devops-engineer | Docker and Kubernetes | planned | none | planned |
 | sysadmin | Shell, Linux, and system administration | planned | none | planned |
 | sysadmin | Network | planned | none | planned |
@@ -58,3 +58,7 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | all roles | Explicit code, design or read-only provider panels | `council`, `sol-loop`, `agent-debate`; requested mode preserves authority | none | in PR |
 | engineering, QA, systems and data-scientist | Comparable benchmarks and explainable numbers | `benchmark-checklist`; domain methods planned | none | in PR |
 | engineering, QA and systems | Real-surface project drivers and feature-map maintenance | `create-verification-skill`, `maintain-verification-skill`; scope and actual proof gaps decide mode | none | in PR |
+| agent-orchestrator | Draft, file and continue verified PR delivery | `file-pr`, `pr`, `babysit-pr`, `leaving-pr-comments`, `modernize`, `takeover`, `full-send`, `full-stop`; root-only authorized monitoring | none | in PR |
+| agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer | CI failure triage and repair | `fix-ci`, `diagnosing-bugs`; search aliases ci-failure-triage and ci-failure-diagnosis | none | in PR |
+| all roles | Session evidence, continuation and instruction craft | `retro`, `handoff`, `writing-for-agents`, `recall`, `decision-log`; one authoritative record | none | in PR |
+| all roles | Grounded teaching and read-only catch-up | `teach`, `ketchup`, `clear-communication`; learning workspace and wider status window only on request | none | in PR |

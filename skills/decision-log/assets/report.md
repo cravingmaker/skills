@@ -4,7 +4,11 @@
 
 ## Evidence
 
-{{claims and supporting source/file locations; distinguish executed results, static demonstrations, and unresolved hypotheses}}
+| Claim | Evidence pointer | Result and limit |
+| --- | --- | --- |
+| {{specific claim}} | {{exact source/artifact path and identity, event/result/trace/screenshot locator, or unresolved}} | {{what the source proves; executed, static, inferred, or unknown}} |
+
+Keep pointers in Evidence cells and put command observations, interpretations, and reasons in their own fields.
 
 ## Artifacts and revisions
 
