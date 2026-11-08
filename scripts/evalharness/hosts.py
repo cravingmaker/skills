@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import selectors
 import shlex
 import signal
@@ -197,11 +198,13 @@ def events(path: Path) -> list[dict]:
     return result
 
 
-def body_read(command_text: str, path: str) -> bool:
-    """Recognize a body read in one simple command.
+def reader_inputs(command_text: str) -> list[str] | None:
+    """Return the input files of one simple read command, or None.
 
     Compound commands need trace review: their aggregate output cannot establish
     which command supplied the visible body text, even in a successful && chain.
+    A reader name alone is not enough either: sed can synthesize text, so only
+    options and programs that copy input lines are accepted.
     """
     try:
         tokens = shlex.split(command_text)
@@ -209,28 +212,74 @@ def body_read(command_text: str, path: str) -> bool:
             # Only this exact form identifies the executed command. Other
             # options, script operands, or outer syntax need trace review.
             if len(tokens) != 3 or tokens[1] not in ("-c", "-lc"):
-                return False
+                return None
             command_text = tokens[2]
         if any(marker in command_text for marker in ("\n", "\r", "$(", "`")):
-            return False
+            return None
         lexer = shlex.shlex(command_text, posix=True, punctuation_chars=";&|()<>")
         lexer.whitespace_split = True
         tokens = list(lexer)
         if any(token and all(character in ";&|()<>" for character in token) for token in tokens):
-            return False
+            return None
         if tokens[:1] == ["command"]:
             tokens = tokens[1:]
-        return bool(tokens and Path(tokens[0]).name in ("cat", "sed", "head", "tail", "more", "less") and path in tokens[1:])
+        if not tokens:
+            return None
+        reader, arguments = Path(tokens[0]).name, tokens[1:]
+        if reader in ("head", "tail"):
+            if arguments[:1] and re.fullmatch(r"-[0-9]+", arguments[0]):
+                arguments = arguments[1:]
+            elif arguments[:1] in (["-n"], ["-c"]) and len(arguments) > 1 and re.fullmatch(r"[+-]?[0-9]+", arguments[1]):
+                arguments = arguments[2:]
+        elif reader == "sed":
+            if arguments[:1] == ["-n"]:
+                arguments = arguments[1:]
+            if arguments[:1] == ["-e"]:
+                arguments = arguments[1:]
+            # Only an optional numeric/$ address range followed by p.
+            address = r"(?:[1-9][0-9]*|\$)"
+            if not arguments or not re.fullmatch(rf"(?:{address}(?:,{address})?)?p", arguments[0]):
+                return None
+            arguments = arguments[1:]
+        elif reader not in ("cat", "more", "less"):
+            return None
+        if arguments[:1] == ["--"]:
+            arguments = arguments[1:]
+        if not arguments or any(argument.startswith("-") for argument in arguments):
+            return None
+        return arguments
     except ValueError:
-        return False
+        return None
 
 
-def body_in_output(path: str, output: str) -> bool:
-    """Require visible skill-body text, not output from another command."""
+def body_read(command_text: str, path: str) -> bool:
+    """Recognize a simple read command whose inputs include the candidate."""
+    inputs = reader_inputs(command_text)
+    return bool(inputs and path in inputs)
+
+
+def body_in_output(path: str, output: str, others: tuple[str, ...] = ()) -> bool:
+    """Require visible text unique to the candidate body among the read inputs."""
     text = Path(path).read_text(encoding="utf-8")
     parts = text.split("\n---\n", 1)
     body = parts[1] if text.startswith("---\n") and len(parts) == 2 else text
-    return any(len(line.strip()) >= 12 and line.strip() in output for line in body.splitlines())
+    shared = {line.strip() for other in others for line in Path(other).read_text(encoding="utf-8").splitlines()}
+    return any(len(line.strip()) >= 12 and line.strip() not in shared and line.strip() in output for line in body.splitlines())
+
+
+def candidate_read(command_text: str, path: str, output: str, skills: Path) -> bool:
+    """A read of installed skill files whose output shows the candidate's own body text.
+
+    Several installed skills may be read in one command; every input must be an
+    installed skill file, so another file cannot supply the matching text.
+    """
+    inputs = reader_inputs(command_text)
+    if not inputs or path not in inputs:
+        return False
+    root = os.path.normpath(skills)
+    if any(os.path.commonpath([root, os.path.normpath(value)]) != root or not Path(value).is_file() for value in inputs):
+        return False
+    return body_in_output(path, output, tuple(value for value in dict.fromkeys(inputs) if value != path))
 
 
 def observe(arm: Arm, host: str, candidate: str) -> dict:
@@ -288,8 +337,8 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
                 text = item.get("command", "")
                 # A mention in prose or a grep result is not a skill activation.
                 # Codex has no Skill tool: require a successful body read command.
-                if (item.get("exit_code") == 0 and item.get("aggregated_output") and body_read(text, candidate_path)
-                        and body_in_output(candidate_path, item["aggregated_output"])):
+                if (item.get("exit_code") == 0 and item.get("aggregated_output")
+                        and candidate_read(text, candidate_path, item["aggregated_output"], arm.config / "skills")):
                     activation.append({"event": "command_execution", "id": item.get("id"), "command": text})
             if event.get("type") == "item.completed" and item.get("type") == "agent_message":
                 messages.append(item.get("text", ""))

@@ -54,7 +54,13 @@ The adapter sets both the child process's home and `CODEX_HOME`. This controls `
 
 The adapter copies only `auth.json` into the temporary home and selects the file credential store. It calls the local app server's `skills/list` without creating a model turn and verifies enabled skill names and paths against the computed inventory. A mismatch rejects the comparison before either model call. CLI execution uses `codex exec --json --skip-git-repo-check --ignore-rules`; each run creates a new session.
 
-Codex has no `Skill` tool in this trace format. The adapter detects a successful `cat`, `sed`, `head`, `tail`, `more`, or `less` command containing the absolute candidate `SKILL.md` path and visible body text. It accepts one simple command. Redirections, compound commands (including `&&` chains and separate lines), and other read mechanisms remain unclassified and require trace review; their combined output does not identify which command supplied the body text. A failed command, a search result, or a prose claim does not count. The local session rollout records the effective model and is exported separately from the CLI trace.
+Codex has no `Skill` tool in this trace format. The adapter counts one successful, simple read command whose inputs are all installed skill files, include the absolute candidate `SKILL.md` path, and whose output shows a candidate body line that none of the other inputs contains. Agents often read several skills in one `cat`, so several installed inputs are allowed. The accepted readers are:
+
+- `cat`, `more`, or `less` with no options.
+- `head` or `tail` with no options, a `-N` count, or `-n N` or `-c N`.
+- `sed` with one `p` program, optionally addressed by a line number, `$`, or a range of those, optionally preceded by `-n` and then `-e`.
+
+A final `--` before the files is allowed, and a shell wrapper counts only in the exact form `sh -c 'command'` or `-lc`. Anything else remains unclassified and requires trace review: other options, text-generating programs, inputs outside the installed skills, redirections, compound commands (including `&&` chains and separate lines), and other read mechanisms. Their output does not establish that the body text came from the candidate. A failed command, a search result, or a prose claim does not count. The local session rollout records the effective model and is exported separately from the CLI trace.
 
 OpenAI documents [skill locations and enablement](https://learn.chatgpt.com/docs/build-skills), [configuration controls](https://learn.chatgpt.com/docs/config-file/config-reference), and the [app server inventory API](https://learn.chatgpt.com/docs/app-server). These pages and the installed CLI help were checked on 2026-11-08. Fetched documentation informs the adapter; it is never added to an evaluated model's instructions.
 

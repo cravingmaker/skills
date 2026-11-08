@@ -254,6 +254,54 @@ class IsolationTests(unittest.TestCase):
                 (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in events))
                 self.assertFalse(hosts.observe(arm, "codex", "clear-communication")["activation"])
 
+    def test_reader_output_must_come_from_installed_candidate(self):
+        _, arms = self.pair("codex")
+        arm = arms[0]
+        candidate = arm.config / "skills/clear-communication/SKILL.md"
+        path = shlex.quote(str(candidate))
+        self.assertEqual(candidate.read_text().splitlines()[0], "---")
+        session = arm.config / "sessions/test.jsonl"
+        session.parent.mkdir()
+        session.write_text(json.dumps({"type": "turn_context", "payload": {"model": "test-model"}}) + "\n")
+        unrelated = arm.work / "unrelated.txt"
+        unrelated.write_text("# Clear communication\n")
+        # Another installed skill: reading it alongside the candidate is a real
+        # pattern, but its copy of a candidate line cannot prove the candidate read.
+        sibling = arm.config / "skills/sibling-skill/SKILL.md"
+        sibling.parent.mkdir()
+        sibling.write_text("---\nname: sibling-skill\ndescription: Test sibling.\n---\n\n# Sibling skill body\n")
+        echo = arm.config / "skills/echo-skill/SKILL.md"
+        echo.parent.mkdir()
+        echo.write_text("".join(line + "\n" for line in candidate.read_text().split("\n---\n", 1)[1].splitlines()))
+        commands = [
+            (f"cat {path}", True),
+            (f"cat -- {path}", True),
+            (f"sed -n '1,200p' {path}", True),
+            (f"sed -n -e '1,200p' {path}", True),
+            (f"sed -n '1p' {path}", False),
+            (f"sed -n '1s/.*/# Clear communication/p' {path}", False),
+            (f"head -n 200 {path}", True),
+            (f"head -200 {path}", True),
+            (f"head -n 1 {path} {shlex.quote(str(unrelated))}", False),
+            (f"tail -n +1 {path}", True),
+            (f"cat {path} {shlex.quote(str(sibling))}", True),
+            (f"sed -n '1,200p' {shlex.quote(str(sibling))} {path}", True),
+            (f"head -n 1 {path} {shlex.quote(str(echo))}", False),
+        ]
+        for inner, expected in commands:
+            command = f"/bin/sh -c {shlex.quote(inner)}"
+            with self.subTest(command=command):
+                self.assertEqual(shlex.split(command), ["/bin/sh", "-c", inner])
+                result = subprocess.run(["/bin/sh", "-c", command], cwd=arm.work, capture_output=True, text=True, timeout=5)
+                self.assertEqual((result.returncode, result.stderr), (0, ""))
+                events = [
+                    {"type": "thread.started", "thread_id": "test-session"},
+                    {"type": "item.completed", "item": {"type": "command_execution", "command": command, "exit_code": result.returncode, "aggregated_output": result.stdout}},
+                    {"type": "turn.completed", "usage": {}},
+                ]
+                (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in events))
+                self.assertEqual(hosts.observe(arm, "codex", "clear-communication")["activation"], expected)
+
     def test_codex_activation_requires_visible_body_output(self):
         _, arms = self.pair("codex")
         path = str(arms[0].config / "skills/clear-communication/SKILL.md")
