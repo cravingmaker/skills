@@ -42,6 +42,13 @@ tests/check-catalog/run.sh || status=1
 tests/install/run.sh || status=1
 tests/eval-harness/run.sh || status=1
 uv run --quiet --script tests/discovery-cost.py || status=1
+
+# Each skill's own tests (tests/<skill>/run.sh); the Vale-dependent one runs below.
+for test in tests/*/run.sh; do
+  skill="$(basename "$(dirname "$test")")"
+  [ -d "skills/$skill" ] && [ "$skill" != clear-communication ] || continue
+  "$test" || status=1
+done
 scripts/check-freshness.py || status=1
 uvx --quiet "zizmor@${ZIZMOR_VERSION}" --offline .github/workflows || status=1
 

@@ -25,6 +25,12 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [project-guardrails](skills/project-guardrails) | Sets up or audits the checks that make a wrong change fail, in the order readability, maintainability, security, performance. |
 | [toolchain-upgrade](skills/toolchain-upgrade) | Upgrades lint, format, and type tooling by comparing effective configuration before and after and deciding every change. |
 | [correct](skills/correct) | Turns a repeated agent mistake into a check that fails, at the highest layer that can hold it. |
+| [agent-orchestrator](skills/agent-orchestrator) | Role: equips an agent to run a fleet of agents as their product and project manager. |
+| [work-decomposition](skills/work-decomposition) | Decides whether to delegate, splits work into owned tasks with disjoint write boundaries, and records a finite budget. |
+| [agent-briefing](skills/agent-briefing) | Writes briefs a fresh agent can execute with no history, with a checker for missing fields. |
+| [agent-debate](skills/agent-debate) | Runs bounded, evidence-based reviews between agents, with a checker for review reports. |
+| [result-verification](skills/result-verification) | Accepts agents' work by rerunning checks and verifying claims at the source, with a write-boundary checker. |
+| [decision-log](skills/decision-log) | Keeps an on-disk run record (plan, log, decisions, raw reports) so multi-agent work survives interruption. |
 
 ## Installation
 

@@ -42,7 +42,7 @@ skills:
     status: unevaluated
   project-guardrails:
     kind: capability
-    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
     status: unevaluated
   toolchain-upgrade:
     kind: capability
@@ -50,7 +50,31 @@ skills:
     status: unevaluated
   correct:
     kind: capability
-    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
+    status: unevaluated
+
+  agent-orchestrator:
+    kind: role
+    status: unevaluated
+  work-decomposition:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  agent-briefing:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  agent-debate:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  result-verification:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: unevaluated
+  decision-log:
+    kind: capability
+    roles: [agent-orchestrator]
     status: unevaluated
 
 external:
