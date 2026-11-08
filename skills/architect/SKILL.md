@@ -1,6 +1,6 @@
 ---
 name: architect
-description: Sketch the caller's usage, types, signatures and module structure before code, compare real alternatives, and record a bounded chosen design. Use when the user says "architect this" or "design the interface", or for non-trivial work where jumping to code would lock in the wrong shape.
+description: Design module interfaces inside one codebase with caller usage, type sketches, alternatives and a chosen rationale. Use for interface design or repeated special cases that suggest a module needs redesign.
 license: MIT
 metadata:
   requires: "codebase-design"
@@ -24,7 +24,7 @@ Skip Phase A only when the work is greenfield with no surrounding system. Done w
 
 ## Phase B: sketch and compare
 
-1. **Declare the design budget.** State how many candidates you will produce and whether they need independent authors, before starting. Two structurally distinct candidates is the default; add a third when the design space has real contenders. Done when the budget is recorded.
+1. **Declare the design budget.** State how many candidates you will produce and whether they need independent authors, before starting. Record inline candidates as inline work; count starts only for agents actually launched. Two structurally distinct candidates is the default; add a third when the design space has real contenders. Done when the budget is recorded.
 2. **Write the caller's usage first.** For each candidate, write the README or quickstart a consumer reads and two or three realistic call sites, then derive the type sketch from them. When usage and types disagree, reconcile the sketch to the usage.
 3. **Produce whole-shape alternatives**, not point fixes inside one shape, using the lenses in the `codebase-design` skill's design-it-twice reference. For a consequential choice where independent, blind candidates would improve the decision and the budget allows, use the `agent-debate` skill: it runs blind same-frame alternatives, evidence-led selection and grafting under its shared budget, and its result fills the rationale's synthesis section. Give each participant [references/candidate-brief.md](references/candidate-brief.md) inside its brief. Otherwise write the candidates yourself and label them sequential, not independent.
 4. **Screen every candidate** against [references/design-red-flags.md](references/design-red-flags.md). Assume the next contributor is an agent that sees only the files it opened, copies the nearest example, and takes the shortest path that compiles; prefer the design where a change that looks right from one file is right for the whole repo.

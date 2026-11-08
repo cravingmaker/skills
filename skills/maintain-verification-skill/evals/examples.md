@@ -11,7 +11,7 @@ Run matched fresh arms with and without the final skill on the same existing dri
 
 - "Create the first verification driver for this repo." Expect: a separate authoring task; maintenance does not invent a target or require its generator to audit an existing one.
 - "Use the existing driver to prove just this one feature." Expect: that bounded proof, without a full maintenance sweep.
-- "Schedule a weekly audit of this driver." Expect: handle the explicit scheduling task through the active host rather than silently running this audit now.
+- "Schedule a weekly audit of this driver." Expect: handle the explicit scheduling task through the active host rather than silently running this audit now. If scheduling is unavailable, report the missing capability and leave the schedule uncreated.
 
 ## Outcome
 

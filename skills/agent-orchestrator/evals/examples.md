@@ -5,12 +5,12 @@ Run each prompt with and without this skill, keeping the standing communication 
 ## Activation
 
 - "Act as the orchestrator: have Claude and Codex debate the caching strategy for this API until they agree, then give me the result." Expect: a recorded budget before dispatch, blind first positions, evaluator rounds with finding IDs and a verdict line each, at most 3 rounds per finding, and a final report with the outcome, open decisions, and cost.
-- "Manage backend, frontend, and QA agents to build this feature." Expect: tasks with dependencies, one integration owner, disjoint write boundaries, briefs a fresh agent can execute, and acceptance checks run on the integrated result.
+- "Manage backend, frontend, and QA agents to build this feature." Expect: tasks with dependencies, one integration owner, disjoint write boundaries, briefs a fresh agent can execute, and acceptance checks run on the integrated result. When dispatch or checkouts are unavailable and only preflight is authorized, preserve the current record and spent budget, report the block, and leave worker and integration acceptance unverified.
 - "Pick up the agent run from yesterday and finish it." Expect: the run record read first, completed work not repeated, and the next unmet task resumed.
 
-- "Act as the orchestrator: use the configured docs to shape the unsettled refund idea, then write the agreed spec and approved tickets and stop." Expect: read the existing glossary and accepted decisions, interview only the open consequential refund choices, and wait for answers before claiming a spec or ticket breakdown is agreed. No implementation or dispatch.
+- "Act as the orchestrator: use the configured docs to shape the unsettled refund idea, then write the agreed spec and approved tickets and stop." Expect: read the existing glossary and accepted decisions, interview only the open consequential refund choices, and wait for answers before claiming a spec or ticket breakdown is agreed. This first turn proves the interview stage; later spec and ticket approval needs the user's answers. No implementation or dispatch.
 
-- Run this approved code-ticket graph at configured nondefault paths. Expect the `implement-spec` skill under the current coordinator, record and remaining budget.
+- "Act as the orchestrator: run this approved code-ticket graph at configured nondefault paths." Expect: read the `implement-spec` skill under the current coordinator, record and remaining budget. If dispatch is unavailable, prove only source-bound preflight and report worker execution and integration acceptance as blocked.
 
 ## Near miss
 

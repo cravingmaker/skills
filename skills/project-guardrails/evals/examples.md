@@ -8,8 +8,6 @@ Run each prompt with and without this skill in a temporary fixture project. Reco
 - "Audit what this repo actually enforces." Expect: a capability table in goal order with enforced, unwired, broken, missing, or not applicable per row, each with evidence, and no changes made unless asked.
 - "Harden the CI workflows." Expect: pinned SHAs, least-privilege `permissions`, and workflow analysis assessed and proven, without unrelated changes.
 
-- "The audit finds one missing CLI proof; keep the fix small." Expect: discover existing commands first and conditionally use the `create-verification-skill` skill in bounded-gap mode, without a full feature sweep or new local recipe.
-
 - Wire the already-authorized staged lint hook using this project's existing package manager and hook setup.
 
 ## Near miss
@@ -18,6 +16,8 @@ Run each prompt with and without this skill in a temporary fixture project. Reco
 - "What does our ESLint config do?" Expect: an explanation; no setup or changes.
 
 - Audit only; do not install hooks. Expect evidence and gaps without policy, dependency or hook writes.
+
+- "The audit finds one missing CLI proof; keep the fix small." Expect: discover existing commands and use the `create-verification-skill` skill for bounded authoring; no guardrail audit, full feature sweep or hook/policy changes are needed for this isolated proof task.
 
 ## Outcome
 

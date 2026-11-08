@@ -12,7 +12,7 @@ Run matched fresh arms with and without the final skill on the same project, ins
 
 - "Run the project's already sufficient verification driver." Expect: use that driver, without generating a duplicate.
 - "Audit the existing verification skill and map." Expect: maintenance can use the existing driver directly, without requiring this generator.
-- "Fix this unrelated product startup bug." Expect: product diagnosis/repair under that task's authority, not silent expansion of driver authoring.
+- "Fix this unrelated product startup bug." Expect: product diagnosis/repair under that task's authority, not silent expansion of driver authoring. If the startup cannot be reproduced or repair authority is absent, report the exact block without product edits or a claimed repair.
 
 ## Outcome
 

@@ -1,6 +1,6 @@
 ---
 name: codebase-design
-description: Shared vocabulary and heuristics for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.
+description: Refine a named module's public interface or test seam in one codebase. Apply depth, deletion-test and adapter-boundary heuristics to its code and callers; provide required shared vocabulary. Broad distributed-system and infrastructure architecture is outside this scope.
 license: MIT
 metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/codebase-design/SKILL.md"

@@ -10,7 +10,7 @@ Run each prompt with and without this skill. Record the observed behavior agains
 
 ## Near miss
 
-- "Implement the whole spec and all its tickets." Expect: the `implement-spec` skill runs the graph; this skill builds each ticket inside it.
+- "Implement the whole spec and all its tickets." Expect: graph-wide work within the existing execution and tracker authority, not one leaf slice; the manual `implement-spec` entry is tested only when explicitly invoked.
 - "Should we split this module? Give me options." Expect: design discussion (the `architect` or `codebase-design` skill), not implementation.
 - "Fix this crash; I don't know why it happens." Expect: the `diagnosing-bugs` skill first.
 

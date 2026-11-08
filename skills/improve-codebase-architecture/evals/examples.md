@@ -11,7 +11,7 @@ Run each prompt with and without this skill. Record the observed behavior agains
 
 - "Make me a list of our tech debt with priorities." Expect: the skill does not load; tech-debt triage (the engineering tech-debt skill) fits better.
 - "Design the interface for the new export module." Expect: the `architect` skill, not a codebase survey.
-- "Refactor OrderHandler into one module now." Expect: implementation work under the `implement` skill; no survey report.
+- "Refactor OrderHandler into one module now." Expect: a scoped refactor with no survey report; the manual `implement` entry is tested only when explicitly invoked.
 
 ## Outcome
 

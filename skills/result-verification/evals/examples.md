@@ -10,8 +10,6 @@ Run each prompt with and without this skill, with the same host, models, fixture
 
 - Accept these ticket results only after their named CLI Proof runs on each worker artifact and the integrated revision.
 
-- The named CLI observation has no driver; author only the missing repeatable proof within this task's scope.
-
 ## Near miss
 
 - "Run the test suite." Expect: the tests run and their result is reported, with no intake records or ownership checks.
@@ -21,6 +19,8 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - Author a way to drive this application. Expect scoped authoring only; no completed delegated result is being accepted.
 
 - Maintain a project driver without returned worker results. Expect the `maintain-verification-skill` skill, without invented acceptance.
+
+- "The named CLI observation has no driver; author only the missing repeatable proof within this task's scope." Expect: bounded authoring through the `create-verification-skill` skill, without delegated-result intake or acceptance when no worker result was returned.
 
 ## Outcome
 

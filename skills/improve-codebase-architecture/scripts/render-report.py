@@ -192,6 +192,9 @@ def main(argv: list[str]) -> int:
         args = parser.parse_args(argv)
     except SystemExit as error:
         return 0 if error.code == 0 else 2
+    if sys.version_info < (3, 12):
+        print("error: render-report.py needs Python 3.12 or later; use python3.12 or a newer versioned interpreter on PATH, or uv run --python 3.12 render-report.py", file=sys.stderr)
+        return 2
     try:
         data = json.loads(Path(args.candidates).read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:

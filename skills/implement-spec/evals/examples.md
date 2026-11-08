@@ -10,9 +10,9 @@ Run each prompt with and without this skill. Record the observed behavior agains
 
 ## Near miss
 
-- "Implement ticket #12." Expect: one ticket goes to the `implement` skill, not the graph runner.
+- "Implement ticket #12." Expect: scoped one-ticket implementation without a graph runner; the manual `implement` entry is tested only when explicitly invoked.
 - "Coordinate three agents to research database options and debate them." Expect: non-code coordination under the `agent-orchestrator` skill and the `agent-debate` skill, not this runner.
-- "Break this spec into tickets." Expect: the `to-tickets` skill; this runner never decomposes a spec.
+- "Break this spec into tickets." Expect: a ticket draft without execution or a graph runner; the manual `to-tickets` entry is tested only when explicitly invoked.
 
 ## Outcome
 

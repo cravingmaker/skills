@@ -52,7 +52,7 @@ skills:
   correct:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
 
   agent-orchestrator:
     kind: role
@@ -163,15 +163,15 @@ skills:
   codebase-design:
     kind: capability
     roles: [agent-orchestrator, backend-engineer]
-    status: unevaluated
+    status: evaluated
   architect:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   improve-codebase-architecture:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
     invocation: user
   implement:
     kind: capability
@@ -181,49 +181,49 @@ skills:
   implement-spec:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
     invocation: user
   tdd:
     kind: capability
     roles: [agent-orchestrator, qa-engineer]
-    status: unevaluated
+    status: evaluated
   diagnosing-bugs:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
-    status: unevaluated
+    status: evaluated
   wizard:
     kind: capability
     roles: [agent-orchestrator, devops-engineer]
-    status: unevaluated
+    status: evaluated
   change-review:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: model
   sol-loop:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: model
   council:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: user
   interrogate:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, security-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: user
   blast-radius:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: model
   benchmark-checklist:
     kind: capability
     roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer, data-scientist]
-    status: unevaluated
+    status: evaluated
     invocation: model
   create-verification-skill:
     kind: capability
@@ -233,7 +233,7 @@ skills:
   maintain-verification-skill:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: user
 
 external:

@@ -50,7 +50,7 @@ python3 <skill-dir>/scripts/render-report.py candidates.json --check
 python3 <skill-dir>/scripts/render-report.py candidates.json --output "<tmpdir>/architecture-review-<timestamp>.html"
 ```
 
-Python 3.12 or later is required; no packages are needed. Exit 0 rendered, 1 findings in the JSON (`--check` lists them as JSON), 2 usage or unreadable input. Resolve `<tmpdir>` from `$TMPDIR`, falling back to `/tmp` (or `%TEMP%` on Windows), so nothing lands in the repo and each run gets a fresh file. The renderer escapes every value and produces a static page with no scripts or network requests. Add `--mermaid-cdn` only when the user accepts that diagrams load a pinned Mermaid build from a CDN; the page then says so. Tell the user the absolute path; open it only if they ask and the host can.
+Python 3.12 or later is required; no packages are needed. Find `python3.12` or a newer versioned interpreter on PATH; if `python3` is older, use that interpreter or `uv run --python 3.12` before the script path. Exit 0 rendered, 1 findings in the JSON (`--check` lists them as JSON), 2 usage or unreadable input. Resolve `<tmpdir>` from `$TMPDIR`, falling back to `/tmp` (or `%TEMP%` on Windows), so nothing lands in the repo and each run gets a fresh file. The renderer escapes every value and produces a static page with no scripts or network requests. Add `--mermaid-cdn` only when the user accepts that diagrams load a pinned Mermaid build from a CDN; the page then says so. Tell the user the absolute path; open it only if they ask and the host can.
 
 Each candidate card shows:
 
