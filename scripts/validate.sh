@@ -41,6 +41,7 @@ scripts/build-profiles.py --check || status=1
 tests/check-catalog/run.sh || status=1
 tests/install/run.sh || status=1
 tests/eval-harness/run.sh || status=1
+uv run --quiet --script tests/discovery-cost.py || status=1
 scripts/check-freshness.py || status=1
 uvx --quiet "zizmor@${ZIZMOR_VERSION}" --offline .github/workflows || status=1
 
