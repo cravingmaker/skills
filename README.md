@@ -26,11 +26,30 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [toolchain-upgrade](skills/toolchain-upgrade) | Upgrades lint, format, and type tooling by comparing effective configuration before and after and deciding every change. |
 | [correct](skills/correct) | Turns a repeated agent mistake into a check that fails, at the highest layer that can hold it. |
 | [agent-orchestrator](skills/agent-orchestrator) | Role: equips an agent to run a fleet of agents as their product and project manager. |
-| [work-decomposition](skills/work-decomposition) | Decides whether to delegate, splits work into owned tasks with disjoint write boundaries, and records a finite budget. |
+| [work-decomposition](skills/work-decomposition) | Imports approved tickets with exact hashes and Proof, then checks ownership, dependencies and a finite budget. |
 | [agent-briefing](skills/agent-briefing) | Writes briefs a fresh agent can execute with no history, with a checker for missing fields. |
 | [agent-debate](skills/agent-debate) | Runs bounded, evidence-based reviews between agents, with a checker for review reports. |
 | [result-verification](skills/result-verification) | Accepts agents' work by rerunning checks and verifying claims at the source, with a write-boundary checker. |
 | [decision-log](skills/decision-log) | Keeps an on-disk run record (plan, log, decisions, raw reports) so multi-agent work survives interruption. |
+| [grilling](skills/grilling) | Resolves consequential design questions in bounded interview rounds, reusing settled answers. |
+| [grill-with-docs](skills/grill-with-docs) | Grounds an interview in configured domain docs and records resolved glossary terms and ADRs. |
+| [domain-modeling](skills/domain-modeling) | Maintains domain vocabulary and immutable, superseded ADRs at configured paths. |
+| [to-spec](skills/to-spec) | Writes an agreed spec with stable stories, source hashes, acceptance and named Proof. |
+| [to-tickets](skills/to-tickets) | Files approved vertical slices with exact status, blockers, acceptance and Proof. |
+| [triage](skills/triage) | Verifies tracker claims and routes issues and external PRs through configured triage states. |
+| [wayfinder](skills/wayfinder) | Charts decision tickets for an unclear goal and resolves the next consequential question. |
+| [to-questionnaire](skills/to-questionnaire) | Drafts recipient-specific questions from known facts and decision gaps without sending them. |
+| [setup-agent-skills](skills/setup-agent-skills) | Maintains one Agent skills block and configured tracker, triage and domain paths. |
+| [prototype](skills/prototype) | Builds and observes a bounded throwaway artifact to answer one design question. |
+| [sharpen](skills/sharpen) | Refines a requested prompt without expanding or executing the task. |
+| [research](skills/research) | Answers bounded questions from primary sources with explicit inference and search limits. |
+| [how](skills/how) | Traces an actual execution path and responsibilities from source anchors. |
+| [why](skills/why) | Reconstructs design intent from attributable history and calibrated uncertainty. |
+| [grill-me](skills/grill-me) | Manual no-doc entry into the owned grilling interview. |
+| [bro](skills/bro) | Manual entry that repairs the last answer through clear-communication. |
+| [wait-what](skills/wait-what) | Manual entry that explains the last unclear point using the user's context. |
+
+See [the catalog](catalog/skills.yaml) for evaluation status and each skill's `evals/results/` for outcomes and limits. Explicit entries use the catalog's `invocation: user`; host policy grants no additional task authority.
 
 ## Installation
 

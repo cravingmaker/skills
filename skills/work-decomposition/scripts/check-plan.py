@@ -42,6 +42,22 @@ def parse_plan(text):
     return json.loads(text, object_pairs_hook=unique_object, parse_constant=reject_constant)
 
 
+def placeholders(value, path):
+    """Yield every unresolved placeholder, including nested extension fields."""
+    if isinstance(value, dict):
+        for key, item in value.items():
+            label = f"{path}.{key}" if path else key
+            if "{{" in key:
+                yield label, key
+            yield from placeholders(item, label)
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            task = path == "tasks" and isinstance(item, dict) and populated(item.get("id"))
+            yield from placeholders(item, item["id"] if task else f"{path}[{index}]")
+    elif isinstance(value, str) and "{{" in value:
+        yield path, value
+
+
 def populated(value):
     return isinstance(value, str) and bool(value.strip()) and "{{" not in value
 
@@ -54,6 +70,8 @@ def check_plan(plan):
     errors = []
     if not isinstance(plan, dict):
         return ["plan must be an object; use the documented work-plan format"]
+    for path, text in placeholders(plan, ""):
+        errors.append(f"{path}: replace the placeholder {text!r}")
     for field in ("run_id", "integration_owner", "workspace"):
         if not populated(plan.get(field)):
             errors.append(f"{field}: supply one non-empty value")
@@ -86,6 +104,8 @@ def check_plan(plan):
         by_id[task_id] = task
         if not populated(task.get("owner")):
             errors.append(f"{task_id}.owner: assign one owner")
+        if not populated(task.get("proof")):
+            errors.append(f"{task_id}.proof: name the surface to drive and the result to observe")
         reason = task.get("execution")
         if not isinstance(reason, str) or reason not in REASONS:
             errors.append(f"{task_id}.execution: use direct or one documented delegation reason")
@@ -209,7 +229,7 @@ def main():
     parser.add_argument("plan", type=Path)
     args = parser.parse_args()
     if sys.version_info < (3, 12):
-        print("error: install Python 3.12 or later and rerun check-plan.py", file=sys.stderr)
+        print("error: check-plan.py needs Python 3.12 or later; use python3.12 or a newer versioned interpreter on PATH, or uv run --python 3.12 check-plan.py", file=sys.stderr)
         return 2
     try:
         source = args.plan.read_text(encoding="utf-8")
@@ -224,7 +244,7 @@ def main():
         for error in errors:
             print(f"FAIL: {error}")
         return 1
-    print("PASS: owners, delegation reasons, dependency ordering, write paths, and recorded budget")
+    print("PASS: owners, proofs, delegation reasons, dependency ordering, write paths, and recorded budget")
     return 0
 
 

@@ -4,5 +4,10 @@ agent-debate
 agent-orchestrator
 clear-communication
 decision-log
+domain-modeling
+grill-with-docs
+grilling
 result-verification
+to-spec
+to-tickets
 work-decomposition

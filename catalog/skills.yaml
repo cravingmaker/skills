@@ -40,7 +40,7 @@ skills:
   clear-communication:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
   project-guardrails:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
@@ -56,11 +56,11 @@ skills:
 
   agent-orchestrator:
     kind: role
-    status: unevaluated
+    status: evaluated
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   agent-briefing:
     kind: capability
     roles: [agent-orchestrator]
@@ -72,17 +72,98 @@ skills:
   result-verification:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   decision-log:
     kind: capability
     roles: [agent-orchestrator]
     status: unevaluated
 
+  grilling:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+  grill-with-docs:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+    invocation: user
+  grill-me:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+    invocation: user
+  domain-modeling:
+    kind: capability
+    roles: [agent-orchestrator, ui-ux-designer, business-analyst]
+    status: unevaluated
+  to-spec:
+    kind: capability
+    roles: [agent-orchestrator, business-analyst]
+    status: evaluated
+    invocation: user
+  to-tickets:
+    kind: capability
+    roles: [agent-orchestrator, business-analyst]
+    status: evaluated
+    invocation: user
+  triage:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+    invocation: user
+  wayfinder:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+    invocation: user
+  to-questionnaire:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+    invocation: user
+
+  setup-agent-skills:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+    invocation: user
+  prototype:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, ui-ux-designer]
+    status: evaluated
+  sharpen:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: user
+  research:
+    kind: capability
+    roles: [agent-orchestrator, data-analyst, data-scientist, technical-writer, seo-engineer, financial-analyst, marketing-expert]
+    status: evaluated
+  how:
+    kind: capability
+    roles: [all]
+    status: evaluated
+  why:
+    kind: capability
+    roles: [all]
+    status: evaluated
+  bro:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: user
+  wait-what:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: user
+
 external:
   mattpocock-skills:
     source: https://github.com/mattpocock/skills
     install: Claude Code plugin mattpocock-skills from claude-plugins-official, or the skills CLI
-    skills: [codebase-design, diagnosing-bugs, domain-modeling, grilling, prototype, research, tdd, writing-for-agents, wizard, handoff, retro]
+    skills: [codebase-design, diagnosing-bugs, tdd, writing-for-agents, wizard, handoff, retro]
   android-skills:
     source: https://github.com/android/skills
     install: skills CLI from the source repository

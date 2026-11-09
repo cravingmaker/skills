@@ -42,7 +42,7 @@ Resolve each required skill through the installed inventory and read its SKILL.m
    python3 <agent-debate-dir>/scripts/check-review.py --round 2 --prior R1-01,R1-03 path/to/report.md
    ```
 
-   Resolve `<agent-debate-dir>` to this skill's installed directory; keep the task checkout as the working directory. Exit 1 lists each defect with its fix: return the report once with that list, counted against the budget, or record the round as unresolved. Exit 2 is a usage error. Done when the raw report is saved and the check exits 0.
+   Resolve `<agent-debate-dir>` to this skill's installed directory; keep the task checkout as the working directory. The checker needs Python 3.12 or later. Find `python3.12` or a newer versioned interpreter on PATH; if `python3` is older, use that interpreter or `uv run --python 3.12` before the script path. Exit 1 lists each defect with its fix: return the report once with that list, counted against the budget, or record the round as unresolved. Exit 2 is a usage error. Done when the raw report is saved and the check exits 0.
 
 5. **Answer every finding.** For each ID, record one disposition in the decision log with its evidence:
    - **Accept** after verifying the claim at the source: rerun the command, open the file and line, read the cited text.

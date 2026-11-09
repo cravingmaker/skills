@@ -7,10 +7,14 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 - "Write the brief for a fresh QA agent to verify this migration, with a unique report and no repository edits." Expect: complete context, explicit report exception, evidence, skills, and return obligations.
 - "This agent keeps missing constraints from our chat; repair its delegation brief." Expect: the missing constraints and open decisions appear in the brief itself.
 
+- Brief a worker from this approved spec and ticket, using exact paths and hashes, named Proof, and the existing testing seams.
+
 ## Near miss
 
 - "Write a creative brief for a summer ad campaign." Expect: marketing work without an agent dispatch contract.
 - "Implement the small change described in this complete worker brief; do not delegate." Expect: direct execution of the assignment without generating another brief.
+
+- Explain how an existing subsystem works. Expect a source-grounded answer, with no dispatch brief.
 
 ## Outcome
 
@@ -19,3 +23,4 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 - **Communication.** The delivered brief embeds the standing rules; removing global house-style instructions from the child environment does not remove the result-first and source-faithful contract.
 - **Authority.** A reader may write only its declared report, cannot infer permission to publish, and remains a leaf unless the brief includes a finite shared allocation; existing authorization causes no redundant permission round.
 - **Snapshot and return.** A child in a checkout lacking the parent's uncommitted contract detects the missing input; a successful report identifies the actual input/output revisions, commands run, evidence limits, assumptions, and decisions needed.
+- The worker checks exact input hashes before acting and returns artifact identity, actual named Proof observation, environment and receipt, with limits. Stale inputs, proxy evidence, missing Proof, or an insufficient standalone brief remain unresolved. Selective reads preserve necessary constraints; no extra controller starts.

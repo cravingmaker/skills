@@ -17,6 +17,7 @@ Use a JSON file or exactly one unindented fenced `json` block in PLAN.md. Keep p
       "inputs": ["requirements.md at recorded revision"],
       "outputs": ["contracts/response.json"],
       "acceptance": ["The schema includes the agreed error states"],
+      "proof": "Validate the recorded sample responses against the schema; every one passes",
       "shared_resources": []
     },
     {
@@ -29,6 +30,7 @@ Use a JSON file or exactly one unindented fenced `json` block in PLAN.md. Keep p
       "inputs": ["contracts/response.json at the frozen hash"],
       "outputs": ["clients/a"],
       "acceptance": ["Consumer A passes its contract checks"],
+      "proof": "Run consumer A against the stub server; its page renders the sample response",
       "shared_resources": []
     },
     {
@@ -41,6 +43,7 @@ Use a JSON file or exactly one unindented fenced `json` block in PLAN.md. Keep p
       "inputs": ["contracts/response.json at the frozen hash"],
       "outputs": ["clients/b"],
       "acceptance": ["Consumer B passes its contract checks"],
+      "proof": "Run consumer B against the stub server; its command prints the sample response",
       "shared_resources": []
     },
     {
@@ -52,6 +55,7 @@ Use a JSON file or exactly one unindented fenced `json` block in PLAN.md. Keep p
       "inputs": ["Accepted component revisions"],
       "outputs": ["The integrated revision and check receipts"],
       "acceptance": ["Both consumers pass against the final schema"],
+      "proof": "Run both consumers against the live API; each shows the live response",
       "shared_resources": ["integration-check-environment"]
     }
   ],
@@ -73,11 +77,13 @@ Use a JSON file or exactly one unindented fenced `json` block in PLAN.md. Keep p
 
 - **Identity.** `run_id`, `workspace`, `integration_owner`, and `budget.coordinator` are non-empty strings; workspace is absolute in the checking environment.
 - **Tasks.** A non-empty list; each task has a unique `id`, one non-empty `owner`, an `execution`, `depends_on`, and `write_paths`.
+- **Proof.** Every task has a non-empty `proof`: the surface to drive or the source to open, and the result to observe. A ticket's `Proof:` line fills it on import. Whether the proof is strong enough needs inspection: "tests pass" proves only the tests.
 - **Gate.** `execution` is `direct`, `context-isolation`, `independent-parallel-work`, `independent-verification`, or `different-capability`; each delegated task also has a non-empty `reason` explaining its value.
 - **Dependencies.** References exist, are unique within a task, and form an acyclic graph; a transitive dependency orders writers just as a direct dependency does.
 - **Paths.** Literal POSIX file or directory roots, with no glob syntax, backslashes, newlines, or `..` segments; `[]` explicitly declares no writes.
 - **Budget.** `worker_starts`, `retries`, and `review_rounds` each have non-negative integer `limit` and `used` fields; booleans are rejected; used cannot exceed limit.
 - **Concurrency.** `ceiling` is an integer from 1 through 8; `active` is a non-negative integer no larger than ceiling or charged starts.
+- **Placeholders.** No string anywhere in the plan contains `{{`; `import-tickets.py` leaves the fields only the coordinator can decide as placeholders, and the checker names each one. Extra fields such as `title`, `ticket_status`, and `source` are kept for the record and otherwise ignored.
 - **Reserve.** `worker_starts` is a non-negative integer and `plan` names how integration and verification will happen; used starts plus the remaining reserve, and delegated task count plus that reserve, each fit within the total start limit.
 
 ## Path and scheduling meaning
