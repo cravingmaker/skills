@@ -1,0 +1,8 @@
+roles: [role-one]
+skills:
+  cap-a: {kind: capability, roles: [role-one], status: unevaluated}
+  cap-b: {kind: capability, roles: [all], status: unevaluated}
+  role-one: {kind: role, status: unevaluated}
+  cap-c: {kind: capability, roles: [all], status: unevaluated}
+external:
+  upstream: {source: https://example.com, skills: [ext-x]}

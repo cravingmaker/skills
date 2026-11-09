@@ -1,0 +1,57 @@
+# agent-briefing: claude activation-2
+
+Comparison: **valid**. Host: `2.1.311 (Claude Code)`. Effective model: `claude-opus-5-5`.
+
+## Inputs
+
+- **Source example.** `activation-2` in `evals/examples.md`.
+- **Skill revision.** Commit `66f8700b5f86ced76eeb64d9f42201df5ea9f2be`, tree `4e237f48b1f19253b5ffb57b4e4c1eaa56379db7`, actual bytes SHA-256 `e91559a207570da695dd8ef566305b16c17eeffc6f3fef07da66560f3ed9e444`; dirty: `False`.
+- **Fixture.** `tests/eval-harness/fixtures/eval-worker/briefing`, SHA-256 `1b3c9158105e9768b08ba9efd4be13d88413c364cf9cd072077e279d0408f33d`.
+- **Standing contract.** SHA-256 `b4ae56649eab02bf1dff5f69b0f382a17d972a93a7cd4354188b031862e5ba01`, identical in both arms.
+- **Settings.** Requested model `host default`; each arm has a new session and the same host settings.
+
+## Prompt
+
+```text
+This agent keeps missing constraints from our chat; repair its delegation brief.
+```
+
+## Expected and observed
+
+| Arm | Activation expected | Activation observed | Tools | Completion |
+| --- | --- | --- | --- | --- |
+| treatment | true | true | 6 | 0 |
+| baseline | false | false | 4 | 0 |
+
+Treatment: 16 response lines; changed files `delegation-brief.md`; removed files `none`; validation command present: `requires review`. Workflow cost: 72.519 seconds and 6 tool calls; token usage is in the JSON record.
+
+Baseline: 12 response lines; changed files `delegation-brief.md`; removed files `none`; validation command present: `requires review`. Workflow cost: 39.77 seconds and 4 tool calls; token usage is in the JSON record.
+
+
+Expected deliverable: Expect: the missing constraints and open decisions appear in the brief itself.
+
+Deliverable correctness and unnecessary workflow cost require review of each response and artifact. The JSON record separates these judgments from activation detection and records usage, elapsed time, response lines, and changed files.
+
+## Isolation evidence
+
+The first arm's sentinel was absent from the second arm: `True`. Restored file inodes are separate. Each arm's input manifest is checked again immediately before its model call.
+
+Project candidate copies are excluded from both restored fixtures; only the treatment receives a candidate copy. The manifest lists every excluded project path and its hash. Dependencies are installed in both temporary homes.
+
+Full configuration, input revisions, effective discovery inventory, and expectations: [2026-11-08-claude-claude-opus-5-5-activation-2/comparison.json](2026-11-08-claude-claude-opus-5-5-activation-2/comparison.json).
+
+## Treatment evidence
+
+- [Raw JSON trace](2026-11-08-claude-claude-opus-5-5-activation-2/treatment/trace.jsonl)
+- [Standard error](2026-11-08-claude-claude-opus-5-5-activation-2/treatment/stderr.txt)
+- [Observed response](2026-11-08-claude-claude-opus-5-5-activation-2/treatment/response.txt)
+- [Input and discovery manifest](2026-11-08-claude-claude-opus-5-5-activation-2/treatment/manifest.json)
+- Artifacts: `2026-11-08-claude-claude-opus-5-5-activation-2/treatment/artifacts/`.
+
+## Baseline evidence
+
+- [Raw JSON trace](2026-11-08-claude-claude-opus-5-5-activation-2/baseline/trace.jsonl)
+- [Standard error](2026-11-08-claude-claude-opus-5-5-activation-2/baseline/stderr.txt)
+- [Observed response](2026-11-08-claude-claude-opus-5-5-activation-2/baseline/response.txt)
+- [Input and discovery manifest](2026-11-08-claude-claude-opus-5-5-activation-2/baseline/manifest.json)
+- Artifacts: `2026-11-08-claude-claude-opus-5-5-activation-2/baseline/artifacts/`.

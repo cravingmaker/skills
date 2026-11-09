@@ -25,6 +25,62 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [project-guardrails](skills/project-guardrails) | Sets up or audits the checks that make a wrong change fail, in the order readability, maintainability, security, performance. |
 | [toolchain-upgrade](skills/toolchain-upgrade) | Upgrades lint, format, and type tooling by comparing effective configuration before and after and deciding every change. |
 | [correct](skills/correct) | Turns a repeated agent mistake into a check that fails, at the highest layer that can hold it. |
+| [agent-orchestrator](skills/agent-orchestrator) | Role: equips an agent to run a fleet of agents as their product and project manager. |
+| [work-decomposition](skills/work-decomposition) | Imports approved tickets with exact hashes and Proof, then checks ownership, dependencies and a finite budget. |
+| [agent-briefing](skills/agent-briefing) | Writes briefs a fresh agent can execute with no history, with a checker for missing fields. |
+| [agent-debate](skills/agent-debate) | Runs bounded, evidence-based reviews between agents, with a checker for review reports. |
+| [result-verification](skills/result-verification) | Accepts agents' work by rerunning checks and verifying claims at the source, with a write-boundary checker. |
+| [decision-log](skills/decision-log) | Keeps an on-disk run record (plan, log, decisions, raw reports) so multi-agent work survives interruption. |
+| [grilling](skills/grilling) | Resolves consequential design questions in bounded interview rounds, reusing settled answers. |
+| [grill-with-docs](skills/grill-with-docs) | Grounds an interview in configured domain docs and records resolved glossary terms and ADRs. |
+| [domain-modeling](skills/domain-modeling) | Maintains domain vocabulary and immutable, superseded ADRs at configured paths. |
+| [to-spec](skills/to-spec) | Writes an agreed spec with stable stories, source hashes, acceptance and named Proof. |
+| [to-tickets](skills/to-tickets) | Files approved vertical slices with exact status, blockers, acceptance and Proof. |
+| [triage](skills/triage) | Verifies tracker claims and routes issues and external PRs through configured triage states. |
+| [wayfinder](skills/wayfinder) | Charts decision tickets for an unclear goal and resolves the next consequential question. |
+| [to-questionnaire](skills/to-questionnaire) | Drafts recipient-specific questions from known facts and decision gaps without sending them. |
+| [setup-agent-skills](skills/setup-agent-skills) | Maintains one Agent skills block and configured tracker, triage and domain paths. |
+| [prototype](skills/prototype) | Builds and observes a bounded throwaway artifact to answer one design question. |
+| [sharpen](skills/sharpen) | Refines a requested prompt without expanding or executing the task. |
+| [research](skills/research) | Answers bounded questions from primary sources with explicit inference and search limits. |
+| [how](skills/how) | Traces an actual execution path and responsibilities from source anchors. |
+| [why](skills/why) | Reconstructs design intent from attributable history and calibrated uncertainty. |
+| [grill-me](skills/grill-me) | Manual no-doc entry into the owned grilling interview. |
+| [bro](skills/bro) | Manual entry that repairs the last answer through clear-communication. |
+| [wait-what](skills/wait-what) | Manual entry that explains the last unclear point using the user's context. |
+| [codebase-design](skills/codebase-design) | Designs deep modules, precise interfaces and testable seams while preserving real trust boundaries. |
+| [architect](skills/architect) | Compares grounded interface sketches and records a bounded design with trade-offs and rationale. |
+| [improve-codebase-architecture](skills/improve-codebase-architecture) | Surveys architecture candidates and renders an escaped, offline report before product changes. |
+| [implement](skills/implement) | Builds one authorized slice with appropriate behavior proof and scoped review. |
+| [implement-spec](skills/implement-spec) | Runs the exact approved ticket graph with one coordinator, finite budget and integration acceptance. |
+| [tdd](skills/tdd) | Proves meaningful red/green behavior at accepted seams, then refactors within the slice. |
+| [diagnosing-bugs](skills/diagnosing-bugs) | Reproduces a symptom, discriminates causes and verifies the causal fix. |
+| [wizard](skills/wizard) | Creates resumable setup wizards with parser round trips and scoped secret-safe writes. |
+| [change-review](skills/change-review) | Reports separate Standards and Spec findings with source evidence and bounded probes. |
+| [sol-loop](skills/sol-loop) | Runs authorized review, fix and recheck rounds with stable findings and an honest finite stop. |
+| [council](skills/council) | Manual dispatch to the code-fix loop, design debate or a report-only provider panel. |
+| [interrogate](skills/interrogate) | Manual report-only probe mode for change-review, preserving static and executed evidence. |
+| [blast-radius](skills/blast-radius) | Traces real consumers and user-visible effects with claim-appropriate proof. |
+| [benchmark-checklist](skills/benchmark-checklist) | Checks comparable workloads, correctness, sensitivity, noise and measurement meaning. |
+| [create-verification-skill](skills/create-verification-skill) | Authors one namespaced project driver in bounded-gap or full-feature-map mode. |
+| [maintain-verification-skill](skills/maintain-verification-skill) | Audits an existing driver and declared feature map, separating drift from product regressions. |
+| [file-pr](skills/file-pr) | Drafts a diff-grounded PR body or files and updates within authority, returning links and state. |
+| [pr](skills/pr) | Manual body-only entry into file-pr; remote filing requires its own task authority. |
+| [babysit-pr](skills/babysit-pr) | Watches only at the root on request or for a pending authorized action, preserving required gates and old feedback. |
+| [fix-ci](skills/fix-ci) | Triages the actual CI failure and applies an evidenced repair or one bounded retry. |
+| [leaving-pr-comments](skills/leaving-pr-comments) | Collects, verifies and answers exact review threads within posting authority. |
+| [modernize](skills/modernize) | Restores an aging PR against its real base with intent checks, conflict proof and captured leases. |
+| [takeover](skills/takeover) | Reconstructs inherited work and verifies current claims before continuing the scoped task. |
+| [full-send](skills/full-send) | Carries explicit finish authority through proof, review, filing, root waiting and guarded merge. |
+| [full-stop](skills/full-stop) | Manual prepare-only entry that propagates no-merge and verifies no owned pending merge remains. |
+| [retro](skills/retro) | Compares session evidence with the requested workflow and identifies the smallest supported improvement. |
+| [handoff](skills/handoff) | Writes a temporary continuation note with exact pointers, proof limits, remaining budget and next action. |
+| [writing-for-agents](skills/writing-for-agents) | Crafts discoverable instructions with clear completion criteria, progressive detail and honest evaluation. |
+| [teach](skills/teach) | Explains grounded mechanism and intent; durable learning artifacts require an explicit workspace request. |
+| [recall](skills/recall) | Finds an unknown prior-run locator through scoped supported history search and exact evidence. |
+| [ketchup](skills/ketchup) | Reports read-only since-last-human state and every pending user choice, with current evidence. |
+
+See [the catalog](catalog/skills.yaml) for evaluation status and each skill's `evals/results/` for outcomes and limits. Explicit entries use the catalog's `invocation: user`; host policy grants no additional task authority.
 
 ## Installation
 
@@ -34,7 +90,15 @@ Install the skills into any supported agent with the [skills](https://github.com
 npx skills add cravingmaker/skills
 ```
 
-To install one skill by hand, copy its folder from `skills/` into the skills directory of the agent, for example `~/.claude/skills/` for Claude Code.
+To install a role or a skill together with every skill it requires, clone this repository and run the installer (needs [uv](https://docs.astral.sh/uv/)):
+
+```bash
+scripts/install-skills.py --target ~/.claude/skills clear-communication
+scripts/install-skills.py --target ~/.claude/skills --apply clear-communication
+scripts/install-skills.py --target ~/.claude/skills --mode symlink --apply <role-or-skill>
+```
+
+The default prints a JSON preview; `--apply` writes. For the gated upstream replacement, use [the cutover checklist](docs/cutover.md). See [installation and host policy](docs/installing.md) for explicit Claude settings, Codex generation, ownership conflicts and temporary-host checks. It lists any upstream skills a role relies on so you can install them from their source. To install one skill by hand, copy its folder from `skills/` into the agent's skills directory, for example `~/.claude/skills/` for Claude Code.
 
 For everyday answers to follow the communication rules without loading a skill, paste the standing contract from [clear-communication/references/house-style.md](skills/clear-communication/references/house-style.md) into your AGENTS.md or CLAUDE.md.
 
@@ -46,12 +110,16 @@ For everyday answers to follow the communication rules without loading a skill, 
 │   └── <skill-name>/
 │       ├── SKILL.md        # Required: frontmatter and instructions
 │       ├── evals/          # Required: activation, near-miss, and outcome examples
+│       ├── agents/         # Generated openai.yaml only for invocation: user
 │       ├── references/     # Optional: documentation loaded on demand
 │       ├── scripts/        # Optional: executable code
 │       └── assets/         # Optional: templates, configs, and data
-├── template/               # Starting point for a new skill
-├── scripts/                # validate.sh and check-skills.py
-└── tests/                  # Fixtures for the checker and the Vale style
+├── template/               # Starting point for a capability skill
+├── template-role/          # Starting point for a role router
+├── catalog/                # Skill catalog, coverage matrix, install profiles, reserved names
+├── docs/                   # Authoring guide
+├── scripts/                # Validation, catalog, profile, freshness, and install scripts
+└── tests/                  # Fixtures for every script and the Vale style
 ```
 
 ## Adding a skill
@@ -62,13 +130,15 @@ Copy the template to a folder named after the skill. The folder name must match 
 cp -r template skills/my-skill
 ```
 
-Set `name`, write a `description` that says what the skill does and when to use it, and fill in `evals/examples.md`. Then validate, which needs [uv](https://docs.astral.sh/uv/) and, for the prose tests, [Vale](https://vale.sh) 3.26.0:
+Set `name`, write a `description` that says what the skill does and when to use it, and fill in `evals/examples.md`. Add the skill to [catalog/skills.yaml](catalog/skills.yaml) and update [catalog/coverage.md](catalog/coverage.md). Generate the profiles, then validate with [uv](https://docs.astral.sh/uv/) and, for the prose tests, [Vale](https://vale.sh) 3.26.0:
 
 ```bash
+scripts/build-profiles.py
+scripts/build-host-config.py --check
 ./scripts/validate.sh
 ```
 
-Add the skill to the table in [Skills](#skills). [AGENTS.md](AGENTS.md) lists the authoring and provenance rules.
+Add the skill to the table in [Skills](#skills). The [authoring guide](docs/authoring-guide.md) sets the bar every skill meets; [AGENTS.md](AGENTS.md) lists the repository rules.
 
 ## Contributing and security
 

@@ -18,3 +18,5 @@ Replace with the instructions the agent follows when this skill is active.
 ## Edge cases
 
 ...
+
+Optional related work: when <condition> applies and it is installed, read the `<skill-name>` skill before relying on it.

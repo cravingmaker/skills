@@ -11,7 +11,7 @@ An upgrade is safe when every change in **effective behavior** is known and deci
 ## Steps
 
 1. **Scope the upgrade.** List the packages to upgrade and their target versions. Respect the project's update policy: exact pins, minimum release age, and one upgrade per commit when the project asks for that. A target version that violates the policy waits.
-2. **Capture the before state.** Record resolved versions (the lockfile, not the ranges) and the effective configuration. Use the project's own inventories first: a policy-diff script, rule-coverage or rule-option tests, a printed resolved config (`eslint --print-config <file>`, `tsc --showConfig`, `prettier --find-config-path` with the resolved options).
+2. **Capture the before state.** Record resolved versions (the lockfile, not the ranges) and the effective configuration. Use the project's own inventories first: a policy-diff script, rule-coverage or rule-option tests, a printed resolved config (`eslint --print-config <file>`, `tsc --showConfig`, `prettier --find-config-path` with the resolved options). Confirm which configuration that command consumes; a separate configuration file alone does not prove enforcement.
 3. **Read the release notes** for every version between the current and the target, from the official changelog or release page. Note breaking changes, new and removed rules, changed defaults and options, preset changes, autofix changes, and runtime or peer requirements.
 4. **Upgrade** the packages and refresh the lockfile with the project's package manager.
 5. **Capture the after state** the same way as step 2 and compare. Account for every difference:
@@ -31,3 +31,4 @@ Done when every difference between the before and after states has a recorded de
 - One concern per change: the upgrade and its configuration decisions land together; unrelated fixes land separately.
 - A failing check after an upgrade gets a decision, not a blanket disable. Disabling a rule is a recorded policy decision with a reason.
 - When release notes are missing or unclear for a version, say so in the report and rely on the before-and-after comparison.
+- Bind each check claim to what the check actually reads and enforces. Manifest/lockfile agreement does not prove peer compatibility or synchronized package versions; inspect the check and test the proposed version combination before predicting that it fails. Report compatibility not exercised by that check as unverified.

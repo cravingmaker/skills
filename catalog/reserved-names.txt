@@ -1,0 +1,118 @@
+# Skill names this repository must not use, because the user's agents already
+# have a skill or command with that name. A duplicate name makes invocation
+# ambiguous and splits ownership of one job. One name per line; '#' starts a comment.
+# Checked by scripts/check-catalog.py. Update when a host or an installed plugin adds names.
+
+# Claude Code built-in skills and commands
+batch
+code-review
+fewer-permission-prompts
+init
+keybindings-help
+loop
+plugin-authoring
+review
+run
+schedule
+security-review
+simplify
+update-config
+workflow-authoring
+claude-api
+artifact-design
+artifact-capabilities
+artifact-diagramming
+dataviz
+
+# Anthropic skills (anthropics/skills and Claude's built-in document skills)
+algorithmic-art
+brand-guidelines
+canvas-design
+doc-coauthoring
+docx
+frontend-design
+internal-comms
+mcp-builder
+pdf
+pptx
+skill-creator
+slack-gif-creator
+theme-factory
+web-artifacts-builder
+webapp-testing
+xlsx
+
+# Installed plugin: design
+accessibility-review
+design-critique
+design-handoff
+design-system
+research-synthesis
+user-research
+ux-copy
+
+# Installed plugin: data
+analyze
+build-dashboard
+create-viz
+data-context-extractor
+data-visualization
+explore-data
+sql-queries
+statistical-analysis
+validate-data
+write-query
+
+# Installed plugin: engineering
+architecture
+debug
+deploy-checklist
+documentation
+incident-response
+standup
+system-design
+tech-debt
+testing-strategy
+
+# Installed plugin: mattpocock-skills
+# Keep remaining source-specific reservations until the observed cutover.
+ask-matt
+chief-of-staff
+claude-handoff
+code-review
+git-guardrails-claude-code
+loop-me
+migrate-to-shoehorn
+scaffold-exercises
+setup-matt-pocock-skills
+setup-pre-commit
+setup-ts-deep-modules
+writing-beats
+writing-fragments
+writing-shape
+
+# Additional installed names in the 2026-11-08 host snapshot used by
+# docs/install-and-discovery-proof.md.
+built-in-browser
+chrome-browser
+computer-use
+create-plugin
+deep-research
+docs
+documents
+excel-live-control
+google-workspace
+imagegen
+import-memory
+learn
+openai-docs
+prepare-plugin-submission
+review-agent
+skill-installer
+starter-workflow
+update-plugin
+visualize
+
+# Host commands; keep independent of upstream source reservations.
+verify
+run-skill-generator

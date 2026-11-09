@@ -1,0 +1,10 @@
+{
+  "revision": "status-v2",
+  "status": [
+    "active",
+    "paused"
+  ],
+  "required": [
+    "status"
+  ]
+}

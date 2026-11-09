@@ -7,7 +7,7 @@ metadata:
   source-revision: 6b0300214a09fd6029cfb7077043125758cd1fd2
   source-license: MIT, see LICENSE-pstack
   source-files: "pstack/skills/correct/SKILL.md"
-  local-changes: "Limited work to evidenced recurrence and authorized remedies; removed history sweeps, mandatory commits, approval and expiry ceremonies, and automatic instruction edits."
+  local-changes: "Preserved evidenced recurrence, current authority and the smallest enforcement hierarchy; placed judgment rules in change-review standards with bad/good examples and repeat proof; retained compatible encode-lessons methods without history sweeps or automatic commits."
 ---
 
 # Correct
@@ -24,10 +24,12 @@ Assume the next contributor is an agent that sees only the files it opened, copi
    2. **Types.** Make the wrong state impossible to write.
    3. **Lint or a CI check** whose error message names the file, type, or function to use instead. When the pattern is already common, fail only on additions.
    4. **A behavior test** that fails when the behavior breaks.
-   5. **A rule in the agent instructions,** only for a judgment call no check can make.
-3. **Prove the remedy.** Show it failing on the real past mistake (or a faithful reproduction of it) and passing on valid code. Run it through the same command the project uses locally and in CI.
+   5. **A written judgment rule,** only when no structural, static or executable check can decide it. Put it in the project standards the `change-review` skill reads, with the past failure and a valid counterexample. Use agent instructions only when no review-standard home exists and editing them is authorized.
+3. **Prove the remedy.** Show it rejecting the real past mistake (or a faithful reproduction) and accepting valid code through the project check or applicable review rubric. Repeat the setup or compare the intended edit against its recorded post-edit state: it needs no further change. Keep an unavailable reject, accept or repeat check unresolved. A structural fix needs no duplicate standing instruction.
 4. **Report** the recurrence, its evidence, the layer chosen, why each higher layer did not work, and the proof.
 
-Done when the remedy rejects the historical mistake, accepts valid code, and runs in the project's standard check command.
+Done when the remedy rejects the historical mistake, accepts valid code, repeats without a further content change, and is enforced by the project's standard check or review.
 
 Commits, history-wide sweeps for other mistake classes, and edits to agent instruction files happen only when the user asks for them.
+
+Per-file provenance: [references/SOURCES.md](references/SOURCES.md).

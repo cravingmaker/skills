@@ -1,0 +1,19 @@
+{
+  "run_id": "fixture",
+  "workspace": "/workspace/fixture",
+  "integration_owner": "coordinator",
+  "tasks": [
+    {"id": "contract", "owner": "coordinator", "execution": "direct", "proof": "Validate the sample responses against schema; all pass", "depends_on": [], "write_paths": ["schema"]},
+    {"id": "a", "owner": "worker-a", "execution": "independent-parallel-work", "reason": "Independent consumer A", "proof": "Run consumer A against the stub server; it renders the sample", "depends_on": ["contract"], "write_paths": ["src/a", "run/raw/a.md"]},
+    {"id": "b", "owner": "worker-b", "execution": "independent-parallel-work", "reason": "Independent consumer B", "proof": "Run consumer B against the stub server; it renders the sample", "depends_on": ["contract"], "write_paths": ["src/ab", "run/raw/b.md"]},
+    {"id": "join", "owner": "coordinator", "execution": "direct", "proof": "Both consumers render the live response", "depends_on": ["a", "b"], "write_paths": ["schema", "src", "run"]}
+  ],
+  "budget": {
+    "coordinator": "coordinator",
+    "worker_starts": {"limit": 5, "used": 0},
+    "retries": {"limit": 1, "used": 0},
+    "review_rounds": {"limit": 3, "used": 0},
+    "concurrency": {"ceiling": 8, "active": 0},
+    "reserve": {"worker_starts": 1, "plan": "Direct integration, reserved independent verification"}
+  }
+}
