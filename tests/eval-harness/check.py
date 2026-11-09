@@ -396,6 +396,32 @@ class IsolationTests(unittest.TestCase):
                 (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in events))
                 self.assertEqual(hosts.observe(arm, "codex", "clear-communication")["activation"], expected)
 
+    def test_codex_listing_then_cat_stays_unclassified(self):
+        _, arms = self.pair("codex")
+        arm = arms[0]
+        candidate = arm.config / "skills/clear-communication/SKILL.md"
+        path = shlex.quote(str(candidate))
+        session = arm.config / "sessions/test.jsonl"
+        session.parent.mkdir()
+        session.write_text(json.dumps({"type": "turn_context", "payload": {"model": "test-model"}}) + "\n")
+        commands = [
+            (f"cat {path}", True),
+            (f"ls {shlex.quote(str(candidate.parent))}; cat {path}", False),
+        ]
+        for command, expected in commands:
+            with self.subTest(command=command):
+                result = subprocess.run(["/bin/sh", "-c", command], cwd=arm.work,
+                                        capture_output=True, text=True, timeout=5)
+                self.assertEqual(result.returncode, 0)
+                trace = [
+                    {"type": "thread.started", "thread_id": "test-session"},
+                    {"type": "item.completed", "item": {"type": "command_execution", "command": command,
+                     "exit_code": result.returncode, "aggregated_output": result.stdout}},
+                    {"type": "turn.completed", "usage": {}},
+                ]
+                (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in trace))
+                self.assertEqual(hosts.observe(arm, "codex", "clear-communication")["activation"], expected)
+
     def test_claude_listing_then_cat_proves_a_visible_installed_body(self):
         _, arms = self.pair("claude")
         arm = arms[0]

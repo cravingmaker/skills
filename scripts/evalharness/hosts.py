@@ -308,7 +308,7 @@ def listing_cat_inputs(command_text: str, skills: Path) -> list[str] | None:
         return None
 
 
-def candidate_read(command_text: str, path: str, output: str, skills: Path) -> bool:
+def candidate_read(command_text: str, path: str, output: str, skills: Path, *, allow_listing_cat: bool = False) -> bool:
     """A read of installed skill files whose output shows the candidate's own body text.
 
     Several installed skills may be read in one command; every input must be an
@@ -316,7 +316,7 @@ def candidate_read(command_text: str, path: str, output: str, skills: Path) -> b
     """
     inputs = reader_inputs(command_text)
     listing = False
-    if not inputs:
+    if not inputs and allow_listing_cat:
         inputs = listing_cat_inputs(command_text, skills)
         listing = bool(inputs)
     if not inputs or path not in inputs:
@@ -458,7 +458,7 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
                             if isinstance(output, list):
                                 output = "\n".join(part.get("text", "") for part in output
                                                    if isinstance(part, dict) and part.get("type") == "text")
-                            if isinstance(output, str) and candidate_read(values.get("command", ""), candidate_path, output, arm.config / "skills"):
+                            if isinstance(output, str) and candidate_read(values.get("command", ""), candidate_path, output, arm.config / "skills", allow_listing_cat=True):
                                 activation.append({"event": "Bash", "tool_use_id": item.get("id"), "command": values.get("command", "")})
                     elif item.get("type") == "text":
                         messages.append(item.get("text", ""))
