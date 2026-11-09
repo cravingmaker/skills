@@ -1,0 +1,24 @@
+{
+  "consumers": [
+    {
+      "name": "slow-export",
+      "effect": "One export file per request.",
+      "source": "pg-queue:jobs",
+      "delivery": "at-least-once",
+      "dedupe_key": "message_id",
+      "ordering": "none",
+      "lease_seconds": 60,
+      "handler_timeout_seconds": 120,
+      "cancellation_margin_seconds": 10,
+      "queue_delay_bound_seconds": 600,
+      "max_attempts": 10,
+      "backoff": { "base_seconds": 30, "cap_seconds": 3600, "jitter": "full" },
+      "retention_seconds": 3600,
+      "dead_letter": "jobs.state = 'dead'",
+      "dead_letter_owner": "data on-call",
+      "replay_authorized_by": "data on-call lead",
+      "schema": { "type": "export.requested", "version": 1 },
+      "external_effects": "none"
+    }
+  ]
+}

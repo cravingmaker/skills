@@ -1,0 +1,8 @@
+role,tenant,operation,object,property,entrypoint,identity,expect
+member,same,read,own,public,http|export,app_api,allow
+member,other,read,other,public,http|export,app_api,deny
+member,same,write,own,protected,http|bulk,app_api,deny
+member,same,read,other,private,http|export,app_api,deny
+anonymous,none,read,own,public,http|export,app_api,deny
+viewer,same,write,own,public,http|bulk,app_api,deny
+support,same,admin,own,public,http|admin,app_api,deny

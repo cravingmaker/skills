@@ -1,0 +1,16 @@
+{
+  "fixture_only": true,
+  "site": "https://site.example.test",
+  "transport": "owned fake; no network",
+  "cases": [
+    {"name": "real-add", "change": "add", "revision": "r1", "notifications": 1},
+    {"name": "real-update", "change": "update", "revision": "r2", "notifications": 1},
+    {"name": "real-delete", "change": "delete", "revision": "r3", "notifications": 1},
+    {"name": "unchanged-save", "change": "unchanged", "revision": "r2", "notifications": 0},
+    {"name": "duplicate-destination", "deliveries": 2, "destinations": 1, "receipts": 1},
+    {"name": "two-destinations", "deliveries": 2, "destinations": 2, "receipts": 2},
+    {"name": "lost-ack", "receiver": "accept then drop reply", "expect": "same change identity; bounded retry"},
+    {"name": "permanent-rejection", "receiver": "reject ownership", "expect": "retained rejection; no accepted receipt"},
+    {"name": "accepted-not-indexed", "receiver": "accept", "expect": "receipt accepted; index status unknown"}
+  ]
+}

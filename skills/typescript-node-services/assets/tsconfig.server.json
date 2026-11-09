@@ -1,0 +1,17 @@
+{
+  // Comparison starter, not a replacement. No compiler version is pinned here.
+  // Check each option against the repo's locked TypeScript and deployment Node.
+  // Select target/lib/types, paths, output directories and emit policy in the repo.
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    // Enable only if supported; use this when native type stripping is a target.
+    "erasableSyntaxOnly": true
+  }
+}

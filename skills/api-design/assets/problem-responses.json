@@ -1,0 +1,18 @@
+[
+  {
+    "method": "POST",
+    "http_status": 409,
+    "content_type": "application/problem+json",
+    "body": {
+      "type": "https://example.invalid/problems/state-conflict",
+      "title": "State conflict",
+      "status": 409
+    }
+  },
+  {
+    "method": "HEAD",
+    "http_status": 404,
+    "content_type": null,
+    "body": null
+  }
+]

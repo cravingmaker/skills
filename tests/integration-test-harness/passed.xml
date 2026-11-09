@@ -1,0 +1,7 @@
+<testsuites tests="2" failures="0" errors="0" skipped="0">
+  <testsuite name="stock" tests="2" failures="0" errors="0" skipped="0">
+    <testcase classname="stock" name="atomic_increment"/>
+    <testcase classname="stock" name="write_skew"/>
+    <system-out>SECRET_SENTINEL</system-out>
+  </testsuite>
+</testsuites>

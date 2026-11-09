@@ -1,0 +1,171 @@
+{
+  "questions": [
+    {
+      "id": "historical-trade-identity",
+      "question": "Which stable entity and quantity did a source-qualified trade refer to at the selected knowledge time?",
+      "consumer": "trade reconciliation",
+      "input_grain": "One issuer-qualified trade claim and recorded revision.",
+      "output_grain": "One retained trade claim, including unresolved identity."
+    }
+  ],
+  "entities": [
+    {
+      "id": "instrument",
+      "fields": [
+        "entity_id"
+      ],
+      "keys": [
+        {
+          "id": "instrument-key",
+          "fields": [
+            "entity_id"
+          ]
+        }
+      ],
+      "grain": [
+        "entity_id"
+      ],
+      "lifecycle": "Stable entity; source codes have separate issuer-qualified generations.",
+      "serves": [
+        "historical-trade-identity"
+      ]
+    },
+    {
+      "id": "identifier",
+      "fields": [
+        "issuer",
+        "code",
+        "generation",
+        "entity_id",
+        "valid_from",
+        "valid_until"
+      ],
+      "keys": [
+        {
+          "id": "identifier-key",
+          "fields": [
+            "issuer",
+            "code",
+            "generation"
+          ]
+        }
+      ],
+      "grain": [
+        "issuer",
+        "code",
+        "generation"
+      ],
+      "lifecycle": "One source-qualified identifier generation maps to a stable entity; keep historical generations and explicit validity.",
+      "serves": [
+        "historical-trade-identity"
+      ]
+    },
+    {
+      "id": "trade",
+      "fields": [
+        "issuer",
+        "trade_id",
+        "instrument_id",
+        "source_code",
+        "quantity",
+        "recorded_at"
+      ],
+      "keys": [
+        {
+          "id": "trade-key",
+          "fields": [
+            "issuer",
+            "trade_id",
+            "recorded_at"
+          ]
+        }
+      ],
+      "grain": [
+        "issuer",
+        "trade_id",
+        "recorded_at"
+      ],
+      "lifecycle": "Retain corrected source claims; record the selected knowledge-time version.",
+      "serves": [
+        "historical-trade-identity"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "identifier-instrument",
+      "from": "identifier",
+      "fields": [
+        "entity_id"
+      ],
+      "to_key": "instrument-key",
+      "cardinality": "many-to-one",
+      "optional": false
+    },
+    {
+      "id": "trade-instrument",
+      "from": "trade",
+      "fields": [
+        "instrument_id"
+      ],
+      "to_key": "instrument-key",
+      "cardinality": "many-to-one",
+      "optional": true
+    }
+  ],
+  "mappings": [
+    {
+      "id": "source-instrument",
+      "entity": "instrument",
+      "source": "accepted.identity_crosswalk",
+      "target": "app.instruments",
+      "identity_rule": "Issuer plus code plus generation maps to a stable entity; reuse never merges generations.",
+      "status": "mapped",
+      "fields": {
+        "stable_id": "entity_id"
+      },
+      "grain": "One stable entity."
+    },
+    {
+      "id": "source-identifier",
+      "entity": "identifier",
+      "source": "source.instrument_codes",
+      "target": "app.instrument_identifiers",
+      "identity_rule": "Issuer plus code plus generation identifies the source claim; accepted stable entity comes from the reviewed crosswalk. Validate non-overlap separately.",
+      "status": "mapped",
+      "fields": {
+        "issuer": "issuer",
+        "code": "code",
+        "generation": "generation",
+        "stable_id": "entity_id",
+        "valid_from": "valid_from",
+        "valid_until": "valid_until"
+      },
+      "grain": "One issuer-qualified source identifier generation."
+    },
+    {
+      "id": "source-trade",
+      "entity": "trade",
+      "source": "source.trade_revisions",
+      "target": "app.trade_claims",
+      "identity_rule": "Source-qualified trade_id identifies the event; recorded_at selects a retained correction; unresolved instrument links stay visible.",
+      "status": "mapped",
+      "fields": {
+        "id": "trade_id",
+        "accepted_entity": "instrument_id",
+        "quantity": "quantity",
+        "seen_at": "recorded_at",
+        "issuer": "issuer",
+        "source_code": "source_code"
+      },
+      "grain": "One source-qualified trade and recorded correction."
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "missing-source-generation",
+      "question": "What source evidence disambiguates records without an issuer or generation?",
+      "owner": "data owner"
+    }
+  ]
+}

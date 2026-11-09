@@ -1,0 +1,83 @@
+{
+  "resource_required_attributes": [
+    "service.name"
+  ],
+  "spans": {
+    "POST /orders/{id}": {
+      "required_attributes": [
+        "http.request.method",
+        "http.route",
+        "http.response.status_code"
+      ]
+    },
+    "orders publish": {
+      "required_attributes": [
+        "messaging.system",
+        "app.event.id"
+      ]
+    },
+    "orders process": {
+      "required_attributes": [
+        "messaging.system",
+        "app.event.id"
+      ]
+    }
+  },
+  "metrics": {
+    "http.server.request.duration": {
+      "attributes": {
+        "http.request.method": [
+          "POST"
+        ],
+        "http.route": [
+          "/orders/{id}"
+        ],
+        "http.response.status_code": [
+          200,
+          503
+        ]
+      },
+      "max_series": 2
+    }
+  },
+  "logs": {
+    "security.access_decision": {
+      "required_attributes": [
+        "event.name",
+        "actor.id",
+        "action",
+        "outcome",
+        "resource.type"
+      ],
+      "required_values": {
+        "outcome": [
+          "allow",
+          "deny"
+        ]
+      }
+    }
+  },
+  "edges": [
+    {
+      "source": "orders publish",
+      "target": "orders process",
+      "relation": "link",
+      "match_attributes": [
+        "app.event.id"
+      ]
+    }
+  ],
+  "forbidden_keys": [
+    "http.request.header.authorization",
+    "http.request.header.cookie",
+    "url.query",
+    "db.statement",
+    "user.email",
+    "password",
+    "authorization"
+  ],
+  "redaction_canaries": [
+    "SYNTHETIC_SECRET_CANARY",
+    "person@example.test"
+  ]
+}

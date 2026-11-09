@@ -1,0 +1,26 @@
+{
+  "_comment": "One entry per consumer or job. Durations are seconds. Replace every value; check with scripts/check-messaging-contract.py.",
+  "consumers": [
+    {
+      "name": "send-receipt-email",
+      "effect": "One receipt email per paid order, sent through the mail provider.",
+      "source": "pg-queue:outbox_messages",
+      "delivery": "at-least-once",
+      "dedupe_key": "consumer + tenant_id + event_id, with a payload fingerprint",
+      "ordering": "none",
+      "ordering_reason": "",
+      "lease_seconds": 300,
+      "handler_timeout_seconds": 60,
+      "cancellation_margin_seconds": 10,
+      "queue_delay_bound_seconds": 600,
+      "max_attempts": 8,
+      "backoff": { "base_seconds": 2, "cap_seconds": 600, "jitter": "full" },
+      "retention_seconds": 604800,
+      "dead_letter": "outbox_messages.state = 'dead'",
+      "dead_letter_owner": "payments on-call, alerted on any dead row",
+      "replay_authorized_by": "payments on-call lead",
+      "schema": { "type": "order.paid", "version": 1 },
+      "external_effects": "Mail provider idempotency key = message_id"
+    }
+  ]
+}

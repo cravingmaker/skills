@@ -1,0 +1,11 @@
+[package]
+name = "svc"
+version = "0.1.0"
+
+[lints.rust]
+unsafe_code = "deny"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+await_holding_lock = "deny"

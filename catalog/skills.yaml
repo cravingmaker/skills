@@ -308,6 +308,122 @@ skills:
     roles: [all]
     status: evaluated
     invocation: user
+  architecture-decisions:
+    kind: capability
+    aliases: [data-pipeline-architecture, mobile-architecture-decision, pipeline-architecture-decisions]
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, sysadmin, security-engineer, data-engineer, data-analyst, data-scientist]
+    status: unevaluated
+    invocation: model
+  architecture-review:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  architecture-fitness-functions:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  backend-engineer:
+    kind: role
+    status: unevaluated
+    invocation: model
+  api-design:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, security-engineer, technical-writer]
+    status: unevaluated
+    invocation: model
+  api-compatibility:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, technical-writer]
+    aliases: [mobile-api-compatibility]
+    status: unevaluated
+    invocation: model
+  api-authorization:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, security-engineer, data-engineer]
+    aliases: [authorization-matrix-testing, authorization-review]
+    status: unevaluated
+    invocation: model
+  idempotent-requests:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer]
+    status: unevaluated
+    invocation: model
+  logical-data-modeling:
+    kind: capability
+    roles: [backend-engineer, data-engineer, data-analyst, data-scientist, business-analyst, financial-analyst]
+    invocation: model
+    status: unevaluated
+  postgres-schema-design:
+    kind: capability
+    roles: [backend-engineer, mobile-engineer, data-engineer, data-analyst]
+    invocation: model
+    status: unevaluated
+  postgres-migrations:
+    kind: capability
+    roles: [backend-engineer, qa-engineer, devops-engineer, data-engineer]
+    invocation: model
+    status: unevaluated
+  postgres-change-execution:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer, data-analyst]
+    invocation: model
+    status: unevaluated
+  postgres-role-administration:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer, data-analyst, data-scientist]
+    aliases: [postgres-roles-and-privileges]
+    invocation: model
+    status: unevaluated
+  postgres-concurrency-control:
+    kind: capability
+    roles: [backend-engineer, qa-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  postgres-connection-pooling:
+    aliases: [neon-pipeline-connections]
+    kind: capability
+    roles: [backend-engineer, devops-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  postgres-query-performance:
+    aliases: [postgres-analytics-tuning]
+    kind: capability
+    roles: [backend-engineer, sysadmin, data-engineer, data-analyst, data-scientist]
+    status: unevaluated
+    invocation: model
+  integration-test-harness:
+    aliases: [postgres-integration-tests]
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  async-messaging:
+    kind: capability
+    roles: [backend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer, seo-engineer]
+    status: unevaluated
+    invocation: model
+  service-resilience:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  opentelemetry-instrumentation:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  typescript-node-services:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, qa-engineer]
+    status: unevaluated
+    invocation: model
+  rust-async-services:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer]
+    status: unevaluated
+    invocation: model
 
 external:
   android-skills:

@@ -1,0 +1,13 @@
+{
+  "database_limit": 80,
+  "unavailable_connections": 3,
+  "other_connections": 2,
+  "migration_connections": 2,
+  "operator_reserve": 4,
+  "direct_groups": [{"instances": 3, "pool_max": 4}],
+  "poolers": [{
+    "client_groups": [{"instances": 10, "pool_max": 4}],
+    "client_limit": 100,
+    "backend_slots": 10
+  }]
+}

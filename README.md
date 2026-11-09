@@ -79,6 +79,28 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [teach](skills/teach) | Explains grounded mechanism and intent; durable learning artifacts require an explicit workspace request. |
 | [recall](skills/recall) | Finds an unknown prior-run locator through scoped supported history search and exact evidence. |
 | [ketchup](skills/ketchup) | Reports read-only since-last-human state and every pending user choice, with current evidence. |
+| [backend-engineer](skills/backend-engineer) | Role: routes service contracts, data, runtime, and failure behavior through owned capability skills. |
+| [architecture-decisions](skills/architecture-decisions) | Audits decision history and runs comparable trials for consequential recovery, concurrency, precision, and operating constraints. |
+| [architecture-review](skills/architecture-review) | Reviews system quality with dependency, churn, critical-journey, data-ownership, and recovery evidence. |
+| [architecture-fitness-functions](skills/architecture-fitness-functions) | Enforces architectural dependency boundaries with allowed and forbidden fixtures and proof after setup reapplication. |
+| [api-design](skills/api-design) | Designs an HTTP operation contract before its handler: resources, methods, errors, pagination, filters, limits, and conditional updates. |
+| [api-compatibility](skills/api-compatibility) | Checks whether an API change breaks deployed consumers and plans its versioning or deprecation. |
+| [api-authorization](skills/api-authorization) | Enforces object, property, function, and tenant authorization, then proves allowed and denied paths with a matrix. |
+| [idempotent-requests](skills/idempotent-requests) | Makes a retried unsafe request produce one scoped durable effect: key admission, fingerprint, in-flight behavior, replay, expiry, and provider reconciliation. |
+| [logical-data-modeling](skills/logical-data-modeling) | Defines entities, identity, cardinality, grain and lifecycle when source systems or consumers disagree about what records mean. |
+| [postgres-schema-design](skills/postgres-schema-design) | Designs PostgreSQL tables and constraints that enforce supplied identity, relationship, type and tenancy rules. |
+| [postgres-migrations](skills/postgres-migrations) | Plans and rehearses a PostgreSQL schema change on tables with traffic using expand, compatible deploy, resumable backfill, validation and contract. |
+| [postgres-change-execution](skills/postgres-change-execution) | Prepares and executes a scoped direct PostgreSQL or Neon data fix, grant or emergency administrative change on a non-disposable target. |
+| [postgres-role-administration](skills/postgres-role-administration) | Provisions or audits effective PostgreSQL roles, ownership, grants and future-object access. |
+| [postgres-concurrency-control](skills/postgres-concurrency-control) | Prevents lost updates, write skew and double booking in PostgreSQL. |
+| [postgres-connection-pooling](skills/postgres-connection-pooling) | Chooses PostgreSQL connection paths and budgets pools across peak app instances, workers, migrations and an operator reserve. |
+| [postgres-query-performance](skills/postgres-query-performance) | Diagnoses slow PostgreSQL queries from workload statistics and representative plans. |
+| [integration-test-harness](skills/integration-test-harness) | Builds or audits isolated tests when real database, cache, broker, storage or native runtime semantics matter. |
+| [async-messaging](skills/async-messaging) | Makes event publication and background jobs survive duplicates and crashes. |
+| [service-resilience](skills/service-resilience) | Bounds dependency time and work in service code. |
+| [opentelemetry-instrumentation](skills/opentelemetry-instrumentation) | Adds or repairs telemetry in application code: service spans, correlated JSON logs, bounded metric labels, queue context, and security events. |
+| [typescript-node-services](skills/typescript-node-services) | Builds or repairs a Node TypeScript service so its deployed entry matches what was checked. |
+| [rust-async-services](skills/rust-async-services) | Builds or repairs a Tokio/Axum service's state, tasks, cancellation, middleware, and shutdown. |
 
 See [the catalog](catalog/skills.yaml) for evaluation status and each skill's `evals/results/` for outcomes and limits. Explicit entries use the catalog's `invocation: user`; host policy grants no additional task authority.
 

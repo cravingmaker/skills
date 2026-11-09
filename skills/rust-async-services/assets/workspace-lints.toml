@@ -1,0 +1,18 @@
+# Comparison fragments for Cargo.toml; not a standalone Cargo manifest.
+# No toolchain or dependency version is pinned; check the repo's toolchain docs.
+# Merge into existing workspace tables; do not replace project policy.
+
+[workspace.lints.clippy]
+await_holding_lock = "deny"
+unwrap_used = "deny"
+expect_used = "deny"
+
+# Add this in EACH member Cargo.toml that should inherit the workspace policy.
+# [lints]
+# workspace = true
+#
+# Keep justified test-only exceptions local; run Clippy on supported feature
+# combinations. Validate the selected toolchain's warnings-as-errors form.
+#
+# Architectural crate privacy and dependency rules belong to the separate
+# architecture-fitness-functions capability.

@@ -1,0 +1,9 @@
+{
+  "deadline_ms": 1200,
+  "overhead_ms": 100,
+  "max_leaf_attempts": 3,
+  "layers": [
+    {"name": "caller", "attempts": 1, "timeout_ms": 1000, "max_backoff_ms": 0},
+    {"name": "dependency", "attempts": 3, "timeout_ms": 250, "max_backoff_ms": 50}
+  ]
+}

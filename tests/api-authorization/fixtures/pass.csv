@@ -1,0 +1,3 @@
+role,tenant,operation,object,property,entrypoint,identity,expect
+member|auditor,same,read,own,public,http|export,app_api,allow
+member,other,read,other,public,http|export,app_api,deny

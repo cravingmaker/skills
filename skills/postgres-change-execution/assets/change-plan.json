@@ -1,0 +1,42 @@
+{
+  "target": {
+    "deployment": "fixture-project/fixture-branch",
+    "endpoint_id": "fixture-direct",
+    "database": "fixture_db",
+    "server_identity": "fixture-cluster",
+    "principal": "fixture_operator"
+  },
+  "candidate_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "preconditions": {
+    "schema_fingerprint": "replace-with-safe-observed-fingerprint",
+    "status": "pending"
+  },
+  "expected_rows": 1,
+  "max_rows": 1,
+  "selected_keys_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "max_observation_age_seconds": 60,
+  "lock_timeout_ms": 1000,
+  "statement_timeout_ms": 5000,
+  "authority_ref": "replace-with-scoped-authority-reference",
+  "destructive": true,
+  "recovery": {
+    "target": {
+      "deployment": "fixture-project/fixture-branch",
+      "endpoint_id": "fixture-direct",
+      "database": "fixture_db",
+      "server_identity": "fixture-cluster",
+      "principal": "fixture_operator"
+    },
+    "usable": false,
+    "receipt_ref": "replace-with-verified-usable-recovery-receipt"
+  },
+  "effects": [
+    "transactional",
+    "trigger"
+  ],
+  "rehearsal": {
+    "disposable": true,
+    "receipt_ref": "replace-with-contained-rehearsal-receipt"
+  },
+  "verification_ref": "replace-with-independent-postconditions"
+}

@@ -1,0 +1,31 @@
+# Local OpenTelemetry Collector that writes every signal to one OTLP JSON Lines file.
+# For development checks only; production pipelines belong to the devops-engineer role.
+# The file exporter ships in the collector's contrib distribution, not the core one.
+# Check component names and options against the installed collector's docs before use.
+# Run it with: otelcol-contrib --config collector-file.yaml
+# Then point the service at it: OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 127.0.0.1:4317
+      http:
+        endpoint: 127.0.0.1:4318
+
+exporters:
+  file:
+    path: ./export.jsonl
+    format: json
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [file]
+    metrics:
+      receivers: [otlp]
+      exporters: [file]
+    logs:
+      receivers: [otlp]
+      exporters: [file]

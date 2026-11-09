@@ -1,0 +1,39 @@
+{
+  "target_id": "disposable-fixture-cluster/database",
+  "checks": [
+    {
+      "id": "reader-select-existing",
+      "login": "fixture_reader",
+      "session_role": "fixture_reader",
+      "phase": "existing",
+      "kind": "sql",
+      "probe_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "expected": "allow",
+      "codes": [
+        "00000"
+      ],
+      "forbidden_roles": [
+        "fixture_owner",
+        "fixture_migrator",
+        "neon_superuser"
+      ]
+    },
+    {
+      "id": "reader-insert-existing",
+      "login": "fixture_reader",
+      "session_role": "fixture_reader",
+      "phase": "existing",
+      "kind": "sql",
+      "probe_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "expected": "deny",
+      "codes": [
+        "42501"
+      ],
+      "forbidden_roles": [
+        "fixture_owner",
+        "fixture_migrator",
+        "neon_superuser"
+      ]
+    }
+  ]
+}

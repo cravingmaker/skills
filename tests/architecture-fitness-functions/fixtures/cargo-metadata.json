@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "packages": [
+    {"id": "opaque-domain", "name": "domain"},
+    {"id": "opaque-data", "name": "data-access"},
+    {"id": "opaque-service", "name": "service"},
+    {"id": "opaque-log", "name": "logging"}
+  ],
+  "workspace_members": ["opaque-domain", "opaque-data", "opaque-service"],
+  "resolve": {
+    "nodes": [
+      {"id": "opaque-domain", "deps": []},
+      {"id": "opaque-data", "deps": [
+        {"name": "domain", "pkg": "opaque-domain", "dep_kinds": [{"kind": null, "target": null}]}
+      ]},
+      {"id": "opaque-service", "deps": [
+        {"name": "renamed_storage", "pkg": "opaque-data", "dep_kinds": [{"kind": null, "target": null}]},
+        {"name": "logging", "pkg": "opaque-log", "dep_kinds": [{"kind": null, "target": null}]}
+      ]},
+      {"id": "opaque-log", "deps": []}
+    ]
+  }
+}

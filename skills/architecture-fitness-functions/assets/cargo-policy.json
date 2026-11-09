@@ -1,0 +1,24 @@
+{
+  "layers": {
+    "domain": ["domain"],
+    "adapters": ["data-access"],
+    "application": ["service"]
+  },
+  "allow": {
+    "normal": {
+      "domain": [],
+      "adapters": ["domain"],
+      "application": ["domain", "adapters"]
+    },
+    "build": {
+      "domain": [],
+      "adapters": [],
+      "application": []
+    },
+    "dev": {
+      "domain": [],
+      "adapters": ["domain"],
+      "application": ["domain", "adapters"]
+    }
+  }
+}
