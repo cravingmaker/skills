@@ -6,8 +6,8 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 
 | Role | Specialty the user named | Capabilities | Upstream providers | Status |
 | --- | --- | --- | --- | --- |
-| agent-orchestrator | Manage other agents like a product or project manager | planned | none | planned |
-| agent-orchestrator | Agents discuss and debate to find the best approach | planned | none | planned |
+| agent-orchestrator | Manage other agents like a product or project manager | `agent-orchestrator` (router), `work-decomposition`, `agent-briefing`, `result-verification`, `decision-log` | none | in PR |
+| agent-orchestrator | Agents discuss and debate to find the best approach | `agent-debate`, `decision-log` | none | in PR |
 | backend-engineer | JavaScript and TypeScript | planned | none | planned |
 | backend-engineer | Rust | planned | none | planned |
 | backend-engineer | API design | planned | none | planned |

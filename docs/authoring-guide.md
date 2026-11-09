@@ -26,9 +26,10 @@ Only the spec's fields: `name`, `description`, `license`, `compatibility`, `meta
 5. **Failure modes as checks.** The specific mistakes average practitioners make, phrased as things to verify.
 6. **Freshness.** No hard-coded versions unless recorded with `metadata.verified` and sources. Prefer instructions that make the agent read the installed version and the official docs.
 7. **Safety and authorization** where relevant: written scope before offensive security work; dry runs, reversible changes, and stop points before destructive operations; no personalized financial advice; search-engine spam policies; consumer-protection and privacy law.
-8. **Size.** `SKILL.md` about 200 lines or fewer; detail in `references/`, linked one level deep.
-9. **Evals.** `evals/examples.md` with Activation, Near miss, and Outcome items, and paired runs recorded in `evals/results/` before the catalog marks the skill `evaluated`.
-10. **Own words.** roadmap.sh and other copyrighted curricula are coverage references only; their license forbids republishing. Every skill is original text or a properly licensed adaptation.
+8. **Scripts a skill ships** run anywhere the skill is installed: Python 3.12+ standard library with `#!/usr/bin/env python3`, or POSIX shell. The existing `clear-communication` Vale wrapper uses Bash; keep that dependency explicit. Read-only by default, exit 0 pass, 1 findings, 2 usage, with messages that name the fix, and tested in `tests/<skill>/run.sh`. Repository tooling in `scripts/` may use `uv` with pinned dependencies instead.
+9. **Size.** `SKILL.md` about 200 lines or fewer; detail in `references/`, linked one level deep.
+10. **Evals.** `evals/examples.md` with Activation, Near miss, and Outcome items, and paired runs recorded in `evals/results/` before the catalog marks the skill `evaluated`.
+11. **Own words.** roadmap.sh and other copyrighted curricula are coverage references only; their license forbids republishing. Every skill is original text or a properly licensed adaptation.
 
 ## Referring to other skills
 

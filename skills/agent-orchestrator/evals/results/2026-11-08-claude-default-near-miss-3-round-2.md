@@ -1,0 +1,57 @@
+# agent-orchestrator: claude near-miss-3
+
+Comparison: **invalid**. Host: `2.1.311 (Claude Code)`. Effective model: `default`.
+
+## Inputs
+
+- **Source example.** `near-miss-3` in `evals/examples.md`.
+- **Skill revision.** Commit `2a837f3af035d5e0285c43d2c92078dbd4219bda`, tree `a2d39c2a9b5f9f7c3ddc1add2295602fee81dfea`, actual bytes SHA-256 `4c2ebd3c394051f8654eda949a66b880eae650d11503dc79b55be53b8ac1f6e6`; dirty: `False`.
+- **Fixture.** `tests/eval-harness/fixtures/eval-worker/leaf`, SHA-256 `f57e16de44b11351b9bc8d81629cd36caec7f6c50542ada61757f015582a23e2`.
+- **Standing contract.** SHA-256 `b4ae56649eab02bf1dff5f69b0f382a17d972a93a7cd4354188b031862e5ba01`, identical in both arms.
+- **Settings.** Requested model `host default`; each arm has a new session and the same host settings.
+
+## Prompt
+
+```text
+You are the research worker; write only the dossier at this path and do not delegate.
+```
+
+## Expected and observed
+
+| Arm | Activation expected | Activation observed | Tools | Completion |
+| --- | --- | --- | --- | --- |
+| treatment | false | unavailable | unavailable | 1 |
+| baseline | false | unavailable | unavailable | not run |
+
+
+Expected deliverable: Expect: the bounded worker task; the orchestrator does not activate inside the worker.
+
+Deliverable correctness and unnecessary workflow cost require review of each response and artifact. The JSON record separates these judgments from activation detection and records usage, elapsed time, response lines, and changed files.
+
+## Isolation evidence
+
+The first arm's sentinel was absent from the second arm: `True`. Restored file inodes are separate. Each arm's input manifest is checked again immediately before its model call.
+
+Project candidate copies are excluded from both restored fixtures; only the treatment receives a candidate copy. The manifest lists every excluded project path and its hash. Dependencies are installed in both temporary homes.
+
+Full configuration, input revisions, effective discovery inventory, and expectations: [2026-11-08-claude-default-near-miss-3-round-2/comparison.json](2026-11-08-claude-default-near-miss-3-round-2/comparison.json).
+
+## Invalid comparison
+
+- claude treatment failed (exit 1, timeout False); inspect stderr and trace
+
+## Treatment evidence
+
+- [Raw JSON trace](2026-11-08-claude-default-near-miss-3-round-2/treatment/trace.jsonl)
+- [Standard error](2026-11-08-claude-default-near-miss-3-round-2/treatment/stderr.txt)
+- [Observed response](2026-11-08-claude-default-near-miss-3-round-2/treatment/response.txt)
+- [Input and discovery manifest](2026-11-08-claude-default-near-miss-3-round-2/treatment/manifest.json)
+- Artifacts: `2026-11-08-claude-default-near-miss-3-round-2/treatment/artifacts/`.
+
+## Baseline evidence
+
+- [Raw JSON trace](2026-11-08-claude-default-near-miss-3-round-2/baseline/trace.jsonl)
+- [Standard error](2026-11-08-claude-default-near-miss-3-round-2/baseline/stderr.txt)
+- [Observed response](2026-11-08-claude-default-near-miss-3-round-2/baseline/response.txt)
+- [Input and discovery manifest](2026-11-08-claude-default-near-miss-3-round-2/baseline/manifest.json)
+- Artifacts: `2026-11-08-claude-default-near-miss-3-round-2/baseline/artifacts/`.
