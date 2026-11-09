@@ -1,0 +1,12 @@
+extends: existence
+message: "Cut the chatbot phrase '%s' and say the point directly."
+level: error
+ignorecase: true
+tokens:
+  - I hope this helps
+  - let me know if you have any (?:other |more |further )?questions
+  - feel free to (?:ask|reach out)
+  - happy to help
+  - great question
+  - you're absolutely right
+  - you are absolutely right

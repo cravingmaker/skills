@@ -1,0 +1,12 @@
+extends: substitution
+message: "Consider '%s' instead of '%s'."
+level: suggestion
+ignorecase: true
+swap:
+  utili[sz]e[sd]?: use
+  utili[sz]ing: using
+  facilitate[sd]?: help
+  numerous: many
+  commence[sd]?: start
+  prior to: before
+  in the near future: soon

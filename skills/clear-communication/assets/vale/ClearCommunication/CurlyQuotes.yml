@@ -1,0 +1,6 @@
+extends: existence
+message: "Use a straight quote instead of '%s'."
+level: error
+nonword: true
+tokens:
+  - '[“”‘’]'

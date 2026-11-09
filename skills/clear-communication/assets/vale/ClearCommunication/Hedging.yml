@@ -1,0 +1,10 @@
+extends: existence
+message: "'%s' stacks hedges. Keep one hedge that states the real uncertainty."
+level: suggestion
+ignorecase: true
+tokens:
+  - could potentially
+  - might possibly
+  - may potentially
+  - could possibly
+  - it could be argued that

@@ -1,0 +1,15 @@
+extends: substitution
+message: "Use '%s' instead of '%s'."
+level: error
+ignorecase: true
+swap:
+  in order to: to
+  due to the fact that: because
+  at this point in time: now
+  for the purpose of: for
+  in the event that: if
+  it is important to note that: nothing (delete the phrase)
+  it's important to note that: nothing (delete the phrase)
+  it is worth noting that: nothing (delete the phrase)
+  it's worth noting that: nothing (delete the phrase)
+  needless to say: nothing (delete the phrase)
