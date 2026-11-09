@@ -35,6 +35,9 @@ class Repo:
                 names[name] = provider
         return names
 
+    def invocation(self, skill: str) -> str:
+        return (self.entries.get(skill) or {}).get("invocation", "model")
+
     def names(self, skill: str, key: str) -> list[str]:
         metadata = self.frontmatter.get(skill, {}).get("metadata") or {}
         value = metadata.get(key, "") if isinstance(metadata, dict) else ""

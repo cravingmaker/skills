@@ -29,3 +29,5 @@ Enter at the step the task needs; no flow is a mandatory pipeline.
 ## Done
 
 - <Completion criterion and the evidence to report.>
+
+Optional related work: when <condition> applies and it is installed, read the `<skill-name>` skill before relying on it.

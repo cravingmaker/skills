@@ -4,7 +4,6 @@ description: Accept or reject sub-agents' work by saving raw reports, checking e
 license: MIT
 metadata:
   requires: "decision-log"
-  handoffs: "agent-briefing agent-debate work-decomposition project-guardrails"
 ---
 
 # Result verification
@@ -20,7 +19,7 @@ Four leading words govern every step:
 
 ## Steps
 
-Read the required `decision-log` skill from the installed inventory before using it; if missing, name it and stop that flow. Resolve `<result-verification-dir>` to this skill's installed directory. Read any named handoff before using it; a missing review checker leaves that check unresolved.
+Read the `decision-log` skill (required) from the installed inventory before using it; if missing, name it and stop that flow. Resolve `<result-verification-dir>` to this skill's installed directory. Read any named handoff before using it; a missing review checker leaves that check unresolved.
 
 1. **Save every raw report.** Before judging a report, save it verbatim in the run record (the `decision-log` skill), with the task ID and the time it arrived. A condensed version is a separate file marked as condensed. For each dispatched task with no report, record the task as unresolved with the reason. Done when every dispatched task has either a saved raw report or an unresolved entry.
 

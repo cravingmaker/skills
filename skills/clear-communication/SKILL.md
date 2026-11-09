@@ -6,7 +6,7 @@ metadata:
   source: https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack
   source-revision: 6b0300214a09fd6029cfb7077043125758cd1fd2
   source-license: MIT, see LICENSE-pstack
-  source-files: "pstack/skills/{unslop,technical-writing,bro,teach,in-your-own-words}/SKILL.md"
+  source-files: "pstack/skills/unslop/SKILL.md pstack/skills/technical-writing/SKILL.md pstack/skills/bro/SKILL.md pstack/skills/teach/SKILL.md pstack/skills/in-your-own-words/SKILL.md"
   local-changes: "Combined clarification and writing guidance; added house style and Vale checks; kept technical terms and em dashes by default; omitted mandatory teaching workflows."
 ---
 
@@ -57,3 +57,5 @@ For a consequential long document (a README, a design doc, a report someone acts
 ## Repair your own last message
 
 When the user signals confusion ("what?", "simpler", "say that plainly"), restate your previous message in plain language, with the jargon replaced by the mechanism it names. Keep every fact and use the fewest words that make it clear; an over-compressed message may need to grow.
+
+Per-file provenance: [references/SOURCES.md](references/SOURCES.md).

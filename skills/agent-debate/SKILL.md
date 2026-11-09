@@ -4,7 +4,6 @@ description: Find the best approach through structured disagreement between agen
 license: MIT
 metadata:
   requires: "agent-briefing decision-log work-decomposition"
-  handoffs: "result-verification clear-communication"
 ---
 
 # Agent debate

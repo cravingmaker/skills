@@ -10,7 +10,7 @@ usage() {
 
 mode=preview
 case "${1:-}" in
-  --help|-h) usage; exit 0 ;;
+  --help|-h) usage 2>&1; exit 0 ;;
   --apply) mode=apply; shift ;;
   --dry-run) shift ;;
 esac

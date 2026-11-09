@@ -14,6 +14,13 @@ PINNED_VALE_VERSION=3.26.0
 skill_dir="$(cd "$(dirname "$0")/.." && pwd)"
 config="$skill_dir/assets/vale/vale.ini"
 
+case "${1:-}" in
+  --help|-h)
+    echo "usage: check-prose.sh [--config FILE] FILE... | -"
+    echo "Lint prose with the ClearCommunication Vale style. Exit: 0 no errors, 1 errors, 2 usage or Vale missing."
+    exit 0 ;;
+esac
+
 if [ "${1:-}" = "--config" ]; then
   if [ "$#" -lt 2 ] || [ -z "$2" ]; then
     echo "error: --config needs a file" >&2

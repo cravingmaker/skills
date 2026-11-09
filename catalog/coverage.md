@@ -2,6 +2,8 @@
 
 Every role and specialty the user asked for, mapped to the skills that cover it. A role's PR is complete when each of its rows is covered or explicitly deferred with a reason. Status: planned, in PR, covered, deferred.
 
+Coverage rows describe scope; only `metadata.requires` defines installation edges. Optional routes are conditional prose pointers checked against shipped names or the supported external inventory. Engineering roles add domain methods around the same owned generic workflow.
+
 Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references only; their content is not reproduced here.
 
 | Role | Specialty the user named | Capabilities | Upstream providers | Status |

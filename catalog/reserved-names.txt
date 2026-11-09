@@ -135,3 +135,7 @@ skill-installer
 starter-workflow
 update-plugin
 visualize
+
+# Host commands; keep independent of upstream source reservations.
+verify
+run-skill-generator

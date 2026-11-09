@@ -139,6 +139,14 @@ class IsolationTests(unittest.TestCase):
             (skill / "SKILL.md").write_text(f'---\nname: {name}\ndescription: Example\nmetadata:\n  requires: "{other}"\n---\n')
         self.assertEqual(sorted(dependency_sources(root, "first", [])), ["first", "second"])
 
+    def test_null_and_empty_metadata_keep_the_required_closure(self):
+        root = self.base / "repo"
+        skill = root / "skills/example"
+        skill.mkdir(parents=True)
+        for block in ("", "metadata:\n", "metadata: {}\n", "metadata: null\n"):
+            (skill / "SKILL.md").write_text("---\nname: example\ndescription: Example\n" + block + "---\n")
+            self.assertEqual(set(dependency_sources(root, "example", [])), {"example"})
+
     def test_dependencies_constant_in_both_arms(self):
         dependency = self.base / "dep-source"
         dependency.mkdir()

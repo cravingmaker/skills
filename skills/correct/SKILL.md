@@ -31,3 +31,5 @@ Assume the next contributor is an agent that sees only the files it opened, copi
 Done when the remedy rejects the historical mistake, accepts valid code, and runs in the project's standard check command.
 
 Commits, history-wide sweeps for other mistake classes, and edits to agent instruction files happen only when the user asks for them.
+
+Per-file provenance: [references/SOURCES.md](references/SOURCES.md).

@@ -4,7 +4,6 @@ description: Equip this agent as the orchestrator of a fleet of AI agents, a pro
 license: MIT
 metadata:
   requires: "work-decomposition agent-briefing agent-debate result-verification decision-log clear-communication"
-  handoffs: "project-guardrails correct"
 ---
 
 # Agent orchestrator

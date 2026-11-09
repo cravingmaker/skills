@@ -42,4 +42,7 @@ Restate only the uncertain part, in the user's terms. When the request is clear,
 
 ## Credits
 
+<!-- skill-names: historical -->
 The batching, recommended answers, and the facts-versus-decisions split follow the `grilling` skill in [mattpocock/skills](https://github.com/mattpocock/skills). Looking at context first follows the `brainstorming` skill in [obra/superpowers](https://github.com/obra/superpowers). The house rule of batching only answerable questions, and the word budget, are this repository's.
+
+<!-- skill-names: end -->

@@ -38,6 +38,8 @@ tests/check-skills/run.sh || status=1
 
 scripts/check-catalog.py || status=1
 scripts/build-profiles.py --check || status=1
+scripts/build-host-config.py --check || status=1
+tests/adoption-tooling/run.sh || status=1
 tests/check-catalog/run.sh || status=1
 tests/install/run.sh || status=1
 tests/eval-harness/run.sh || status=1

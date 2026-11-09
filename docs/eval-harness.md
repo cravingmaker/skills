@@ -20,7 +20,7 @@ Pass `--model NAME` to choose the model; otherwise the host chooses its default.
 
 For an example with placeholder input, write the concrete prompt to a file and pass `--prompt-file FILE`. The record keeps both the source example and the actual prompt. Use `--record-id activation-1-trial-2` for another trial; existing records are never overwritten.
 
-Required skills are installed in both arms through the candidate's transitive `metadata.requires` closure. A missing dependency stops the comparison before either model call. Pass `--dependency DIR` for each required skill maintained outside this repository. Optional handoffs are unavailable unless the fixture provides them identically to both arms.
+Required skills are installed in both arms through the candidate's transitive `metadata.requires` closure. A missing dependency stops the comparison before either model call. Pass `--dependency DIR` for each required skill maintained outside this repository. Optional prose routes are unavailable unless the fixture provides them identically to both arms.
 
 ## Prepare a fixture
 

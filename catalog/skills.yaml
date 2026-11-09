@@ -3,11 +3,12 @@
 # skills.<name>:
 #   kind: capability | role       A role is a router that equips an agent for a role.
 #   roles: [role names]           Capability only: the roles whose routers use it.
+#   invocation: model | user     Optional; model is the default.
 #   status: unevaluated | evaluated   Evaluated means paired runs are recorded in evals/results/.
 #
 # Dependencies live in each SKILL.md as spec-compliant metadata strings:
 #   metadata.requires: "name name"   Skills this one cannot work without.
-#   metadata.handoffs: "name name"   Optional related skills.
+# Optional routes are conditional prose pointers, not installation edges.
 #
 # external.<provider>: skills kept upstream and installed from their source,
 # so routers may name them without this repository copying them.
