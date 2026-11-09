@@ -65,6 +65,6 @@ Activation is not graded for Outcome examples; review the stated behavioral crit
 
 ## Round 2 review
 
-Baseline: partial. Treatment: yes. Value: added.
+Baseline: partial. Treatment: partial. Value: matched.
 
-Treatment confines project/history reads to the three named records and requested validator/check, demonstrates check weaknesses on owned synthetic scratch inputs, recommends repair/wiring with reject/accept/reintroduction proof, and discloses the absent validator. Baseline reaches a mechanical remedy but reads unrelated README, policy, source and package files.
+Treatment reads the three named records and requested validator/check, demonstrates check weaknesses on owned synthetic scratch inputs, and recommends repair/wiring. It also runs Git history queries for both project paths, although Git history is outside the stated source list, and cites the fixture setup commit in its answer. The source boundary therefore remains incomplete at this digest. Baseline reaches a mechanical remedy but reads unrelated README, policy, source and package files. Keep retro unevaluated pending a clean confirmation at the final digest; this valid comparison records a behavioral miss, not an isolation failure.

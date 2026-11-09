@@ -281,7 +281,7 @@ skills:
   retro:
     kind: capability
     roles: [all]
-    status: evaluated
+    status: unevaluated
     invocation: user
   handoff:
     kind: capability
