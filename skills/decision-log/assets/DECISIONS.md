@@ -8,7 +8,8 @@ Run ID: {{same as PLAN.md}}. Decision owner: {{coordinator or named authority}}.
 - **Context.** {{goal, constraints, requirement revision, and why this decision matters}}
 - **Alternatives.** {{viable choices, including direct work or no change when applicable}}
 - **Criteria.** {{hard requirements and the tradeoffs that determine the choice}}
-- **Evidence.** {{sources, raw report IDs/hashes, exact artifact revisions, commands and observed results; label inference and unknowns}}
+- **Evidence.** {{exact source locations, raw report IDs/paths/hashes, artifact revisions, and result/trace/screenshot pointers; or unresolved}}
+- **Interpretation.** {{what those sources establish; distinguish observed results, inference, historical report, current observation, and unknowns}}
 - **Decision.** {{selected option and concise reason; or explicitly unresolved}}
 - **Rejected alternatives.** {{each rejected option with its evidence-based reason; or none with explanation}}
 - **Finding dispositions.** {{stable IDs: accepted, rejected with evidence, partial (the accepted part and the rejected part, each with evidence), superseded, or unresolved}}

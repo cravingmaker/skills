@@ -1,6 +1,6 @@
 ---
 name: domain-modeling
-description: Change a project's domain model by resolving or renaming terms in its configured glossary, or recording or superseding hard-to-reverse architecture decisions. Use for domain-model changes; vocabulary-only explanations use the existing glossary directly.
+description: Edit a project's configured glossary or architecture decision records. Use when asked to resolve conflicting terms, record a settled definition, rename a domain concept across the project, or record or supersede a hard-to-reverse decision.
 license: MIT
 metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/domain-modeling/SKILL.md"

@@ -282,6 +282,53 @@ def candidate_read(command_text: str, path: str, output: str, skills: Path) -> b
     return body_in_output(path, output, tuple(value for value in dict.fromkeys(inputs) if value != path))
 
 
+def selected_skill_injections(rollout: list[dict], candidate_path: str) -> list[dict]:
+    """Recognize host-selected instructions, never quoted user/report tags.
+
+    Unknown provenance or schemas stay unclassified. Native provenance, the
+    installed path/name and the complete installed body must all agree.
+    """
+    candidate = Path(candidate_path)
+    if not candidate.is_file():
+        return []
+    expected = candidate.read_text(encoding="utf-8").rstrip("\n")
+    pattern = re.compile(
+        r"\A<skill>\s*<name>" + re.escape(candidate.parent.name)
+        + r"</name>\s*<path>" + re.escape(str(candidate))
+        + r"</path>\n(.*)\n</skill>\s*\Z", re.DOTALL)
+    found = []
+    for event in rollout:
+        payload = event.get("payload", {})
+        if event.get("type") != "response_item" or not isinstance(payload, dict):
+            continue
+        if payload.get("type") != "message" or payload.get("role") != "user":
+            continue
+        metadata = payload.get("internal_chat_message_metadata_passthrough")
+        if not isinstance(metadata, dict):
+            continue
+        kinds = metadata.get("content_item_kinds")
+        details = metadata.get("content_item_metadata")
+        content = payload.get("content")
+        if (not all(isinstance(value, list) for value in (kinds, details, content))
+                or not len(kinds) == len(details) == len(content)):
+            continue
+        for index, part in enumerate(content):
+            if not isinstance(part, dict) or part.get("type") != "input_text":
+                continue
+            detail = details[index]
+            provenance = detail.get("provenance") if isinstance(detail, dict) else None
+            if (kinds[index] != "skills.selected_skill_instructions"
+                    or not isinstance(provenance, dict) or provenance.get("type") != "skills"):
+                continue
+            value = part.get("text")
+            match = pattern.fullmatch(value) if isinstance(value, str) else None
+            if match and match[1].rstrip("\n") == expected:
+                found.append({"event": "skills.selected_skill_instructions",
+                              "message_id": payload.get("id"), "content_index": index,
+                              "path": candidate_path})
+    return found
+
+
 def observe(arm: Arm, host: str, candidate: str) -> dict:
     trace = events(arm.evidence / "trace.jsonl")
     activation = []
@@ -336,7 +383,7 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
                 tool_count += 1
                 text = item.get("command", "")
                 # A mention in prose or a grep result is not a skill activation.
-                # Codex has no Skill tool: require a successful body read command.
+                # Classify shell body reads here; native selections come from the rollout below.
                 if (item.get("exit_code") == 0 and item.get("aggregated_output")
                         and candidate_read(text, candidate_path, item["aggregated_output"], arm.config / "skills")):
                     activation.append({"event": "command_execution", "id": item.get("id"), "command": text})
@@ -347,7 +394,9 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
                 usage = event.get("usage", {})
         # The local rollout is retained only as evidence, never the auth store.
         for path in (arm.config / "sessions").rglob("*.jsonl"):
-            for event in events(path):
+            rollout = events(path)
+            activation.extend(selected_skill_injections(rollout, candidate_path))
+            for event in rollout:
                 if event.get("type") == "turn_context":
                     model = event.get("payload", {}).get("model")
                     if model:

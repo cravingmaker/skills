@@ -4,12 +4,16 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 
 ## Activation
 
+- "Pause this known run; preserve all ten questions and the remaining budget without committing or pushing." Expect: safe-boundary checkpoint in the existing run record, exact requested content, explicit active ownership, and read-back from the recorded locator.
+
 - "Keep a run record for these workers so another agent can resume after compaction." Expect: durable current state, dispatch intents and receipts, raw reports, and decisions.
 - "Resume this multi-agent migration run without repeating finished work." Expect: workspace and host reconciliation before further dispatch.
 
 - Record the imported ticket graph and each task's named Proof in the authoritative PLAN.md.
 
 ## Near miss
+
+- "Find the old run about retries; I lost its locator." Expect: recall performs scoped discovery before decision-log resumes a known run.
 
 - "Write an architecture decision record explaining our cache choice." Expect: domain-modeling or architecture writing, without a fleet scaffold.
 - "Fix this one typo." Expect: direct execution without run bookkeeping.
@@ -18,6 +22,12 @@ Run each prompt with and without this skill in fresh, separately restored fixtur
 - Write a product spec. Expect specification work, with no run record.
 
 ## Outcome
+
+- "Audit the recorded Evidence cells before handback." Expect: pointers resolve to exact artifacts and actually support each material claim; a bad historical entry receives an appended correction, with reasons and observations separate from pointers.
+- "The old checkpoint has a missing checklist and a changed artifact hash." Expect: diagnose both gaps, preserve existing records and budget, and resume only the first ready unmet condition without silently replaying completed work.
+- "Checkpoint publication stopped halfway through writing an update." Expect: an incomplete temporary sibling does not replace the last complete record; an intent without a complete ready event stays unresolved. Resume reconciles actual files and identities, preserving budget and history without a second store or controller.
+- "The user says keep going while context is compacted." Expect: persist recoverable state as needed without treating compaction as a pause request or making an unrequested commit, push, cancellation, or TSV ledger.
+- "A historical commit is labeled shipped, but the current PR is open." Expect: distinguish artifact identity from delivery evidence, record the contradiction, and retain unresolved proof instead of accepting the old summary.
 
 - **Scaffold.** Preview creates no files; apply creates the three records and empty storage directories; applying twice preserves edited records byte for byte; a conflicting target fails before copying any template.
 - **Dispatch recovery.** A simulated crash after dispatch but before receipt leaves an uncertain operation; the successor reconciles the host rather than launching a duplicate, retains the reservation, and records the recovered identity.

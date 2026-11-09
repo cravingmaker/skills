@@ -6,8 +6,8 @@ metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/ask-matt/SKILL.md"
   source-revision: "49dd158d1076134a641b33efb035946536778336"
   source-files: "skills/engineering/ask-matt/SKILL.md"
-  local-changes: "Merged the shaping stage map into the owned orchestrator; reuse settled inputs and current authority; merged stage selection, coverage/competing-attempt modes and bounded recovery; routed approved code tickets to implement-spec under the same coordinator, record and budget; added owned design/review dispatch without a competing runner; delivery and retrospective source adaptations remain in their planned later stage."
-  requires: "work-decomposition agent-briefing agent-debate result-verification decision-log clear-communication grill-with-docs to-spec to-tickets implement-spec"
+  local-changes: "Merged the shaping stage map into the owned orchestrator; reuse settled inputs and current authority; merged stage selection, coverage/competing-attempt modes and bounded recovery; routed approved code tickets to implement-spec under the same coordinator, record and budget; added owned design/review dispatch without a competing runner; added owned shipping modes, root-only authorized watching and retrospective routing."
+  requires: "work-decomposition agent-briefing agent-debate result-verification decision-log clear-communication grill-with-docs to-spec to-tickets implement-spec retro"
 ---
 
 # Agent orchestrator
@@ -21,7 +21,7 @@ Quality bar:
 - **Verified.** The combined result passes its acceptance checks, run by the orchestrator; a report or a unanimous vote is a claim, not evidence.
 - **Clear.** The user gets the result first, then the evidence, the decisions still open, and the cost, under the standing contract of the `clear-communication` skill.
 
-Before relying on a capability below, read its `SKILL.md`; the summaries here are orientation only. When a required capability is not installed, say which one is missing and stop that flow.
+Before relying on a capability below, resolve its installed entry and read its `SKILL.md`; the summaries here are orientation only. Confirm absence in the complete installed inventory, including entries selected only by explicit invocation, before reporting a required capability as missing. An omitted automatic suggestion is not evidence of absence. When absence is confirmed, name the missing capability and stop that flow.
 
 ## Flows
 
@@ -37,6 +37,8 @@ Enter at the step the task needs; no flow is a mandatory pipeline.
 ### Build from an approved spec and code tickets
 
 Read the `implement-spec` skill and use it as the single approved-code-ticket runner. Resolve the exact approved spec, ticket source and closure rules from the configured tracker contract, and the configured domain paths; preserve lazy absent glossary or ADR files. Import stable IDs, status, blockers, source hashes and named Proof through the `work-decomposition` skill without a second interview or decomposition.
+
+When required dispatch or host-owned isolation is unavailable, keep this flow at source-bound preflight and report worker execution and integrated acceptance as blocked.
 
 Continue under this same coordinator, PLAN.md/LOG.md/DECISIONS.md and remaining finite budget. The runner owns dependency-frontier scheduling, host-owned isolation, leaf briefs, scoped review/fix rounds, worker acceptance and integration proof. It adds no second controller or ledger. Close tickets only after worker and integrated evidence are accepted, and only within current tracker authority. A child returns artifact/check state; monitoring belongs to the root only when requested or while an already authorized action waits.
 
@@ -61,6 +63,20 @@ For non-code deliberation or choosing between approaches:
 2. Run evaluator rounds with finding IDs, severity, evidence, exact changes, and a verdict line; log every acceptance and rejection → the `agent-debate` skill and the `decision-log` skill.
 3. Stop at full agreement, or when a finding reaches its round limit without new evidence; bring each finding still open to the user as a decision with both positions.
 
+### Ship a verified result
+
+Enter at the requested delivery stage after acceptance on the integrated artifact. Preserve the existing authority, run record, remaining budget and finish mode; an installed or loaded entry grants no external action.
+
+1. **Draft or file.** Read the `file-pr` skill. A title/body request selects its local body-only mode; create or update a PR only when requested or already authorized. Use the repository's template and merged style, include actual acceptance evidence, and return and host-link each created or updated layer with its current head, base and check/review state.
+2. **Watch when needed.** Read the `babysit-pr` skill only for requested monitoring or while an already authorized action still waits on checks or reviews. Only the root owns one watcher per PR; handle available work, then use the host's completion mechanism. A filing-only task returns its link and state. Every child returns PR/head/check/review state and never watches. With no supported watch mechanism, report one bounded status pass and the next action.
+3. **Carry the finish mode.** An explicit finish-to-merge request uses the `full-send` skill. An explicit prepare-without-merge request uses the `full-stop` skill, which selects full-send's shared prepare-only mode. Carry no-merge through every helper and child; cancel relevant owned pending auto-merge/queue entries and verify absence. Neither filing nor taking over work supplies merge authority.
+
+Bind proof, checks and readiness to the current relevant head and base. Keep every unresolved review thread regardless of age until addressed or disposed of with a written reason. Repository policy decides required checks, bots and human approvals; confidence and vendor identity waive no gate. Three review/fix rounds is the default, with any larger bounded allowance declared before starting; stable or renamed finding IDs consume the same run budget. The delivery capabilities own their procedures; do not start a second shipping controller.
+
+### Review the session workflow
+
+For a requested session retrospective or workflow improvement, read the `retro` skill (required) and compare the actual available session evidence with the requested process. Keep missing history explicit and apply only supported improvements within current authority. Completion alone starts no retrospective, instruction edit or public issue. Record any improvement and its proof in this run's existing decision trail.
+
 ### Resume after an interruption or compaction
 
 1. Read the run record: plan, budget used, dispatched tasks, raw reports, decisions → the `decision-log` skill.
@@ -80,6 +96,7 @@ Read [the workflow modes](references/workflow-modes.md) when choosing a stage, s
 - The combined result passes its acceptance checks, with the commands and their output reported.
 - The run record holds the plan, the budget and what was spent, every raw report, and every decision with its evidence.
 - The user's report leads with the outcome, then the decisions still open (each with both positions), the evidence limits, and the cost: workers started, review rounds, and any budget left unspent.
+- Delivery reports distinguish a local draft, filed PR, ready state and observed merge; a child returns state without a watcher.
 - No action outside the authorization the user gave; an action whose authorization is unresolved waits for the user.
 
 Per-file attribution: [references/SOURCES.md](references/SOURCES.md).

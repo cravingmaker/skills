@@ -3,6 +3,7 @@
 # skills.<name>:
 #   kind: capability | role       A role is a router that equips an agent for a role.
 #   roles: [role names]           Capability only: the roles whose routers use it.
+#   aliases: [search names]      Optional; search aliases never install another package.
 #   invocation: model | user     Optional; model is the default.
 #   status: unevaluated | evaluated   Evaluated means paired runs are recorded in evals/results/.
 #
@@ -44,11 +45,11 @@ skills:
   project-guardrails:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
   toolchain-upgrade:
     kind: capability
     roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
   correct:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
@@ -56,19 +57,19 @@ skills:
 
   agent-orchestrator:
     kind: role
-    status: unevaluated
+    status: evaluated
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   agent-briefing:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   agent-debate:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
   result-verification:
     kind: capability
     roles: [agent-orchestrator]
@@ -76,7 +77,7 @@ skills:
   decision-log:
     kind: capability
     roles: [agent-orchestrator]
-    status: unevaluated
+    status: evaluated
 
   grilling:
     kind: capability
@@ -95,7 +96,7 @@ skills:
   domain-modeling:
     kind: capability
     roles: [agent-orchestrator, ui-ux-designer, business-analyst]
-    status: unevaluated
+    status: evaluated
   to-spec:
     kind: capability
     roles: [agent-orchestrator, business-analyst]
@@ -176,7 +177,7 @@ skills:
   implement:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: user
   implement-spec:
     kind: capability
@@ -228,7 +229,7 @@ skills:
   create-verification-skill:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
-    status: unevaluated
+    status: evaluated
     invocation: model
   maintain-verification-skill:
     kind: capability
@@ -236,11 +237,79 @@ skills:
     status: evaluated
     invocation: user
 
+  file-pr:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+  pr:
+    kind: capability
+    roles: [agent-orchestrator]
+    invocation: user
+    status: evaluated
+  babysit-pr:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+  fix-ci:
+    aliases: [ci-failure-triage, ci-failure-diagnosis]
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
+    status: evaluated
+  leaving-pr-comments:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+  modernize:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+  takeover:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+  full-send:
+    kind: capability
+    roles: [agent-orchestrator]
+    invocation: user
+    status: evaluated
+  full-stop:
+    kind: capability
+    roles: [agent-orchestrator]
+    invocation: user
+    status: evaluated
+
+  retro:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: user
+  handoff:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: user
+  writing-for-agents:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: model
+  teach:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: user
+  recall:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: model
+  ketchup:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: user
+
 external:
-  mattpocock-skills:
-    source: https://github.com/mattpocock/skills
-    install: Claude Code plugin mattpocock-skills from claude-plugins-official, or the skills CLI
-    skills: [writing-for-agents, handoff, retro]
   android-skills:
     source: https://github.com/android/skills
     install: skills CLI from the source repository

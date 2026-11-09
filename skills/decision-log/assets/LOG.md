@@ -13,11 +13,14 @@ Copy this block for each event and replace the fields. Record dispatch intent be
 - **Route.** {{resolved provider/model/options and discovery evidence; or direct}}
 - **Budget.** {{starts/retries/rounds delta and totals; active/uncertain runs; shared-pool reservation; reserve remaining}}
 - **Operation.** {{dispatch intent, receipt, result status, or recovery action; never infer a missing receipt}}
-- **Evidence.** {{raw report path/hash, exact output revisions, commands and observed results, omitted checks with reasons}}
+- **Evidence.** {{exact source pointers, raw report path/hash, output revision, result/event/trace/screenshot locator; or unresolved}}
+- **Result and interpretation.** {{claim, command and observed result, what the linked evidence proves, omitted checks and reasons}}
 - **Usage.** {{native measurements and source; unknown where unavailable; estimates labeled separately}}
 - **Disposition.** {{reported, verified, accepted, unresolved, rejected, cancelled, or superseded; decision ID if relevant}}
 - **Next.** {{owner and next unmet condition; or closed}}
 
 ## Checkpoint template
 
-{{event ID, last reconciled workspace and host state, accepted work to reuse, active/uncertain runs, budget spent and reserved, unresolved decisions, next ready action, and successor owner}}
+{{event ID, exact project/run locator, last reconciled workspace and host state, disk versus context-only state, accepted work and proof to reuse, active/uncertain runs and ownership, budget spent/reserved/remaining, unresolved decisions, requested artifact links, next ready action, successor owner, and storage/access limits}}
+
+Checkpoint read-back: {{reopened using only the recorded locator; evidence and all requested artifacts checked for identity, completeness and order; gaps remain explicit}}

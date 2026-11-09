@@ -409,5 +409,79 @@ class IsolationTests(unittest.TestCase):
         self.assertIn("test credential unavailable", value["errors"])
 
 
+    def native_selection_observation(self, change=None):
+        self.base = Path(tempfile.mkdtemp(prefix="native-selection-", dir=self.temporary.name))
+        _, arms = self.pair("codex", project=False)
+        arm = arms[0]
+        path = arm.config / "skills/clear-communication/SKILL.md"
+        body = path.read_text(encoding="utf-8")
+        message = {"type": "response_item", "payload": {
+            "type": "message", "id": "native-selected-message", "role": "user",
+            "content": [{"type": "input_text", "text":
+                f"<skill>\n<name>clear-communication</name>\n<path>{path}</path>\n{body}\n</skill>"}],
+            "internal_chat_message_metadata_passthrough": {
+                "content_item_kinds": ["skills.selected_skill_instructions"],
+                "content_item_metadata": [{"provenance": {"type": "skills"}}]}}}
+        if change:
+            change(message, path)
+        (arm.evidence / "trace.jsonl").write_text(
+            json.dumps({"type": "thread.started", "thread_id": "fixture-thread"}) + "\n"
+            + json.dumps({"type": "turn.completed", "usage": {}}) + "\n")
+        sessions = arm.config / "sessions"
+        sessions.mkdir()
+        (sessions / "fixture.jsonl").write_text(json.dumps(message) + "\n"
+            + json.dumps({"type": "turn_context", "payload": {"model": "fixture-model"}}) + "\n")
+        return hosts.observe(arm, "codex", "clear-communication")
+
+    def test_codex_native_selection_counts_without_shell_read(self):
+        result = self.native_selection_observation()
+        self.assertTrue(result["activation"])
+        self.assertEqual(result["activation_evidence"][0]["event"], "skills.selected_skill_instructions")
+
+    def test_codex_quoted_skill_tags_without_native_provenance_do_not_count(self):
+        def ordinary(message, path):
+            message["payload"].pop("internal_chat_message_metadata_passthrough")
+        self.assertFalse(self.native_selection_observation(ordinary)["activation"])
+
+    def test_codex_native_selection_rejects_wrong_provenance_path_and_body(self):
+        def wrong_provenance(message, path):
+            message["payload"]["internal_chat_message_metadata_passthrough"]["content_item_metadata"][0]["provenance"]["type"] = "human"
+        def wrong_path(message, path):
+            part = message["payload"]["content"][0]
+            part["text"] = part["text"].replace(str(path), str(path) + ".wrong")
+        def wrong_body(message, path):
+            part = message["payload"]["content"][0]
+            part["text"] = part["text"].replace("</skill>", "changed body\n</skill>")
+        for change in (wrong_provenance, wrong_path, wrong_body):
+            with self.subTest(change=change.__name__):
+                self.assertFalse(self.native_selection_observation(change)["activation"])
+
+
+
+    def test_codex_native_selection_rejects_unknown_content_types(self):
+        def change_type(value):
+            def change(message, path):
+                part = message["payload"]["content"][0]
+                if value == "absent":
+                    part.pop("type")
+                else:
+                    part["type"] = value
+            return change
+        for value in ("output_text", "input_image", "image", "tool_result", "refusal", "unknown", None, "absent"):
+            with self.subTest(content_type=value):
+                self.assertFalse(self.native_selection_observation(change_type(value))["activation"])
+
+    def test_codex_native_selection_requires_aligned_metadata(self):
+        def extra_kind(message, path):
+            message["payload"]["internal_chat_message_metadata_passthrough"]["content_item_kinds"].append("user")
+        def extra_detail(message, path):
+            message["payload"]["internal_chat_message_metadata_passthrough"]["content_item_metadata"].append({"provenance": {"type": "human"}})
+        def extra_content(message, path):
+            message["payload"]["content"].append({"type": "input_text", "text": "unannotated"})
+        for change in (extra_kind, extra_detail, extra_content):
+            with self.subTest(change=change.__name__):
+                self.assertFalse(self.native_selection_observation(change)["activation"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
