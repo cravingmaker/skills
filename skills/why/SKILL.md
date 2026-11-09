@@ -1,6 +1,6 @@
 ---
 name: why
-description: "Reconstruct why a concrete design or behavior exists from attributable history. Use for design rationale, motivating incidents, historical constraints, or the origin of a threshold; distinguish evidence from inference."
+description: "Reconstruct why a design or behavior exists, or check whether agent notes match the user's original instruction. Use for design rationale, incidents, historical constraints, thresholds, or disputed human rulings; separate attributable evidence from inference."
 license: MIT
 metadata:
   source: "https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/why/SKILL.md"

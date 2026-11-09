@@ -1,6 +1,6 @@
 ---
 name: project-guardrails
-description: Set up or audit a project's guardrails (formatter, linter, strict types, tests, CI, dependency and workflow security, git and agent hooks) so a wrong change fails a check, ordered by readability, maintainability, security, then performance. Use when starting or adopting a project, auditing what a repo enforces, or when the user asks to harden, tighten, or add guardrails.
+description: "Set up or audit project guardrails so wrong changes fail checks: format, lint, types, tests, CI, dependencies, and hooks. Use for project setup, enforcement audits, CI hardening, or wiring an authorized staged hook with the existing package manager and hook setup."
 license: MIT
 metadata:
   source: https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack
@@ -17,6 +17,8 @@ A **guardrail** is a check that fails when a change is wrong, runs the same way 
 The goal order is fixed: readability, then maintainability, then security, then performance. When two choices conflict, the earlier goal wins.
 
 The checklist in [references/capabilities.md](references/capabilities.md) lists capabilities to assess, not tools to install. A project that already enforces a capability with a different tool keeps its tool.
+
+When the request only reports an already identified proof gap, keep the answer on that gap and its supplied evidence. If the named verification helper is unavailable, report the gap, missing helper, and open proof, then stop that flow. A missing helper does not call for another inventory, version lookup, or replacement procedure.
 
 ## Steps
 
