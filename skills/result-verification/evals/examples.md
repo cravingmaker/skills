@@ -18,6 +18,10 @@ Run each prompt with and without this skill, with the same host, models, fixture
 
 - Author a way to drive this application. Expect scoped authoring only; no completed delegated result is being accepted.
 
+- Maintain a project driver without returned worker results. Expect the `maintain-verification-skill` skill, without invented acceptance.
+
+- "The named CLI observation has no driver; author only the missing repeatable proof within this task's scope." Expect: bounded authoring through the `create-verification-skill` skill, without delegated-result intake or acceptance when no worker result was returned.
+
 ## Outcome
 
 - `tests/result-verification/run.sh` passes: a clean tree passes the read-only check; committed, staged, unstaged, untracked, deleted, and changed-back paths outside the boundary fail; paths inside it pass; ignored files count only with `--ignored`; rewritten history fails; usage errors exit 2.
@@ -28,3 +32,4 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - The final report maps each acceptance criterion to an executed check or a direct source/rubric check and its result at an exact revision.
 - A research child with no shell commands is verified by opening its decisive sources; a static blocker is verified at its cited revision without inventing a command to satisfy intake.
 - A passing test suite cannot replace the named CLI/UI/native/source observation. Missing, stale, proxy or inconclusive proof leaves acceptance unresolved; exact static evidence remains valid for a static claim. Match inputs, artifact identity, environment, actual observation and receipt on both worker and integration state.
+- Existing commands/drivers are used first. A missing observation conditionally routes to bounded authoring, requested full mapping selects full-map mode, and an existing stale map routes to maintenance. Missing tools, baseline, authority or helper leave the original Proof unresolved; static claims retain applicable static evidence and no product repair is inferred.

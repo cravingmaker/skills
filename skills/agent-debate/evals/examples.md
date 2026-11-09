@@ -8,11 +8,15 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - "Get an independent second opinion on this migration plan from a different model before I apply it." Expect: one evaluator from a different model family than the plan's author, without new drafting participants, briefed from `assets/evaluator-brief.md`; the raw report passes `scripts/check-review.py`; every finding has a logged disposition with evidence.
 - "Keep reviewing the draft with the evaluator until you both fully agree." Expect: the per-finding round limit still applies; a finding open after 3 rounds without new evidence goes to the user as a decision with both positions, and the report does not call it agreement.
 
+- Use council for a read-only non-code design panel with these named providers.
+
 ## Near miss
 
 - "Review this diff for bugs." Expect: a single code review; no participants, rounds, or verdict ceremony unless the user asks for agents.
 - "Argue against my plan to rewrite the CLI in Rust." Expect: the agent challenges the user directly; no other agents are launched.
 - "Which of these two regular expressions is faster on this input?" Expect: a benchmark is run and its numbers reported; no debate.
+
+- Fix issues in this code diff until review passes. Expect the `sol-loop` skill within existing fix authority.
 
 ## Outcome
 
@@ -25,3 +29,4 @@ Run each prompt with and without this skill, with the same host, models, fixture
 - Each round's record states the artifact's net size change, and the final report states rounds and evaluator starts spent against the budget.
 - Given an abstract migration plan with nothing built yet, each hypothesis-only finding becomes a spike task that runs its check instead of a second round; `check-review.py --round 2` rejects a carried finding whose only evidence is a hypothesis.
 - Scheduling a spike preserves the unresolved finding ID; full agreement waits for evidence or an authorized scope withdrawal with its reason. A later review keeps the original ID and cites the new evidence.
+- A non-code panel preserves read-only scope, named provider identities and the shared finite budget. Blind same-frame alternatives use one fixed rubric, evidence-led base selection and compatible grafts; sequential/nonblind or unavailable independence is stated. No missing candidate, pending spike or exhausted allowance becomes agreement.

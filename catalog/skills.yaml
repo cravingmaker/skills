@@ -52,15 +52,15 @@ skills:
   correct:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
-    status: unevaluated
+    status: evaluated
 
   agent-orchestrator:
     kind: role
-    status: evaluated
+    status: unevaluated
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]
-    status: evaluated
+    status: unevaluated
   agent-briefing:
     kind: capability
     roles: [agent-orchestrator]
@@ -159,11 +159,88 @@ skills:
     status: evaluated
     invocation: user
 
+
+  codebase-design:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer]
+    status: evaluated
+  architect:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+  improve-codebase-architecture:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+    invocation: user
+  implement:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, data-engineer]
+    status: unevaluated
+    invocation: user
+  implement-spec:
+    kind: capability
+    roles: [agent-orchestrator]
+    status: evaluated
+    invocation: user
+  tdd:
+    kind: capability
+    roles: [agent-orchestrator, qa-engineer]
+    status: evaluated
+  diagnosing-bugs:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    status: evaluated
+  wizard:
+    kind: capability
+    roles: [agent-orchestrator, devops-engineer]
+    status: evaluated
+  change-review:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
+    status: evaluated
+    invocation: model
+  sol-loop:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
+    status: evaluated
+    invocation: model
+  council:
+    kind: capability
+    roles: [all]
+    status: evaluated
+    invocation: user
+  interrogate:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, security-engineer, data-engineer]
+    status: evaluated
+    invocation: user
+  blast-radius:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
+    status: evaluated
+    invocation: model
+  benchmark-checklist:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer, data-scientist]
+    status: evaluated
+    invocation: model
+  create-verification-skill:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    status: unevaluated
+    invocation: model
+  maintain-verification-skill:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    status: evaluated
+    invocation: user
+
 external:
   mattpocock-skills:
     source: https://github.com/mattpocock/skills
     install: Claude Code plugin mattpocock-skills from claude-plugins-official, or the skills CLI
-    skills: [codebase-design, diagnosing-bugs, tdd, writing-for-agents, wizard, handoff, retro]
+    skills: [writing-for-agents, handoff, retro]
   android-skills:
     source: https://github.com/android/skills
     install: skills CLI from the source repository

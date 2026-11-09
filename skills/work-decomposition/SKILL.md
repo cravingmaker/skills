@@ -40,6 +40,8 @@ Owners, reasons, write paths, outputs, shared resources, and the budget remain c
 
 Keep approved wording and graph edges. An execution dependency needed to separate writers is a logged overlay; merging, splitting, or rewording approved tickets needs authority. For a hosted tracker, construct the same shape from the exact issue bodies, stable IDs, status, native blocking links, acceptance and Proof, binding exported source bytes or immutable receipts. Read the `to-tickets` skill only when an approved decomposition is actually missing; installation preference supplies no new authority.
 
+Approved code-ticket execution belongs to the `implement-spec` skill under the existing coordinator, budget and record. This importer and plan checker supply its graph and execution overlays; generic planning and non-code coordination remain available independently.
+
 ## Choose direct work or delegation
 
 1. **Inspect.** Read the goal, existing work, acceptance criteria, current workspace, and session rules before proposing workers. Done when each required outcome and the authority to delegate are known; tool availability alone supplies neither.

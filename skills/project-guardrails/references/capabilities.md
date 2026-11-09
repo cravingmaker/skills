@@ -41,7 +41,7 @@ Assess performance only where the project has a budget or a benchmark: a bundle-
 
 | Capability | Prevents | Evidence of enforcement |
 | --- | --- | --- |
-| Repeatable launch and drive | Claims about behavior nobody ran | A documented command launches the real app and a recipe drives one feature end to end; see [verification-recipe.md](verification-recipe.md) |
+| Repeatable launch and drive | Claims about behavior nobody ran | An existing command or driver proves the named real surface; record a missing proof and conditionally use the `create-verification-skill` skill |
 | Package smoke test | A published package that fails to import | CI packs the package and imports it in a clean consumer project |
 
 ## Agent environment

@@ -79,13 +79,8 @@ ask-matt
 chief-of-staff
 claude-handoff
 code-review
-codebase-design
-diagnosing-bugs
 git-guardrails-claude-code
 handoff
-implement
-implement-spec
-improve-codebase-architecture
 loop-me
 migrate-to-shoehorn
 pr
@@ -94,9 +89,7 @@ scaffold-exercises
 setup-matt-pocock-skills
 setup-pre-commit
 setup-ts-deep-modules
-tdd
 teach
-wizard
 writing-beats
 writing-for-agents
 writing-fragments

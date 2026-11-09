@@ -1,0 +1,41 @@
+Adapted files: SKILL.md, references/playbooks.md, references/root-cause.md.
+
+Portions of this skill are adapted from the pstack-claude port,
+https://github.com/michael-denyer/pstack-claude/tree/91ab921ab92d9ccfe503c93c3524410277f012e1
+at revision 91ab921ab92d9ccfe503c93c3524410277f012e1, and modified.
+Adapted local files: SKILL.md, references/playbooks.md, references/root-cause.md.
+Upstream files: plugins/pstack/skills/poteto-mode/playbooks/bug-fix.md, plugins/pstack/skills/poteto-mode/playbooks/perf-issue.md, plugins/pstack/skills/poteto-mode/playbooks/runtime-forensics.md, plugins/pstack/skills/poteto-mode/playbooks/trace-forensics.md, plugins/pstack/skills/principle-attack-the-premise/SKILL.md, plugins/pstack/skills/principle-fix-root-causes/SKILL.md.
+
+The port's NOTICE.md records that its pstack-derived skills, including
+plugins/pstack/skills/poteto-mode/, architect/, tdd/ and principle-*/, come from
+cursor/plugins/pstack at e46364b8be46000b7df0f260550cd712afbb8d36 and later revisions,
+(c) 2026 Lauren Tan, MIT; that plugins/pstack/skills/deslop/ comes from
+cursor/plugins/cursor-team-kit at e46364b8be46000b7df0f260550cd712afbb8d36, (c) 2026 Cursor,
+MIT (see LICENSE-cursor-team-kit where present); and that the port's modifications
+and additions are (c) 2026 Michael Denyer under the same MIT license. NOTICE-skills.md
+states the same for the skills-only distribution.
+
+The upstream license follows.
+
+MIT License
+
+Copyright (c) 2026 Lauren Tan
+Copyright (c) 2026 Michael Denyer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -1,0 +1,25 @@
+# Sources
+
+One row per retained upstream file. Hashes cover the original bytes before adaptation.
+
+| source | source_url | source_path | source_revision | sha256 | license | copyright_holders | destination_paths | kept_material | local_changes | license_files | notice_files |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| mattpocock | https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/implement/SKILL.md | skills/engineering/implement/SKILL.md | 49dd158d1076134a641b33efb035946536778336 | 483bdc4ccf4ac31d86ac7beeaa0d0db80313e71e120bb8c59b3196ae5decd53d | MIT | Copyright (c) 2026 Matt Pocock | SKILL.md | Ticket lookup and title, tdd at agreed seams, regular checks, closing review, commit. | Commit within current authority; leaf self-review with the change-review rubric; coordinator owns independent review; spec frontmatter; manual-only moved to the catalog. | LICENSE-mattpocock | none |
+| pstack | https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/poteto-mode/playbooks/feature.md | pstack/skills/poteto-mode/playbooks/feature.md | 6b0300214a09fd6029cfb7077043125758cd1fd2 | af8ce700b99953741cb547e34308fde0cf6b98ce67e1652c800d0deedf53aba1 | MIT | Copyright (c) 2026 Lauren Tan | SKILL.md | Narrow vertical delivery, data shape first, verification on the matching surface. | Mandatory arena, model defaults, throughput checkpoint and PR-opening steps removed. | LICENSE-pstack | none |
+| pstack | https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/poteto-mode/playbooks/refactoring.md | pstack/skills/poteto-mode/playbooks/refactoring.md | 6b0300214a09fd6029cfb7077043125758cd1fd2 | 0f5dd38113379ea8cf61e2182eca0a7478eea9a869eb40c2dddab3335aeca197 | MIT | Copyright (c) 2026 Lauren Tan | SKILL.md | Pin the behavior contract, small behavior-preserving steps, rename spot-checks, split out bugs. | Compatibility for public consumers; no automatic legacy deletion; model defaults removed. | LICENSE-pstack | none |
+| pstack-claude | https://github.com/michael-denyer/pstack-claude/blob/91ab921ab92d9ccfe503c93c3524410277f012e1/plugins/pstack/skills/poteto-mode/playbooks/feature.md | plugins/pstack/skills/poteto-mode/playbooks/feature.md | 91ab921ab92d9ccfe503c93c3524410277f012e1 | 66dd2481b8daf0f73e29525e4e8eb52d415ce7c65599b555f51a91c01e7bfffd | MIT | Copyright (c) 2026 Lauren Tan; Copyright (c) 2026 Michael Denyer | SKILL.md | Port's own-worktree rule for file-writing delegates. | Expressed through host-isolated checkouts in implement-spec. | LICENSE-pstack-claude | NOTICE.md; NOTICE-skills.md |
+| pstack-claude | https://github.com/michael-denyer/pstack-claude/blob/91ab921ab92d9ccfe503c93c3524410277f012e1/plugins/pstack/skills/poteto-mode/playbooks/refactoring.md | plugins/pstack/skills/poteto-mode/playbooks/refactoring.md | 91ab921ab92d9ccfe503c93c3524410277f012e1 | 6f6855960902c40deee6841310c2a6518eec2a976a131b6f11238a41544af8e5 | MIT | Copyright (c) 2026 Lauren Tan; Copyright (c) 2026 Michael Denyer | SKILL.md | Body identical to the pstack base; differs only in driver-skill wording. | Same adaptation as the base row. | LICENSE-pstack-claude | NOTICE.md; NOTICE-skills.md |
+| pstack-claude | https://github.com/michael-denyer/pstack-claude/blob/91ab921ab92d9ccfe503c93c3524410277f012e1/plugins/pstack/skills/deslop/SKILL.md | plugins/pstack/skills/deslop/SKILL.md | 91ab921ab92d9ccfe503c93c3524410277f012e1 | 3abe24e49bb1d42ccbac549557a29f58b381721e1ad7ccebbca434750269e619 | MIT | Copyright (c) 2026 Lauren Tan; Copyright (c) 2026 Michael Denyer; Copyright (c) 2026 Cursor | SKILL.md | Diff-local cleanup focus areas and guardrails. | Limited to the agent's own lines; rationale comments, legal notices, trust-boundary checks and others' work preserved. | LICENSE-pstack-claude; LICENSE-cursor-team-kit | NOTICE.md; NOTICE-skills.md |
+| superpowers | https://github.com/obra/superpowers/blob/22f0b463e7a5e579904dd6211a520321035526f7/skills/executing-plans/SKILL.md | skills/executing-plans/SKILL.md | 22f0b463e7a5e579904dd6211a520321035526f7 | deaf176fa179827e80f2ea3101db3ea90fdf562ebef340eba761e4687940f5f5 | MIT | Copyright (c) 2025 Jesse Vincent | SKILL.md | Rulings not stalls, the four stops, pre-flight contradictions, completion contract. | Ledger, workspace scripts, mandatory final reviewer and finishing skill removed; decision-log owns durable runs. | LICENSE-superpowers | none |
+
+## Reproduce the comparison
+
+For each row, resolve its pinned source checkout and export the exact input, verify its table hash, then compare each receiving path:
+
+```sh
+git -C <upstream-checkout> show <source_revision>:<source_path> > upstream.md
+shasum -a 256 upstream.md
+diff -u upstream.md <skill-dir>/<destination_path>
+```
+
+The hash must equal sha256 in that row. Repeat the diff for every destination_paths entry; exit 1 records expected adaptation differences. Complete legal texts and applicable notices remain intact. Source review establishes attribution completeness.
