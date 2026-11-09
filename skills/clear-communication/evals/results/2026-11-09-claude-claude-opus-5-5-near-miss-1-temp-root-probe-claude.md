@@ -1,0 +1,65 @@
+# clear-communication: claude near-miss-1
+
+Comparison: **valid**. Host: `2.1.311 (Claude Code)`. Effective model: `claude-opus-5-5`.
+
+## Inputs
+
+- **Source example.** `near-miss-1` in `evals/examples.md`.
+- **Skill revision.** Commit `b7d5b85899f2cfe0b6ce7e2e715565848a9436ec`, tree `3c1d6e767164d88cf2ea77ef9eb49d73e360bb7c`, actual bytes SHA-256 `50e5d3e75b98078be5aef095c579602f97be163c257098372291d64bb340a4d1`; dirty: `True`.
+- **Fixture.** `near-miss-1`, SHA-256 `f32f228fcd55e70ae4c582e9eeff82c502b043fdef3aff6a253f3edddb1b5747`.
+- **Standing contract.** SHA-256 `b4ae56649eab02bf1dff5f69b0f382a17d972a93a7cd4354188b031862e5ba01`, identical in both arms.
+- **Settings.** Requested model `claude-opus-5-5`; effort `high`; each arm has a new session and the same host settings.
+
+## Prompt
+
+```text
+Run exactly this Bash check, then report its raw output. Do not write anything before its assertion passes.
+
+python3 - <<'CHECK'
+import os,pathlib,hashlib,json
+w=pathlib.Path.cwd().resolve();t=pathlib.Path(os.environ["TMPDIR"]).resolve();private=w.parent/"tmp"
+assert t.is_relative_to(private),(str(t),str(private))
+p=t/"private-temp-probe.txt";p.write_text("isolated probe\n")
+print(json.dumps({"cwd":str(w),"temp":str(t),"private":str(private),"sha256":hashlib.sha256(p.read_bytes()).hexdigest()}))
+CHECK
+```
+
+## Expected and observed
+
+| Arm | Activation expected | Activation observed | Tools | Completion |
+| --- | --- | --- | --- | --- |
+| treatment | false | false | 1 | 0 |
+| baseline | false | false | 1 | 0 |
+
+Treatment: 5 response lines; changed files `.cache/npm/_logs/2026-11-09T05_15_50_102Z-debug-0.log`; removed files `none`; validation command present: `False`. Workflow cost: 36.441 seconds and 1 tool calls; token usage is in the JSON record.
+
+Baseline: 7 response lines; changed files `none`; removed files `none`; validation command present: `False`. Workflow cost: 35.59 seconds and 1 tool calls; token usage is in the JSON record.
+
+
+Expected deliverable: Expect: a direct one-line answer under the standing contract (`./scripts/validate.sh`), no clarifying question, no skill-driven editing pass.
+
+Deliverable correctness and unnecessary workflow cost require review of each response and artifact. The JSON record separates these judgments from activation detection and records usage, elapsed time, response lines, and changed files.
+
+## Isolation evidence
+
+The first arm's sentinel was absent from the second arm: `True`. Restored file inodes are separate. Each arm's input manifest is checked again immediately before its model call.
+
+Project candidate copies are excluded from both restored fixtures; only the treatment receives a candidate copy. The manifest lists every excluded project path and its hash. Dependencies are installed in both temporary homes.
+
+Full configuration, input revisions, effective discovery inventory, and expectations: [2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/comparison.json](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/comparison.json).
+
+## Treatment evidence
+
+- [Raw JSON trace](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/treatment/trace.jsonl)
+- [Standard error](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/treatment/stderr.txt)
+- [Observed response](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/treatment/response.txt)
+- [Input and discovery manifest](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/treatment/manifest.json)
+- Artifacts: `2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/treatment/artifacts/`.
+
+## Baseline evidence
+
+- [Raw JSON trace](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/baseline/trace.jsonl)
+- [Standard error](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/baseline/stderr.txt)
+- [Observed response](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/baseline/response.txt)
+- [Input and discovery manifest](2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/baseline/manifest.json)
+- Artifacts: `2026-11-09-claude-claude-opus-5-5-near-miss-1-temp-root-probe-claude/baseline/artifacts/`.

@@ -32,6 +32,7 @@ def parse(arguments: list[str]) -> argparse.Namespace:
     parser.add_argument("--example", required=True, help="activation-1, near-miss-1, etc., in evals/examples.md")
     parser.add_argument("--fixture", required=True, type=Path)
     parser.add_argument("--model", help="host model name; omit to use the host default")
+    parser.add_argument("--effort", choices=("low", "medium", "high", "max"), help="Claude reasoning effort; omit to use the host default")
     parser.add_argument("--binary", help="host CLI executable; defaults to --host")
     parser.add_argument("--dependency", action="append", default=[], metavar="DIR", help="a local copy of a required external skill; repeat as needed")
     parser.add_argument("--prompt-file", type=Path, help="concrete prompt for an example with placeholder input")
@@ -39,6 +40,8 @@ def parse(arguments: list[str]) -> argparse.Namespace:
     parser.add_argument("--timeout", type=int, default=300, help="maximum seconds per model run; default 300")
     parser.add_argument("--dry-run", action="store_true")
     options = parser.parse_args(arguments)
+    if options.effort and options.host != "claude":
+        parser.error("--effort is supported only by the Claude host")
     for value in (options.skill, options.example, options.record_id or options.example):
         if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", value):
             parser.error("skill, example, and record identifiers must use lowercase letters, digits, and single hyphens")
@@ -107,7 +110,7 @@ def record(options, data: dict, arms: list, tokens: list[bytes]) -> Path:
             shutil.copytree(arm.evidence, target)
             shutil.copytree(arm.work, target / "artifacts")
         json_file(destination / "comparison.json", data)
-        lines = [f"# {options.skill}: {options.host} {options.example}", "", f"Comparison: **{data['status']}**. Host: `{data.get('host_version', 'unavailable')}`. Effective model: `{model}`.", "", "## Inputs", "", f"- **Source example.** `{options.example}` in `evals/examples.md`.", f"- **Skill revision.** Commit `{data['skill_revision']['commit']}`, tree `{data['skill_revision']['tree']}`, actual bytes SHA-256 `{data['skill_revision']['working_tree_sha256']}`; dirty: `{data['skill_revision']['dirty']}`.", f"- **Fixture.** `{_display_path(data['fixture'], options.root)}`, SHA-256 `{data['fixture_sha256']}`.", f"- **Standing contract.** SHA-256 `{data['contract_sha256']}`, identical in both arms.", f"- **Settings.** Requested model `{options.model or 'host default'}`; each arm has a new session and the same host settings.", "", "## Prompt", "", "```text", data["prompt"], "```", "", "## Expected and observed", "", "| Arm | Activation expected | Activation observed | Tools | Completion |", "| --- | --- | --- | --- | --- |"]
+        lines = [f"# {options.skill}: {options.host} {options.example}", "", f"Comparison: **{data['status']}**. Host: `{data.get('host_version', 'unavailable')}`. Effective model: `{model}`.", "", "## Inputs", "", f"- **Source example.** `{options.example}` in `evals/examples.md`.", f"- **Skill revision.** Commit `{data['skill_revision']['commit']}`, tree `{data['skill_revision']['tree']}`, actual bytes SHA-256 `{data['skill_revision']['working_tree_sha256']}`; dirty: `{data['skill_revision']['dirty']}`.", f"- **Fixture.** `{_display_path(data['fixture'], options.root)}`, SHA-256 `{data['fixture_sha256']}`.", f"- **Standing contract.** SHA-256 `{data['contract_sha256']}`, identical in both arms.", f"- **Settings.** Requested model `{options.model or 'host default'}`; effort `{options.effort or 'host default'}`; each arm has a new session and the same host settings.", "", "## Prompt", "", "```text", data["prompt"], "```", "", "## Expected and observed", "", "| Arm | Activation expected | Activation observed | Tools | Completion |", "| --- | --- | --- | --- | --- |"]
         for arm in arms:
             info = data["arms"][arm.name]
             observed = info.get("observed", {})
@@ -156,7 +159,9 @@ def main(arguments: list[str]) -> int:
         sources = dependency_sources(options.root, options.skill, options.dependency)
         standing = contract(options.root)
         fixture_before = manifest(options.fixture)
-        with tempfile.TemporaryDirectory(prefix="eval-skill-") as temporary:
+        # A long macOS temp path makes Claude's sandbox fall back to a shared TMPDIR.
+        temporary_parent = "/tmp" if options.host == "claude" and Path("/tmp").is_dir() else None
+        with tempfile.TemporaryDirectory(prefix="" if options.host == "claude" else "eval-skill-", dir=temporary_parent) as temporary:
             base = Path(temporary).resolve()
             seed = base / "seed"
             from .isolation import copy_tree
@@ -168,13 +173,13 @@ def main(arguments: list[str]) -> int:
                 frozen = base / "skills" / name
                 copy_tree(source, frozen, skill=True)
                 frozen_sources[name] = frozen
-            arms = [build_arm(base / name, options.host, name, seed, frozen_sources, options.skill, standing) for name in ("treatment", "baseline")]
+            arms = [build_arm(base / (name[0] if options.host == "claude" else name), options.host, name, seed, frozen_sources, options.skill, standing) for name in ("treatment", "baseline")]
             for arm in arms:
                 hosts.configure(arm, options.host)
             validate_pair(arms, options.host, options.skill)
             proof = isolation_proof(arms, seed)
             machine = managed_sources(options.host)
-            data = {"schema_version": 1, "status": "dry-run" if options.dry_run else "valid", "host": options.host, "requested_model": options.model or "host default", "source_example": example, "prompt": prompt, "expected": example["expected"], "fixture": str(options.fixture), "fixture_sha256": tree_digest(fixture_before), "fixture_manifest": fixture_before, "skill_revision": revision(options.root, skill_dir), "input_revisions": {name: revision(options.root, path) if path.is_relative_to(options.root) else {"working_tree_sha256": tree_digest(manifest(path, skill=True))} for name, path in sources.items()}, "skill_input_manifests": {name: manifest(path, skill=True) for name, path in frozen_sources.items()}, "examples_sha256": digest((skill_dir / "evals/examples.md").read_bytes()), "contract_sha256": digest(standing.encode()), "managed_sources": machine, "isolation_proof": proof, "discovery_policy": {"user": "fresh temporary home and host config directory", "project": "all candidate copies removed; every remaining skill inventoried", "ancestors": "reject any discovered ancestor skills", "plugins": "disabled; no inherited settings or extra roots", "managed": "reject local files/MDM; verify runtime inventory", "system": "Codex bundled skills disabled in both; Claude bundled skills compared from init", "environment": "allowlist only; no inherited provider/session/skill settings"}, "arms": {}, "errors": [], "model_runs_started": 0}
+            data = {"schema_version": 1, "status": "dry-run" if options.dry_run else "valid", "host": options.host, "requested_model": options.model or "host default", "requested_effort": options.effort or "host default", "source_example": example, "prompt": prompt, "expected": example["expected"], "fixture": str(options.fixture), "fixture_sha256": tree_digest(fixture_before), "fixture_manifest": fixture_before, "skill_revision": revision(options.root, skill_dir), "input_revisions": {name: revision(options.root, path) if path.is_relative_to(options.root) else {"working_tree_sha256": tree_digest(manifest(path, skill=True))} for name, path in sources.items()}, "skill_input_manifests": {name: manifest(path, skill=True) for name, path in frozen_sources.items()}, "examples_sha256": digest((skill_dir / "evals/examples.md").read_bytes()), "contract_sha256": digest(standing.encode()), "managed_sources": machine, "isolation_proof": proof, "discovery_policy": {"user": "fresh temporary home and host config directory", "project": "all candidate copies removed; every remaining skill inventoried", "ancestors": "reject any discovered ancestor skills", "plugins": "disabled; no inherited settings or extra roots", "managed": "reject local files/MDM; verify runtime inventory", "system": "bundled skills disabled in both hosts; effective runtime inventory checked", "environment": "allowlist only; no inherited provider/session/skill settings"}, "arms": {}, "errors": [], "model_runs_started": 0}
             for arm in arms:
                 info = {"inventory": canonical(arm.inventory, arm.base), "excluded_project_candidates": arm.excluded, "input_manifest": arm.input_manifest, "input_sha256": tree_digest(arm.input_manifest), "settings": canonical(arm.settings, arm.base), "environment": canonical(hosts.environment(arm, options.host), arm.base)}
                 data["arms"][arm.name] = info
@@ -201,7 +206,7 @@ def main(arguments: list[str]) -> int:
                 for arm in arms:
                     if manifest(seed) != fixture_before or manifest(arm.work) != arm.input_manifest:
                         raise InvalidComparison(f"{arm.name} input changed after the first arm; comparison is invalid")
-                    argv = hosts.command(arm, options.host, binary, options.model)
+                    argv = hosts.command(arm, options.host, binary, options.model, options.effort)
                     data["arms"][arm.name]["argv"] = canonical(argv, arm.base)
                     data["model_runs_started"] += 1
                     execution = hosts.execute(arm, options.host, argv, prompt, options.timeout)

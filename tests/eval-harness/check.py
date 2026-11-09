@@ -89,6 +89,26 @@ class IsolationTests(unittest.TestCase):
                 self.assertNotIn(name, result)
             self.assertEqual(result["HOME"], str(arms[0].home))
 
+    def test_claude_uses_an_arm_private_host_temp_directory(self):
+        _, arms = self.pair("claude")
+        for arm in arms:
+            result = hosts.environment(arm, "claude")
+            self.assertEqual(result.get("CLAUDE_CODE_TMPDIR"), str(arm.base / "tmp"))
+
+        built = []
+        def capture(*args, **kwargs):
+            arm = build_arm(*args, **kwargs)
+            built.append(arm)
+            return arm
+        with patch("evalharness.runner.build_arm", side_effect=capture), contextlib.redirect_stdout(io.StringIO()):
+            code = main(["--root", str(ROOT), "--skill", "clear-communication", "--host", "claude",
+                         "--example", "near-miss-1", "--fixture", str(ROOT / "tests/eval-harness/fixtures/package"),
+                         "--dry-run"])
+        self.assertEqual(code, 0)
+        self.assertEqual(len(built), 2)
+        # Claude falls back to a shared system TMPDIR when the override is long.
+        self.assertTrue(all(len(str(arm.base / "tmp" / f"claude-{os.getuid()}").encode()) <= 40 for arm in built))
+
     def test_uncontrolled_ancestor_is_rejected(self):
         _, arms = self.pair("codex")
         outside = self.base / ".agents/skills/clear-communication"
@@ -166,6 +186,39 @@ class IsolationTests(unittest.TestCase):
             self.assertEqual(value["status"], "dry-run")
             self.assertEqual(value["arms"]["baseline"]["inventory"], [])
             self.assertTrue(value["isolation_proof"]["seed_unchanged"])
+
+    def test_claude_effort_is_passed_to_both_arms_and_recorded(self):
+        root = self.base / "repo"
+        copy_tree(self.sources["clear-communication"], root / "skills/clear-communication", skill=True)
+        commands = []
+
+        def execute(arm, host, argv, prompt, timeout):
+            commands.append(argv)
+            trace = [
+                {"type": "system", "subtype": "init",
+                 "skills": [entry["name"] for entry in arm.inventory],
+                 "plugins": [], "mcp_servers": [], "tools": [],
+                 "model": "fixture-model", "session_id": arm.name},
+                {"type": "result", "subtype": "success", "result": "./scripts/validate.sh"},
+            ]
+            (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in trace))
+            return {"exit_code": 0, "timed_out": False, "seconds": 0}
+
+        with patch("evalharness.hosts.version", return_value="fixture-host"), \
+             patch("evalharness.hosts.credentials", return_value=[]), \
+             patch("evalharness.hosts.execute", side_effect=execute), \
+             contextlib.redirect_stdout(io.StringIO()):
+            code = main(["--root", str(root), "--skill", "clear-communication", "--host", "claude",
+                         "--binary", sys.executable, "--model", "fixture-model", "--effort", "high",
+                         "--example", "near-miss-1", "--fixture", str(ROOT / "tests/eval-harness/fixtures/package")])
+        self.assertEqual(code, 0)
+        self.assertEqual(len(commands), 2)
+        for argv in commands:
+            self.assertEqual(argv[argv.index("--effort") + 1], "high")
+        directory = root / "skills/clear-communication/evals/results"
+        record = json.loads(next(directory.glob("*/comparison.json")).read_text())
+        self.assertEqual(record["requested_effort"], "high")
+        self.assertIn("effort `high`", next(directory.glob("*.md")).read_text())
 
     def test_trace_claims_and_failed_commands_do_not_count_as_activation(self):
         _, arms = self.pair("codex")
@@ -343,6 +396,65 @@ class IsolationTests(unittest.TestCase):
                 (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in events))
                 self.assertEqual(hosts.observe(arm, "codex", "clear-communication")["activation"], expected)
 
+    def test_codex_listing_then_cat_stays_unclassified(self):
+        _, arms = self.pair("codex")
+        arm = arms[0]
+        candidate = arm.config / "skills/clear-communication/SKILL.md"
+        path = shlex.quote(str(candidate))
+        session = arm.config / "sessions/test.jsonl"
+        session.parent.mkdir()
+        session.write_text(json.dumps({"type": "turn_context", "payload": {"model": "test-model"}}) + "\n")
+        commands = [
+            (f"cat {path}", True),
+            (f"ls {shlex.quote(str(candidate.parent))}; cat {path}", False),
+        ]
+        for command, expected in commands:
+            with self.subTest(command=command):
+                result = subprocess.run(["/bin/sh", "-c", command], cwd=arm.work,
+                                        capture_output=True, text=True, timeout=5)
+                self.assertEqual(result.returncode, 0)
+                trace = [
+                    {"type": "thread.started", "thread_id": "test-session"},
+                    {"type": "item.completed", "item": {"type": "command_execution", "command": command,
+                     "exit_code": result.returncode, "aggregated_output": result.stdout}},
+                    {"type": "turn.completed", "usage": {}},
+                ]
+                (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in trace))
+                self.assertEqual(hosts.observe(arm, "codex", "clear-communication")["activation"], expected)
+
+    def test_claude_listing_then_cat_proves_a_visible_installed_body(self):
+        _, arms = self.pair("claude")
+        arm = arms[0]
+        candidate = arm.config / "skills/clear-communication/SKILL.md"
+        path = shlex.quote(str(candidate))
+        listing = f"ls {shlex.quote(str(candidate.parent.parent))}; ls {shlex.quote(str(candidate.parent))} 2>&1"
+        body = shlex.quote(candidate.read_text())
+        commands = [
+            (f"{listing}; cat {path} 2>&1", True, False),
+            (f"{listing}; cat {path} 2>&1", True, True),
+            (f"{listing}; cat {path} >/dev/null; printf %s {body}", False, False),
+            (f"{listing}; false && cat {path}; printf %s {body}", False, False),
+        ]
+        for command, expected, truncated in commands:
+            with self.subTest(command=command, truncated=truncated):
+                result = subprocess.run(["/bin/sh", "-c", command], cwd=arm.work,
+                                        capture_output=True, text=True, timeout=5)
+                self.assertEqual(result.returncode, 0)
+                output = result.stdout
+                if truncated:
+                    output = output[:output.index("# Clear communication") + 600]
+                trace = [
+                    {"type": "system", "subtype": "init", "skills": ["clear-communication"],
+                     "plugins": [], "mcp_servers": [], "model": "test-model", "session_id": "listing-session"},
+                    {"type": "assistant", "message": {"content": [{"type": "tool_use", "name": "Bash",
+                     "id": "read-1", "input": {"command": command}}]}},
+                    {"type": "user", "message": {"content": [{"type": "tool_result",
+                     "tool_use_id": "read-1", "is_error": False, "content": output}]}},
+                    {"type": "result", "subtype": "success", "result": "Done"},
+                ]
+                (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in trace))
+                self.assertEqual(hosts.observe(arm, "claude", "clear-communication")["activation"], expected)
+
     def test_codex_activation_requires_visible_body_output(self):
         _, arms = self.pair("codex")
         path = str(arms[0].config / "skills/clear-communication/SKILL.md")
@@ -364,6 +476,63 @@ class IsolationTests(unittest.TestCase):
         trace[2]["message"]["content"][0]["is_error"] = False
         path.write_text("\n".join(json.dumps(value) for value in trace))
         self.assertTrue(hosts.observe(arm, "claude", "clear-communication")["activation"])
+
+    def test_claude_native_command_replay_proves_explicit_selection(self):
+        _, arms = self.pair("claude")
+        arm = arms[0]
+        arm.prompt = "/clear-communication Explain the result."
+        replay = {"type": "user", "isReplay": True, "session_id": "native-session",
+                  "parent_tool_use_id": None, "message": {"role": "user", "content":
+                  "<command-message>clear-communication</command-message>\n"
+                  "<command-name>/clear-communication</command-name>\n"
+                  "<command-args>Explain the result.</command-args>"}}
+        trace = [
+            {"type": "system", "subtype": "init", "skills": ["clear-communication"],
+             "slash_commands": ["clear-communication"], "plugins": [], "mcp_servers": [],
+             "model": "fixture-model", "session_id": "native-session"},
+            replay,
+            {"type": "result", "subtype": "success", "result": "A clearer result."},
+        ]
+        path = arm.evidence / "trace.jsonl"
+        path.write_text("\n".join(json.dumps(value) for value in trace))
+        self.assertTrue(hosts.observe(arm, "claude", "clear-communication")["activation"])
+        # Quoted tags and an echoed ordinary prompt are user data, even if a
+        # caller supplies replay-shaped fields. They are not native selection.
+        arm.prompt = replay["message"]["content"]
+        self.assertFalse(hosts.observe(arm, "claude", "clear-communication")["activation"])
+        arm.prompt = "/clear-communication Explain the result."
+        replay["isReplay"] = False
+        path.write_text("\n".join(json.dumps(value) for value in trace))
+        self.assertFalse(hosts.observe(arm, "claude", "clear-communication")["activation"])
+
+    def test_claude_command_requests_replayable_native_input(self):
+        _, arms = self.pair("claude")
+        argv = hosts.command(arms[0], "claude", "claude", "fixture-model", "high")
+        self.assertEqual(argv[argv.index("--input-format") + 1], "stream-json")
+        self.assertIn("--replay-user-messages", argv)
+
+    def test_claude_disables_bundled_skills_that_can_fork_models(self):
+        _, arms = self.pair("claude")
+        for arm in arms:
+            self.assertIs(arm.settings.get("disableBundledSkills"), True)
+            self.assertEqual(arm.settings.get("skillOverrides", {}).get("doctor"), "off")
+            self.assertEqual(arm.settings.get("skillOverrides", {}).get("plugin-authoring"), "off")
+            self.assertIn("Skill(plugin-authoring)", arm.settings["permissions"]["deny"])
+
+    def test_claude_unmetered_fork_is_an_invalid_comparison(self):
+        _, arms = self.pair("claude")
+        arm = arms[0]
+        trace = [
+            {"type": "system", "subtype": "init", "skills": ["clear-communication"],
+             "plugins": [], "mcp_servers": [], "model": "fixture-model", "session_id": "fixture-session"},
+            {"type": "user", "tool_use_result": {"success": True, "commandName": "code-review",
+             "status": "forked", "agentId": "synthetic-child", "result": "Fixture review"},
+             "message": {"role": "user", "content": []}},
+            {"type": "result", "subtype": "success", "result": "Done"},
+        ]
+        (arm.evidence / "trace.jsonl").write_text("\n".join(json.dumps(value) for value in trace))
+        with self.assertRaisesRegex(InvalidComparison, "forked model"):
+            hosts.observe(arm, "claude", "clear-communication")
 
     def test_secret_evidence_is_withheld(self):
         evidence = self.base / "evidence"

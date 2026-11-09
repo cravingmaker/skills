@@ -14,4 +14,6 @@ metadata:
 
 On explicit user invocation, read the `change-review` skill and open its report-only **panel probe mode** within the agreed scope and shared round/start/probe budget; if it is missing, name it and stop. Runtime claims need executed probes; deterministic static findings stay valid as static proof, and unrun runtime claims stay unresolved hypotheses under stable IDs. The parent owns reviewer dispatch and evidence checks; this entry starts no automatic fix loop and adds no product edit, posting, push, merge, or extra reviewer authority. Quoted or incidental interrogate text selects nothing.
 
+Charge every attempted probe to the declared allowance, including timeout, permission, and wrapper failures. Reserve a remaining attempt before each command execution, including repeats inside a batch, and record the remaining count. Capture output and exit status from that single execution; rerunning to collect either spends another attempt. When none remain, stop probing and report the failed attempts and unresolved claims; changing the wrapper does not reset the budget.
+
 Read [references/SOURCES.md](references/SOURCES.md) when checking attribution and source identity.
