@@ -1,0 +1,12 @@
+{
+  "captured_at": "2026-11-07T20:00:00Z",
+  "note": "Historical fixture snapshot, no live host API is available. Do not infer present completion.",
+  "operations": [
+    {
+      "request_key": "migration-01/frontend/attempt-1",
+      "host_task": "fixture-task-frontend-01",
+      "state": "running-at-snapshot",
+      "report": null
+    }
+  ]
+}

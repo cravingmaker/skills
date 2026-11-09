@@ -1,0 +1,31 @@
+{
+  "run_id": "migration-01",
+  "coordinator": "current-agent",
+  "budget": {
+    "worker_starts": {
+      "limit": 4,
+      "used": 2
+    },
+    "concurrency": {
+      "ceiling": 2,
+      "active": 1
+    }
+  },
+  "tasks": [
+    {
+      "id": "backend",
+      "state": "reported",
+      "output": "backend/service.py",
+      "sha256": "1eafe4420e49f3fd553f8374ac4c6bdcdc0a5334b0c6b01959cca21ee00465d2",
+      "report": "run/raw/backend.md"
+    },
+    {
+      "id": "frontend",
+      "state": "uncertain",
+      "request_key": "migration-01/frontend/attempt-1",
+      "reserved_starts": 1,
+      "receipt": "run/host-receipts.json"
+    }
+  ],
+  "next": "Reconcile uncertain frontend operation before any replacement; reuse backend only after hash/check reconciliation."
+}

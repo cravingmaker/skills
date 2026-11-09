@@ -5,9 +5,11 @@ This repo holds personal Agent Skills that follow the [Agent Skills specificatio
 ## Structure
 
 - `skills/<skill-name>/` holds one skill: `SKILL.md`, optional `references/`, `scripts/`, `assets/`, and a required `evals/examples.md`. Nothing else goes in `skills/`.
-- `template/` is the starting point for a new skill. Do not add skills here.
-- `scripts/validate.sh` runs every check: the pinned `skills-ref` validator, `scripts/check-skills.py`, and the fixture tests in `tests/`.
-- `tests/` holds fixtures for the repository checker and for the `clear-communication` Vale style.
+- `template/` starts a capability skill; `template-role/` starts a role router. Do not add skills to either.
+- `catalog/skills.yaml` lists every skill (kind, roles, evaluation status) and the upstream skills routers may name; `catalog/coverage.md` maps every requested role and specialty to skills; `catalog/profiles/` holds generated install lists, one per role; `catalog/reserved-names.txt` lists names already taken by the user's other skills.
+- `docs/authoring-guide.md` is the bar every skill meets. Read it before writing or reviewing a skill.
+- `scripts/validate.sh` runs every check: the pinned `skills-ref` validator, `check-skills.py`, `check-catalog.py`, `build-profiles.py --check`, `check-freshness.py`, zizmor, the Vale style on the repo's docs, and the fixture tests in `tests/`.
+- `scripts/install-skills.py` installs a role or skill with everything it requires.
 
 ## Authoring rules
 
@@ -30,8 +32,13 @@ A skill that adapts third-party material sets `license`, `metadata.source` (the 
 
 Docs in this repo follow `skills/clear-communication`: lead with the point, plain words, one line per paragraph. `./scripts/validate.sh` lints them with its Vale style when Vale is installed.
 
+## Dependencies
+
+Declare dependencies in `SKILL.md` as quoted, space-separated strings: `metadata.requires` for skills this one cannot work without, `metadata.handoffs` for optional ones. Refer to other skills in prose as "the `name` skill". After changing dependencies or adding a role, run `scripts/build-profiles.py` and commit `catalog/profiles/`.
+
 ## Workflow
 
-1. `cp -r template skills/<skill-name>`, then edit `SKILL.md` and `evals/examples.md`.
-2. Run `./scripts/validate.sh` and fix every error.
-3. Add the skill to the table in `README.md`.
+1. `cp -r template skills/<skill-name>` (or `template-role` for a role router), then edit `SKILL.md` and `evals/examples.md`.
+2. Add the skill to `catalog/skills.yaml` and update `catalog/coverage.md`.
+3. Run `scripts/build-profiles.py`, then `./scripts/validate.sh`, and fix every error.
+4. Add the skill to the table in `README.md`.

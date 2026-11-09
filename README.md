@@ -34,7 +34,14 @@ Install the skills into any supported agent with the [skills](https://github.com
 npx skills add cravingmaker/skills
 ```
 
-To install one skill by hand, copy its folder from `skills/` into the skills directory of the agent, for example `~/.claude/skills/` for Claude Code.
+To install a role or a skill together with every skill it requires, clone this repository and run the installer (needs [uv](https://docs.astral.sh/uv/)):
+
+```bash
+scripts/install-skills.py --target ~/.claude/skills clear-communication
+scripts/install-skills.py --target ~/.claude/skills --mode symlink <role-or-skill>
+```
+
+It lists any upstream skills a role relies on so you can install them from their source. To install one skill by hand, copy its folder from `skills/` into the agent's skills directory, for example `~/.claude/skills/` for Claude Code.
 
 For everyday answers to follow the communication rules without loading a skill, paste the standing contract from [clear-communication/references/house-style.md](skills/clear-communication/references/house-style.md) into your AGENTS.md or CLAUDE.md.
 
@@ -49,9 +56,12 @@ For everyday answers to follow the communication rules without loading a skill, 
 │       ├── references/     # Optional: documentation loaded on demand
 │       ├── scripts/        # Optional: executable code
 │       └── assets/         # Optional: templates, configs, and data
-├── template/               # Starting point for a new skill
-├── scripts/                # validate.sh and check-skills.py
-└── tests/                  # Fixtures for the checker and the Vale style
+├── template/               # Starting point for a capability skill
+├── template-role/          # Starting point for a role router
+├── catalog/                # Skill catalog, coverage matrix, install profiles, reserved names
+├── docs/                   # Authoring guide
+├── scripts/                # Validation, catalog, profile, freshness, and install scripts
+└── tests/                  # Fixtures for every script and the Vale style
 ```
 
 ## Adding a skill
@@ -62,13 +72,14 @@ Copy the template to a folder named after the skill. The folder name must match 
 cp -r template skills/my-skill
 ```
 
-Set `name`, write a `description` that says what the skill does and when to use it, and fill in `evals/examples.md`. Then validate, which needs [uv](https://docs.astral.sh/uv/) and, for the prose tests, [Vale](https://vale.sh) 3.26.0:
+Set `name`, write a `description` that says what the skill does and when to use it, and fill in `evals/examples.md`. Add the skill to [catalog/skills.yaml](catalog/skills.yaml) and update [catalog/coverage.md](catalog/coverage.md). Generate the profiles, then validate with [uv](https://docs.astral.sh/uv/) and, for the prose tests, [Vale](https://vale.sh) 3.26.0:
 
 ```bash
+scripts/build-profiles.py
 ./scripts/validate.sh
 ```
 
-Add the skill to the table in [Skills](#skills). [AGENTS.md](AGENTS.md) lists the authoring and provenance rules.
+Add the skill to the table in [Skills](#skills). The [authoring guide](docs/authoring-guide.md) sets the bar every skill meets; [AGENTS.md](AGENTS.md) lists the repository rules.
 
 ## Contributing and security
 
