@@ -1,6 +1,6 @@
 ---
 name: clear-communication
-description: Make complex explanations and written material clear, concise, and faithful to their meaning, and resolve consequential ambiguity before acting. Use when drafting or substantially editing documents, reports, PR descriptions, or complex explanations; when unresolved ambiguity could change the result; or when the user asks to simplify, clarify, or "unslop" text.
+description: Clarify complex explanations, substantial writing, and consequential ambiguity while preserving meaning and facts. Use for complex drafts or substantial edits; requests to simplify, clarify, unslop, or say the last answer plainly; and direct bro or wait-what requests to repair it. Short factual PR drafts use the standing style.
 license: MIT
 metadata:
   source: "https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/in-your-own-words/SKILL.md"

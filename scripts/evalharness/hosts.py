@@ -19,7 +19,7 @@ def environment(arm: Arm, host: str) -> dict[str, str]:
     result = {key: os.environ[key] for key in ("PATH", "LANG", "LC_ALL", "TZ", "SSL_CERT_FILE", "SSL_CERT_DIR") if key in os.environ}
     result.update({"HOME": str(arm.home), "TMPDIR": str(arm.base / "tmp"), "XDG_CONFIG_HOME": str(arm.home / ".config"), "XDG_CACHE_HOME": str(arm.home / ".cache"), "SHELL": "/bin/sh", "NO_COLOR": "1"})
     if host == "claude":
-        result.update({"CLAUDE_CONFIG_DIR": str(arm.config), "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1", "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1", "DISABLE_TELEMETRY": "1", "DISABLE_ERROR_REPORTING": "1"})
+        result.update({"CLAUDE_CONFIG_DIR": str(arm.config), "CLAUDE_CODE_TMPDIR": str(arm.base / "tmp"), "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1", "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1", "DISABLE_TELEMETRY": "1", "DISABLE_ERROR_REPORTING": "1"})
     else:
         result["CODEX_HOME"] = str(arm.config)
     return result
@@ -29,9 +29,10 @@ def configure(arm: Arm, host: str) -> None:
     if host == "claude":
         arm.settings = {
             "disableAllHooks": True, "autoMemoryEnabled": False,
+            "disableBundledSkills": True, "skillOverrides": {"doctor": "off", "plugin-authoring": "off"},
             "syncClaudeAiSkills": False, "syncClaudeAiPlugins": False,
             "disableClaudeAiConnectors": True, "enabledPlugins": {},
-            "permissions": {"allow": ["Read", "Glob", "Grep", "Skill", "Edit", "Write", "Bash"], "deny": ["Agent", "WebFetch", "WebSearch"], "blockReadsOutsideWorkingDirectories": True},
+            "permissions": {"allow": ["Read", "Glob", "Grep", "Skill", "Edit", "Write", "Bash"], "deny": ["Agent", "WebFetch", "WebSearch", "Skill(plugin-authoring)"], "blockReadsOutsideWorkingDirectories": True},
             "sandbox": {"enabled": True, "autoAllowBashIfSandboxed": True, "allowUnsandboxedCommands": False, "network": {"allowedDomains": []}},
         }
         (arm.config / "settings.json").write_text(json.dumps(arm.settings, indent=2) + "\n", encoding="utf-8")
@@ -94,13 +95,17 @@ def version(binary: str, host: str) -> str:
     return result.stdout.strip()
 
 
-def command(arm: Arm, host: str, binary: str, model: str | None) -> list[str]:
+def command(arm: Arm, host: str, binary: str, model: str | None, effort: str | None = None) -> list[str]:
     if host == "claude":
         result = [binary, "-p", "--verbose", "--output-format", "stream-json", "--no-session-persistence", "--setting-sources", "user", "--settings", str(arm.config / "settings.json"), "--strict-mcp-config", "--mcp-config", str(arm.base / "mcp.json"), "--no-chrome", "--permission-mode", "dontAsk", "--tools", "Read,Glob,Grep,Skill,Edit,Write,Bash", "--add-dir", str(arm.config / "skills")]
     else:
         result = [binary, "exec", "--strict-config", "--json", "--skip-git-repo-check", "--ignore-rules", "--color", "never", "--cd", str(arm.work)]
+    if host == "claude":
+        result.extend(["--input-format", "stream-json", "--replay-user-messages"])
     if model:
         result.extend(["--model", model])
+    if host == "claude" and effort:
+        result.extend(["--effort", effort])
     result.append("-" if host == "codex" else "")
     if host == "claude":
         result.pop()  # Claude reads the prompt from stdin when no argument is set.
@@ -169,11 +174,13 @@ def codex_inventory(arm: Arm, binary: str) -> dict:
 
 def execute(arm: Arm, host: str, argv: list[str], prompt: str, timeout: int) -> dict:
     start = time.monotonic()
+    arm.prompt = prompt
+    payload = (json.dumps({"type": "user", "message": {"role": "user", "content": prompt}}) + "\n") if host == "claude" else prompt
     with (arm.evidence / "trace.jsonl").open("wb") as stdout, (arm.evidence / "stderr.txt").open("wb") as stderr:
         process = subprocess.Popen(argv, cwd=arm.work, env=environment(arm, host), stdin=subprocess.PIPE, stdout=stdout, stderr=stderr, start_new_session=True)
         timed_out = False
         try:
-            process.communicate(prompt.encode(), timeout=timeout)
+            process.communicate(payload.encode(), timeout=timeout)
         except subprocess.TimeoutExpired:
             timed_out = True
             os.killpg(process.pid, signal.SIGTERM)
@@ -267,6 +274,40 @@ def body_in_output(path: str, output: str, others: tuple[str, ...] = ()) -> bool
     return any(len(line.strip()) >= 12 and line.strip() not in other_text and line.strip() in output for line in body.splitlines())
 
 
+def listing_cat_inputs(command_text: str, skills: Path) -> list[str] | None:
+    """Recognize one or two installed-directory listings followed by a full cat.
+
+    Only unconditional semicolons and stderr-to-stdout redirection are allowed.
+    Other compound commands remain unclassified.
+    """
+    if any(marker in command_text for marker in ("\n", "\r", "$(", "`")):
+        return None
+    try:
+        lexer = shlex.shlex(command_text, posix=True, punctuation_chars=";&|()<>")
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        commands = [[]]
+        for token in lexer:
+            if token == ";":
+                commands.append([])
+            else:
+                commands[-1].append(token)
+        if len(commands) not in (2, 3):
+            return None
+        for command in commands:
+            if command[-3:] == ["2", ">&", "1"]:
+                del command[-3:]
+            if len(command) != 2 or not os.path.isabs(command[1]):
+                return None
+            if os.path.commonpath([os.path.normpath(skills), os.path.normpath(command[1])]) != os.path.normpath(skills):
+                return None
+        if any(command[0] not in ("ls", "/bin/ls", "/usr/bin/ls") for command in commands[:-1]):
+            return None
+        return [commands[-1][1]] if commands[-1][0] in ("cat", "/bin/cat", "/usr/bin/cat") else None
+    except ValueError:
+        return None
+
+
 def candidate_read(command_text: str, path: str, output: str, skills: Path) -> bool:
     """A read of installed skill files whose output shows the candidate's own body text.
 
@@ -274,11 +315,23 @@ def candidate_read(command_text: str, path: str, output: str, skills: Path) -> b
     installed skill file, so another file cannot supply the matching text.
     """
     inputs = reader_inputs(command_text)
+    listing = False
+    if not inputs:
+        inputs = listing_cat_inputs(command_text, skills)
+        listing = bool(inputs)
     if not inputs or path not in inputs:
         return False
     root = os.path.normpath(skills)
     if any(not os.path.isabs(value) or os.path.commonpath([root, os.path.normpath(value)]) != root or not Path(value).is_file() for value in inputs):
         return False
+    if listing:
+        text = Path(path).read_text(encoding="utf-8")
+        parts = text.split("\n---\n", 1)
+        body = parts[1] if text.startswith("---\n") and len(parts) == 2 else text
+        # Tool output may be truncated. Require a substantial contiguous body
+        # prefix, rather than a filename or one line printed by the listings.
+        prefix = body.lstrip()[:512]
+        return len(prefix) >= 64 and prefix in output
     return body_in_output(path, output, tuple(value for value in dict.fromkeys(inputs) if value != path))
 
 
@@ -329,6 +382,29 @@ def selected_skill_injections(rollout: list[dict], candidate_path: str) -> list[
     return found
 
 
+def claude_native_selection(event: dict, prompt: str, candidate: str, init: dict) -> bool:
+    """Match a host-expanded command replay to the actual slash input and inventory.
+
+    The replay's command tags are host output only when the original input was
+    an exact leading slash invocation. Quoted or supplied tags cannot prove it.
+    """
+    match = re.fullmatch(r"/([a-z0-9-]+)(?:\s+(.*))?", prompt.strip(), re.DOTALL)
+    if (not match or match[1] != candidate or event.get("type") != "user"
+            or event.get("isReplay") is not True or event.get("parent_tool_use_id") is not None
+            or event.get("session_id") != init.get("session_id")
+            or candidate not in (init.get("skills") or [])
+            or candidate not in (init.get("slash_commands") or [])):
+        return False
+    message = event.get("message", {})
+    if not isinstance(message, dict) or message.get("role") != "user":
+        return False
+    content = message.get("content")
+    header = f"<command-message>{candidate}</command-message>\n<command-name>/{candidate}</command-name>"
+    arguments = (match[2] or "").strip()
+    expected = header + (f"\n<command-args>{arguments}</command-args>" if arguments else "")
+    return isinstance(content, str) and content == expected
+
+
 def observe(arm: Arm, host: str, candidate: str) -> dict:
     trace = events(arm.evidence / "trace.jsonl")
     activation = []
@@ -338,14 +414,22 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
     finished = False
     candidate_path = str(arm.config / "skills" / candidate / "SKILL.md")
     if host == "claude":
-        successful_tools = {
-            item.get("tool_use_id")
+        successful_results = {
+            item.get("tool_use_id"): item.get("content", "")
             for event in trace if event.get("type") == "user"
             for item in event.get("message", {}).get("content", [])
             if isinstance(item, dict) and item.get("type") == "tool_result" and not item.get("is_error")
         }
+        successful_tools = set(successful_results)
+        init = {}
         for event in trace:
+            result = event.get("tool_use_result")
+            stats = event.get("subagent_stats")
+            if ((isinstance(result, dict) and result.get("status") == "forked")
+                    or (isinstance(stats, dict) and stats.get("spawned", 0))):
+                raise InvalidComparison("Claude started a forked model outside the paired-run budget; disable bundled skills and rerun")
             if event.get("type") == "system" and event.get("subtype") == "init":
+                init = event
                 inventory_result = {key: event.get(key) for key in ("skills", "plugins", "mcp_servers", "tools", "model", "session_id")}
                 models.add(event.get("model", "unknown"))
                 sessions.add(event.get("session_id", "unknown"))
@@ -355,6 +439,10 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
                 present = candidate in (event.get("skills") or [])
                 if present != (arm.name == "treatment"):
                     raise InvalidComparison(f"Claude {arm.name} init inventory does not prove candidate availability")
+            if (Path(candidate_path).is_file()
+                    and claude_native_selection(event, getattr(arm, "prompt", ""), candidate, init)):
+                activation.append({"event": "native_command_replay", "path": candidate_path,
+                                   "session_id": event.get("session_id")})
             if event.get("type") == "assistant":
                 for item in event.get("message", {}).get("content", []):
                     if item.get("type") == "tool_use":
@@ -365,6 +453,13 @@ def observe(arm: Arm, host: str, candidate: str) -> dict:
                             activation.append({"event": "Skill", "tool_use_id": item.get("id"), "input": values})
                         elif item.get("name") == "Read" and values.get("file_path") == candidate_path and item.get("id") in successful_tools:
                             activation.append({"event": "Read", "tool_use_id": item.get("id"), "path": candidate_path})
+                        elif item.get("name") == "Bash" and item.get("id") in successful_tools:
+                            output = successful_results[item["id"]]
+                            if isinstance(output, list):
+                                output = "\n".join(part.get("text", "") for part in output
+                                                   if isinstance(part, dict) and part.get("type") == "text")
+                            if isinstance(output, str) and candidate_read(values.get("command", ""), candidate_path, output, arm.config / "skills"):
+                                activation.append({"event": "Bash", "tool_use_id": item.get("id"), "command": values.get("command", "")})
                     elif item.get("type") == "text":
                         messages.append(item.get("text", ""))
             if event.get("type") == "result":

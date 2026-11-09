@@ -45,7 +45,7 @@ skills:
   project-guardrails:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
-    status: evaluated
+    status: unevaluated
   toolchain-upgrade:
     kind: capability
     roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
@@ -148,7 +148,7 @@ skills:
   why:
     kind: capability
     roles: [all]
-    status: evaluated
+    status: unevaluated
   bro:
     kind: capability
     roles: [all]
@@ -214,7 +214,7 @@ skills:
   interrogate:
     kind: capability
     roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, security-engineer, data-engineer]
-    status: evaluated
+    status: unevaluated
     invocation: user
   blast-radius:
     kind: capability
@@ -245,11 +245,11 @@ skills:
     kind: capability
     roles: [agent-orchestrator]
     invocation: user
-    status: evaluated
+    status: unevaluated
   babysit-pr:
     kind: capability
     roles: [agent-orchestrator]
-    status: evaluated
+    status: unevaluated
   fix-ci:
     aliases: [ci-failure-triage, ci-failure-diagnosis]
     kind: capability
@@ -281,7 +281,7 @@ skills:
   retro:
     kind: capability
     roles: [all]
-    status: evaluated
+    status: unevaluated
     invocation: user
   handoff:
     kind: capability
