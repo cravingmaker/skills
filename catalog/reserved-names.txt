@@ -74,23 +74,6 @@ system-design
 tech-debt
 testing-strategy
 
-# Installed plugin: mattpocock-skills
-# Keep remaining source-specific reservations until the observed cutover.
-ask-matt
-chief-of-staff
-claude-handoff
-code-review
-git-guardrails-claude-code
-loop-me
-migrate-to-shoehorn
-scaffold-exercises
-setup-matt-pocock-skills
-setup-pre-commit
-setup-ts-deep-modules
-writing-beats
-writing-fragments
-writing-shape
-
 # Additional installed names in the 2026-11-08 host snapshot used by
 # docs/install-and-discovery-proof.md.
 built-in-browser
