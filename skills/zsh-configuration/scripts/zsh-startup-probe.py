@@ -57,13 +57,15 @@ def probe(zsh, directory, root, flags, timeout):
         timed_out = True
         try:
             os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
+        except (ProcessLookupError, PermissionError):
+            # macOS reports EPERM for a group whose remaining members are zombies.
             pass
         stdout, stderr = process.communicate()
     finally:
         try:
             os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
+        except (ProcessLookupError, PermissionError):
+            # macOS reports EPERM for a group whose remaining members are zombies.
             pass
     known = {os.fsencode(directory / name): name for name in NAMES}
     order, extra_stderr = [], len(stderr)
