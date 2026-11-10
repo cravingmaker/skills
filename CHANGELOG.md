@@ -1,13 +1,14 @@
 # Changelog
 
-Each entry records one merged pull request, newest first. The merged snapshot ends at PR #10 on 2026-11-09.
+Each entry records one merged pull request, newest first by merge time. The history runs through PR #15, merged 2026-11-10.
 
 [PR #11](https://github.com/cravingmaker/skills/pull/11) (backend-engineer) and [PR #12](https://github.com/cravingmaker/skills/pull/12) (devops-engineer) were closed unmerged because their Outcome evals mostly matched the no-skill baseline at high token cost. Their skills are not part of this collection.
 
-[PR #14](https://github.com/cravingmaker/skills/pull/14) removes the planned role entries, role template, and unused Android provider, and maps jobs to shipped skills. It keeps `agent-orchestrator` as the core router. It is open as of 2026-11-10, so it has no merged-PR entry here.
-
 ## Contents
 
+- [PR #15: baseline-first Outcome evaluation](#pr-15-baseline-first-outcome-evaluation)
+- [PR #13: human handbook and generated inventories](#pr-13-human-handbook-and-generated-inventories)
+- [PR #14: role skills removed](#pr-14-role-skills-removed)
 - [PR #10: observed cutover and reservations](#pr-10-observed-cutover-and-reservations)
 - [PR #9: Claude host evaluations](#pr-9-claude-host-evaluations)
 - [PR #8: land the reviewed stack](#pr-8-land-the-reviewed-stack)
@@ -18,6 +19,24 @@ Each entry records one merged pull request, newest first. The merged snapshot en
 - [PR #3: the orchestrator role](#pr-3-the-orchestrator-role)
 - [PR #2: the fleet foundation](#pr-2-the-fleet-foundation)
 - [PR #1: the first capabilities and checks](#pr-1-the-first-capabilities-and-checks)
+
+## PR #15: baseline-first Outcome evaluation
+
+Merged 2026-11-10. [Evaluate `writing-for-agents`' baseline-first Outcome on Codex](https://github.com/cravingmaker/skills/pull/15).
+
+Five custom Codex Outcome pairs ran at the final skill bytes. With supplied baseline reports or no authorized model calls, the skill added value twice (no skill body after a passing report, cases prepared without a body when no calls were authorized) and matched once (both arms drafted after a failing report), with no hurt. The supplied reports are fixture premises, not real sessions. Two pairs with a detectable runner double keep limited conclusions, including one unresolved observation: the treatment drafted after a failure it judged unverified. `writing-for-agents` became evaluated, so all 58 skills are evaluated.
+
+## PR #13: human handbook and generated inventories
+
+Merged 2026-11-10. [Add the human handbook and generate the skill inventories](https://github.com/cravingmaker/skills/pull/13).
+
+The handbook in `handbook/` is for people, in English with an Indonesian mirror under `handbook/id/`. `scripts/build-docs.py` generates the README category tables, skill reference, routes, provenance and evaluation results, and its `--check` rejects drift, agent-facing links into the handbook, and unsynced language pairs. `AGENTS.md` gained common-task procedures in `docs/` and the baseline-first rule for new skills. Evaluation records replaced raw-file links with local-only text and owner-only archive lines. The four skills changed by PR #14 were rerun on triggers (62 pairs); three returned to evaluated and `writing-for-agents` stayed unevaluated pending its Outcome.
+
+## PR #14: role skills removed
+
+Merged 2026-11-10. [Remove the planned role skills from main](https://github.com/cravingmaker/skills/pull/14).
+
+`agent-orchestrator` is the only router. The catalog dropped the 17 planned roles, the role template and the mobile-only external provider, and coverage maps each job to shipped skills. Four skills that assumed role routers now name installed capabilities, and briefs no longer need a `Role skill` section. Those four were marked unevaluated pending new evidence.
 
 ## PR #10: observed cutover and reservations
 

@@ -69,7 +69,7 @@ Validity, activation, semantic correctness, and added value are different questi
 
 A valid pair can show a failed expectation. A matched result does not establish superiority to the baseline. Manual-entry positives can measure availability of the requested entry more than a unique method benefit. Shared dependency components also limit per-skill attribution.
 
-At the 2026-11-09 core snapshot, all shipped skills were marked evaluated after the [completed host campaign in PR #9](https://github.com/cravingmaker/skills/pull/9). That statement does not promise perfect activation, every optional branch, real hosted CI, successful production delivery, or a particular future model's behavior. The [known-issues page](known-issues.md) retains those qualifications.
+At the 2026-11-09 core snapshot, all shipped skills were marked evaluated after the [completed host campaign in PR #9](https://github.com/cravingmaker/skills/pull/9). The role cleanup in [PR #14](https://github.com/cravingmaker/skills/pull/14) changed four skills and reset their status. [PR #13](https://github.com/cravingmaker/skills/pull/13) restored three with new trigger pairs, and [PR #15](https://github.com/cravingmaker/skills/pull/15) restored `writing-for-agents` with Outcome pairs, so all 58 were evaluated again on 2026-11-10. That statement does not promise perfect activation, every optional branch, real hosted CI, successful production delivery, or a particular future model's behavior. The [known-issues page](known-issues.md) retains those qualifications.
 
 ## Preserve provenance
 

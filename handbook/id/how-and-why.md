@@ -69,7 +69,7 @@ Validitas, aktivasi, ketepatan semantik, dan nilai tambah adalah pertanyaan berb
 
 Pasangan valid dapat menunjukkan harapan yang gagal. Hasil sepadan tidak membuktikan keunggulan terhadap baseline. Kasus positif entri manual dapat lebih banyak mengukur ketersediaan entri yang diminta daripada manfaat unik metodenya. Komponen dependensi bersama juga membatasi atribusi per skill.
 
-Pada snapshot inti 2026-11-09, semua skill yang tersedia ditandai evaluated setelah [kampanye host selesai dalam PR #9](https://github.com/cravingmaker/skills/pull/9). Pernyataan itu tidak menjanjikan aktivasi sempurna, setiap cabang opsional, hosted CI nyata, penyerahan produksi berhasil, atau perilaku model masa depan tertentu. [Halaman masalah yang diketahui](known-issues.md) mempertahankan batasan tersebut.
+Pada snapshot inti 2026-11-09, semua skill yang tersedia ditandai evaluated setelah [kampanye host selesai dalam PR #9](https://github.com/cravingmaker/skills/pull/9). Pembersihan peran dalam [PR #14](https://github.com/cravingmaker/skills/pull/14) mengubah empat skill dan mengembalikan statusnya. [PR #13](https://github.com/cravingmaker/skills/pull/13) memulihkan tiga skill dengan pasangan trigger baru, dan [PR #15](https://github.com/cravingmaker/skills/pull/15) memulihkan `writing-for-agents` dengan pasangan Outcome, sehingga semua 58 skill kembali evaluated pada 2026-11-10. Pernyataan itu tidak menjanjikan aktivasi sempurna, setiap cabang opsional, hosted CI nyata, penyerahan produksi berhasil, atau perilaku model masa depan tertentu. [Halaman masalah yang diketahui](known-issues.md) mempertahankan batasan tersebut.
 
 ## Mempertahankan asal-usul
 
