@@ -4,15 +4,15 @@ Every skill in this repository meets this guide. Workers drafting skills read it
 
 ## Two kinds of skills
 
-- **Capability skill.** One capability, one trigger, one reusable deliverable, and a demonstrated benefit over the agent's behavior without it. Named for the capability as a practitioner says it: `api-design`, `postgres-schema-design`, `wcag-audit`. A technology prefix only when the skill is specific to it: `rust-async-services`, `swiftui-architecture`. Knowledge that does not justify its own trigger goes into a capability's `references/`.
-- **Role router.** One per role: `backend-engineer`, `agent-orchestrator`. It equips an agent for the role in one invocation and routes the role's work through capability skills. Start from `template-role/`.
+- **Capability skill.** One capability, one trigger, one reusable deliverable, and a demonstrated benefit over the agent's behavior without it. Named for the capability as a practitioner says it: `change-review`, `diagnosing-bugs`, `to-spec`. A technology prefix only when the skill is specific to it. Knowledge that does not justify its own trigger goes into a capability's `references/`.
+- **Router.** `agent-orchestrator` is the one router: it equips an agent in one invocation and routes its work through capability skills.
 
 ## Frontmatter
 
 Only the spec's fields: `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`. Host-specific behavior belongs in host settings, not here.
 
-- **`description`:** lead with the main use case, then what the skill does and when to use it, one trigger per distinct branch, about 300 characters or less. A role router's description names the role and its invocation ("Equip this agent as a backend engineer... Use when the user invokes backend-engineer or asks the agent to act as one.").
-- **`metadata.requires`:** a quoted, space-separated string of skills this one cannot work without. A role router lists its capabilities here.
+- **`description`:** lead with the main use case, then what the skill does and when to use it, one trigger per distinct branch, about 300 characters or less. A router's description names what it equips the agent to do and how it is invoked.
+- **`metadata.requires`:** a quoted, space-separated string of skills this one cannot work without. A router lists its capabilities here.
 - **`metadata.verified`:** `"YYYY-MM"` when the skill states version-specific facts; sources go in `references/sources.md` with access dates.
 - Adapted material: `license`, `metadata.source`, `metadata.source-revision`, `metadata.source-files`, `metadata.local-changes`, and a `LICENSE-<upstream>` file (see AGENTS.md).
 
@@ -40,7 +40,7 @@ The catalog checker scans this form in `SKILL.md` and its directly linked owned 
 
 Set `invocation: user` in the catalog for an entry the user selects explicitly; omit it for the `model` default. Preview/apply `scripts/build-host-config.py` in the source repository and check the generated Codex policy before installing. Claude settings are a separate explicit adapter step; see [installing.md](installing.md). Invocation preference adds no authority and does not prohibit a genuine `requires` edge.
 
-Engineering roles compose one owned generic workflow with their domain-specific methods. Keep generic planning, execution, review and verification in their owning capabilities; place language or platform methods in the corresponding role's capabilities. Add no router for a second generic workflow.
+Keep generic planning, execution, review and verification in their owning capabilities. Add no router for a second generic workflow.
 
 ## Provenance manifests
 
@@ -58,17 +58,17 @@ Include commands in the manifest to export each pinned input, verify its byte ha
 
 Follow `skills/clear-communication`: lead with the action, plain words, one idea per sentence, one line per paragraph. Use leading words (a compact, pretrained concept repeated as a token) instead of restating a behavior in sentences. Phrase the target behavior positively; use a prohibition only as a guardrail, paired with the positive target. Keep each meaning in one place. Run `./scripts/validate.sh`; it lints this repository's prose.
 
-## Role routers
+## Routers
 
 A router contains, in this order:
 
-1. **Mission and quality bar:** what the role delivers and the standard it holds, in a few lines.
+1. **Mission and quality bar:** what the router delivers and the standard it holds, in a few lines.
 2. **Before relying on a capability:** read its `SKILL.md`; the router's summary is orientation only.
-3. **Flows:** the role's common jobs as conditional paths through its capabilities. The agent enters at the step the task needs; a flow is never a mandatory pipeline.
-4. **Handoffs:** which role owns adjacent work, and what to hand over.
-5. **Done:** the role's completion criteria and the evidence to report.
+3. **Flows:** its common jobs as conditional paths through its capabilities. The agent enters at the step the task needs; a flow is never a mandatory pipeline.
+4. **Handoffs:** which skill or person owns adjacent work, and what to hand over.
+5. **Done:** its completion criteria and the evidence to report.
 
-Every prerequisite a flow needs appears in `metadata.requires` and in the catalog with this role listed. Optional routes stay in conditional prose and do not change installation closure.
+Every prerequisite a flow needs appears in `metadata.requires` and in the catalog with this router listed. Optional routes stay in conditional prose and do not change installation closure.
 
 ## Catalog and coverage
 

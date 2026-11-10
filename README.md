@@ -115,7 +115,6 @@ For everyday answers to follow the communication rules without loading a skill, 
 │       ├── scripts/        # Optional: executable code
 │       └── assets/         # Optional: templates, configs, and data
 ├── template/               # Starting point for a capability skill
-├── template-role/          # Starting point for a role router
 ├── catalog/                # Skill catalog, coverage matrix, install profiles, reserved names
 ├── docs/                   # Authoring guide
 ├── scripts/                # Validation, catalog, profile, freshness, and install scripts

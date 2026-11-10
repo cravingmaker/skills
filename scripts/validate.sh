@@ -25,7 +25,7 @@ if ! command -v uvx >/dev/null 2>&1; then
 fi
 
 shopt -s nullglob
-dirs=(template template-role skills/*/)
+dirs=(template skills/*/)
 dirs=("${dirs[@]%/}")
 
 status=0

@@ -19,23 +19,6 @@
 
 roles:
   - agent-orchestrator
-  - backend-engineer
-  - frontend-engineer
-  - mobile-engineer
-  - ui-ux-designer
-  - qa-engineer
-  - devops-engineer
-  - sysadmin
-  - security-engineer
-  - data-engineer
-  - data-scientist
-  - data-analyst
-  - technical-writer
-  - seo-engineer
-  - business-analyst
-  - financial-analyst
-  - marketing-expert
-  - copywriter
 
 skills:
   clear-communication:
@@ -44,20 +27,20 @@ skills:
     status: evaluated
   project-guardrails:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
   toolchain-upgrade:
     kind: capability
-    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
+    roles: [all]
     status: evaluated
   correct:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
 
   agent-orchestrator:
     kind: role
-    status: evaluated
+    status: unevaluated
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]
@@ -65,7 +48,7 @@ skills:
   agent-briefing:
     kind: capability
     roles: [agent-orchestrator]
-    status: evaluated
+    status: unevaluated
   agent-debate:
     kind: capability
     roles: [agent-orchestrator]
@@ -95,16 +78,16 @@ skills:
     invocation: user
   domain-modeling:
     kind: capability
-    roles: [agent-orchestrator, ui-ux-designer, business-analyst]
+    roles: [agent-orchestrator]
     status: evaluated
   to-spec:
     kind: capability
-    roles: [agent-orchestrator, business-analyst]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: user
   to-tickets:
     kind: capability
-    roles: [agent-orchestrator, business-analyst]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: user
   triage:
@@ -130,7 +113,7 @@ skills:
     invocation: user
   prototype:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, ui-ux-designer]
+    roles: [agent-orchestrator]
     status: evaluated
   sharpen:
     kind: capability
@@ -139,7 +122,7 @@ skills:
     invocation: user
   research:
     kind: capability
-    roles: [agent-orchestrator, data-analyst, data-scientist, technical-writer, seo-engineer, financial-analyst, marketing-expert]
+    roles: [agent-orchestrator]
     status: evaluated
   how:
     kind: capability
@@ -163,8 +146,8 @@ skills:
 
   codebase-design:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer]
-    status: evaluated
+    roles: [agent-orchestrator]
+    status: unevaluated
   architect:
     kind: capability
     roles: [agent-orchestrator]
@@ -176,7 +159,7 @@ skills:
     invocation: user
   implement:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: user
   implement-spec:
@@ -186,24 +169,24 @@ skills:
     invocation: user
   tdd:
     kind: capability
-    roles: [agent-orchestrator, qa-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
   diagnosing-bugs:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
   wizard:
     kind: capability
-    roles: [agent-orchestrator, devops-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
   change-review:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: model
   sol-loop:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: model
   council:
@@ -213,27 +196,27 @@ skills:
     invocation: user
   interrogate:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, security-engineer, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: user
   blast-radius:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: model
   benchmark-checklist:
     kind: capability
-    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer, data-scientist]
+    roles: [all]
     status: evaluated
     invocation: model
   create-verification-skill:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: model
   maintain-verification-skill:
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
     invocation: user
 
@@ -253,7 +236,7 @@ skills:
   fix-ci:
     aliases: [ci-failure-triage, ci-failure-diagnosis]
     kind: capability
-    roles: [agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer]
+    roles: [agent-orchestrator]
     status: evaluated
   leaving-pr-comments:
     kind: capability
@@ -291,7 +274,7 @@ skills:
   writing-for-agents:
     kind: capability
     roles: [all]
-    status: evaluated
+    status: unevaluated
     invocation: model
   teach:
     kind: capability
@@ -309,8 +292,4 @@ skills:
     status: evaluated
     invocation: user
 
-external:
-  android-skills:
-    source: https://github.com/android/skills
-    install: skills CLI from the source repository
-    skills: []
+external: {}

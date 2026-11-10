@@ -53,7 +53,7 @@ Place validation, narrowing and error handling where data crosses a trust bounda
 
 Design operations to converge on the correct state however many times they run and wherever a previous run stopped. Derive each step from the state that exists, not from what the previous run meant to do: read current state, compare with the goal, apply only the difference.
 
-Anything a run leaves behind (a lock, a temporary file, a half-written record, a claimed job) must be recognizable as stale by the next run, by evidence that stays true wherever the run could have stopped. For example, write to a temporary path and rename it into place, or compare artifacts by content rather than creation order. Test: what happens if it runs twice; if the previous run crashed at each point; does re-execution converge? Domain protocols such as payment idempotency keys belong to their specialist role skills.
+Anything a run leaves behind (a lock, a temporary file, a half-written record, a claimed job) must be recognizable as stale by the next run, by evidence that stays true wherever the run could have stopped. For example, write to a temporary path and rename it into place, or compare artifacts by content rather than creation order. Test: what happens if it runs twice; if the previous run crashed at each point; does re-execution converge? Domain protocols such as payment idempotency keys belong to the relevant domain capability when it is installed.
 
 ## Migrating callers
 
