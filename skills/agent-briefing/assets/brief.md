@@ -34,13 +34,9 @@
 
 {{exact owned paths and forbidden paths; owner of shared resources; unique report exception for a repository reader; no edits to shared ledgers}}
 
-## Role skill
-
-{{exact role skill name and advertised installed path; or none with a reason}} Resolve named skills through the child's installed inventory and read each SKILL.md before relying on it. Report which skills actually loaded; stop a dependent flow if its required skill is missing.
-
 ## Capability skills
 
-{{specific capability skill names and advertised paths to load; or none with a reason}}
+{{specific capability skill names and advertised paths to load; or none with a reason}} Resolve named skills through the child's installed inventory and read each SKILL.md before relying on it. Report which skills actually loaded; stop a dependent flow if its required skill is missing.
 
 ## Communication
 

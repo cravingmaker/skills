@@ -4,9 +4,9 @@ Read this when creating or changing a skill, its invocation, dependencies, or pr
 
 ## One capability and its package
 
-A capability has a distinct trigger, reusable deliverable, evidence standard, and checkable definition of done. Put detail without an independent job in the capability's references. A role router names the role, reads its capabilities before use, routes conditional flows, identifies adjacent ownership, and states completion evidence. Keep one owned generic procedure; role methods supply domain-specific evidence rather than copying its controller.
+A capability has a distinct trigger, reusable deliverable, evidence standard, and checkable definition of done. Put detail without an independent job in the capability's references. `agent-orchestrator` is the collection's one router: it reads capabilities before use, routes conditional flows, identifies adjacent ownership, and states completion evidence. Keep one owned generic procedure; capability methods supply domain-specific evidence rather than copying its controller.
 
-Use `skills/<name>/SKILL.md`, optional references, scripts, assets, and required `evals/examples.md`. Use the capability or role template as appropriate, without placing skills inside the templates. Check the catalog and actual supported host inventory for collisions, including independent built-in reservations.
+Use `skills/<name>/SKILL.md`, optional references, scripts, assets, and required `evals/examples.md`. Use the capability template in `template/`, without placing skills inside it. Check the catalog and actual supported host inventory for collisions, including independent built-in reservations.
 
 ## Frontmatter and invocation
 

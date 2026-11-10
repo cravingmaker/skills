@@ -40,7 +40,7 @@ skills:
 
   agent-orchestrator:
     kind: role
-    status: evaluated
+    status: unevaluated
   work-decomposition:
     kind: capability
     roles: [agent-orchestrator]
@@ -48,7 +48,7 @@ skills:
   agent-briefing:
     kind: capability
     roles: [agent-orchestrator]
-    status: evaluated
+    status: unevaluated
   agent-debate:
     kind: capability
     roles: [agent-orchestrator]
@@ -147,7 +147,7 @@ skills:
   codebase-design:
     kind: capability
     roles: [agent-orchestrator]
-    status: evaluated
+    status: unevaluated
   architect:
     kind: capability
     roles: [agent-orchestrator]
@@ -274,7 +274,7 @@ skills:
   writing-for-agents:
     kind: capability
     roles: [all]
-    status: evaluated
+    status: unevaluated
     invocation: model
   teach:
     kind: capability

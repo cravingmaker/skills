@@ -40,7 +40,7 @@ class BriefTests(unittest.TestCase):
         self.check(BASE)
 
     def test_every_missing_section_is_named(self):
-        self.assertEqual(len(SECTIONS), 20)
+        self.assertEqual(len(SECTIONS), 19)
         for heading in SECTIONS:
             with self.subTest(heading=heading):
                 self.check(remove_section(BASE, heading), 1, (heading, "missing field"))

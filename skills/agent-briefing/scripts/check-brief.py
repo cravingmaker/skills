@@ -12,7 +12,7 @@ from pathlib import Path, PurePosixPath
 
 FIELDS = (
     "Task identity", "Goal", "Context", "Workspace", "Scope", "Constraints",
-    "Permissions", "Write boundary", "Role skill", "Capability skills",
+    "Permissions", "Write boundary", "Capability skills",
     "Communication", "Terminology", "Open decisions", "Dependencies",
     "Acceptance", "Evidence standard", "Return contract", "Raw report path",
     "Budget", "Stop conditions",

@@ -34,10 +34,6 @@ Read /workspace/project/AGENTS.md first; preserve source values.
 
 Own /workspace/run/raw/inspect-r1.md; repository writes and shared-ledger writes are excluded.
 
-## Role skill
-
-None: this is bounded source comparison, without a role router.
-
 ## Capability skills
 
 None: the supplied schema and acceptance command define this bounded inspection.

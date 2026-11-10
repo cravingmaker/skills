@@ -48,7 +48,7 @@ For one authorized slice, use the `implement` skill; an accepted testing seam ca
 
 1. For generic work without an approved code-ticket graph, decide whether to delegate at all, split the goal into tasks with dependencies, owners, and write boundaries, and record the budget → the `work-decomposition` skill.
 2. Open the run record (plan, log, decisions) on disk before the first dispatch → the `decision-log` skill.
-3. Write one brief per task that a fresh agent with no history can execute, including the role and capability skills it loads and its return contract → the `agent-briefing` skill.
+3. Write one brief per task that a fresh agent with no history can execute, including the capability skills it loads and its return contract → the `agent-briefing` skill.
 4. Dispatch within the budget and the concurrency limit; launch independent tasks together; wait for completion instead of polling; cancel superseded work.
 5. Take in each result: save the raw report, check it against its brief, and spot-check its claims at the source → the `result-verification` skill.
 6. Integrate, then run the acceptance checks on the combined result → the `result-verification` skill.
@@ -87,7 +87,7 @@ Read [the workflow modes](references/workflow-modes.md) when choosing a stage, s
 
 ## Handoffs
 
-- **Role work** goes to the matching role router (backend, frontend, data, security, and the rest), loaded by the worker its brief names.
+- **Specialist work** goes to a worker whose brief names the relevant installed capability skills and required domain evidence.
 - **A mistake that repeats across runs** → the `correct` skill, to make it fail a check instead of being corrected again.
 - **The enforcement environment of a repository** → the `project-guardrails` skill.
 
