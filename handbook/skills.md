@@ -1946,7 +1946,7 @@ Plan execution across agents: decide whether delegation earns its cost, then map
 
 Author or repair agent instruction content, triggers, and completion criteria in SKILL.md, AGENTS.md, CLAUDE.md, or their references. Use only for requested content changes. For finalized instructions, use the selected packager or installer directly without loading this skill.
 
-- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** unevaluated.
+- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** evaluated.
 - **Requires:** [`clear-communication`](#clear-communication). **Required by:** [`retro`](#retro).
 - **Install closure (2):** `clear-communication`, `writing-for-agents`.
 - **Optional routes in its instructions:** none.

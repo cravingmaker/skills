@@ -84,8 +84,8 @@ Tabel yang dihasilkan menghitung ringkasan historis yang disimpan pada semua rev
 | `2.1.311 (Claude Code)` | `claude-opus-5-5` | 626 | 108 | 734 |
 | `2.1.311 (Claude Code)` | `default` | 0 | 2 | 2 |
 | `codex-cli 0.167.0` | `default` | 0 | 3 | 3 |
-| `codex-cli 0.167.0` | `gpt-6.1-sol` | 802 | 0 | 802 |
-| Semua | | 1428 | 113 | 1541 |
+| `codex-cli 0.167.0` | `gpt-6.1-sol` | 805 | 0 | 805 |
+| Semua | | 1431 | 113 | 1544 |
 
 <!-- END GENERATED eval-records -->
 
