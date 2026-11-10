@@ -25,8 +25,8 @@ History separates older or missing digests, invalid comparisons, and incomplete 
 | Host | Current valid pairs | Activation hit / miss / unknown | Near miss load / skip / unknown | Outcome added / matched / hurt / blocked / unreviewed | Other current | History older or unbound / invalid / incomplete or other |
 | --- | --- | --- | --- | --- | --- | --- |
 | `claude` | 444 | 164 / 13 / 0 | 3 / 194 / 0 | 16 / 53 / 1 / 0 / 0 | 0 | 182 / 110 / 0 |
-| `codex` | 400 | 136 / 51 / 0 | 4 / 193 / 0 | 11 / 5 / 0 / 0 / 0 | 0 | 405 / 3 / 0 |
-| All | 844 | 300 / 64 / 0 | 7 / 387 / 0 | 27 / 58 / 1 / 0 / 0 | 0 | 587 / 113 / 0 |
+| `codex` | 402 | 136 / 51 / 0 | 4 / 193 / 0 | 12 / 6 / 0 / 0 / 0 | 0 | 405 / 3 / 0 |
+| All | 846 | 300 / 64 / 0 | 7 / 387 / 0 | 28 / 59 / 1 / 0 / 0 | 0 | 587 / 113 / 0 |
 
 ## Per skill and host
 
@@ -147,7 +147,7 @@ History separates older or missing digests, invalid comparisons, and incomplete 
 | [`work-decomposition`](../skills/work-decomposition/evals/results/) | `claude` | 9 | 4 / 0 / 0 | 0 / 5 / 0 | 0 / 0 / 0 / 0 / 0 | 0 | 3 / 1 / 0 |
 | [`work-decomposition`](../skills/work-decomposition/evals/results/) | `codex` | 9 | 4 / 0 / 0 | 0 / 5 / 0 | 0 / 0 / 0 / 0 / 0 | 0 | 10 / 0 / 0 |
 | [`writing-for-agents`](../skills/writing-for-agents/evals/results/) | `claude` | 5 | 2 / 0 / 0 | 0 / 3 / 0 | 0 / 0 / 0 / 0 / 0 | 0 | 10 / 0 / 0 |
-| [`writing-for-agents`](../skills/writing-for-agents/evals/results/) | `codex` | 8 | 2 / 0 / 0 | 0 / 3 / 0 | 2 / 1 / 0 / 0 / 0 | 0 | 20 / 0 / 0 |
+| [`writing-for-agents`](../skills/writing-for-agents/evals/results/) | `codex` | 10 | 2 / 0 / 0 | 0 / 3 / 0 | 3 / 2 / 0 / 0 / 0 | 0 | 20 / 0 / 0 |
 
 ## Historical records
 
