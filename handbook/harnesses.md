@@ -79,11 +79,11 @@ The generated table counts retained historical summaries at all revisions. Valid
 
 | Host as recorded | Effective model | Valid | Invalid | Total |
 | --- | --- | ---: | ---: | ---: |
-| `2.1.311 (Claude Code)` | `claude-opus-5-5` | 588 | 108 | 696 |
+| `2.1.311 (Claude Code)` | `claude-opus-5-5` | 593 | 108 | 701 |
 | `2.1.311 (Claude Code)` | `default` | 0 | 2 | 2 |
 | `codex-cli 0.167.0` | `default` | 0 | 3 | 3 |
-| `codex-cli 0.167.0` | `gpt-6.1-sol` | 766 | 0 | 766 |
-| All | | 1354 | 113 | 1467 |
+| `codex-cli 0.167.0` | `gpt-6.1-sol` | 770 | 0 | 770 |
+| All | | 1363 | 113 | 1476 |
 
 <!-- END GENERATED eval-records -->
 
