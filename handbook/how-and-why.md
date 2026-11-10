@@ -50,7 +50,7 @@ An independent evaluator reviews the actual artifact and evidence until the rema
 
 The method is then compared with and without the skill in matched fresh sessions on Codex and Claude Code. Required prerequisites and task inputs stay the same in both arms. Only candidate availability changes. A material edit changes the tested bytes and requires matching coverage at the final revision.
 
-The [paired harness documentation](../docs/eval-harness.md) describes preparation, models, fixtures, records, and isolation. It uses real model sessions when an evaluation is run; authoring or deterministic validation alone needs no model calls.
+The [paired harness documentation](../docs/eval-harness.md) describes preparation, models, fixtures, records, and isolation. It uses real model sessions when an evaluation is run. Preparing examples and fixtures, editing existing instructions, and deterministic validation need no model calls; a new skill body still requires a recorded failing baseline.
 
 ## What evaluated means
 

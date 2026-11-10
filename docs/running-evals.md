@@ -1,6 +1,6 @@
 # Run and review paired evals
 
-Use this to evaluate a new or materially changed skill against the no-skill baseline. Read the [harness contract](eval-harness.md) for fixture rules, host adapters, evidence files, activation detection, and exit codes. Authoring and offline validation need no model calls.
+Use this to evaluate a new or materially changed skill against the no-skill baseline. Read the [harness contract](eval-harness.md) for fixture rules, host adapters, evidence files, activation detection, and exit codes. Preparing examples and fixtures, editing existing instructions, and offline validation need no model calls. Draft a new skill body only after a recorded failing baseline; see the [create procedure](skill-workflows.md#create-a-skill).
 
 ## Prepare and budget
 

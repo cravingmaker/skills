@@ -35,7 +35,7 @@ Everything below the "How to read an entry" section is generated from `catalog/s
 
 Write a self-contained task brief for a fresh agent, with skills, permissions, evidence, and a return contract. Use when preparing a delegation or repairing a brief that depends on missing history.
 
-- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** evaluated.
+- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** unevaluated.
 - **Requires:** none. **Required by:** [`agent-debate`](#agent-debate), [`agent-orchestrator`](#agent-orchestrator), [`implement-spec`](#implement-spec).
 - **Install closure (1):** `agent-briefing`.
 - **Optional routes in its instructions:** [`agent-orchestrator`](#agent-orchestrator), [`clear-communication`](#clear-communication), [`decision-log`](#decision-log), [`result-verification`](#result-verification), [`work-decomposition`](#work-decomposition).
@@ -108,7 +108,7 @@ Find the best approach through structured disagreement between agents, with blin
 
 Coordinate a multi-agent run: plan, delegate, debate, and verify combined results. Use when asked to act as agent-orchestrator, manage agents, or pick up an earlier agent run and finish it; resume from its durable record.
 
-- **Starts:** model selection when the task fits. **Kind:** router. **Status:** evaluated.
+- **Starts:** model selection when the task fits. **Kind:** router. **Status:** unevaluated.
 - **Requires:** [`work-decomposition`](#work-decomposition), [`agent-briefing`](#agent-briefing), [`agent-debate`](#agent-debate), [`result-verification`](#result-verification), [`decision-log`](#decision-log), [`clear-communication`](#clear-communication), [`grill-with-docs`](#grill-with-docs), [`to-spec`](#to-spec), [`to-tickets`](#to-tickets), [`implement-spec`](#implement-spec), [`retro`](#retro). **Required by:** none.
 - **Install closure (19):** `agent-briefing`, `agent-debate`, `agent-orchestrator`, `change-review`, `clear-communication`, `codebase-design`, `decision-log`, `domain-modeling`, `grill-with-docs`, `grilling`, `implement`, `implement-spec`, `result-verification`, `retro`, `tdd`, `to-spec`, `to-tickets`, `work-decomposition`, `writing-for-agents`.
 - **Optional routes in its instructions:** [`architect`](#architect), [`babysit-pr`](#babysit-pr), [`change-review`](#change-review), [`codebase-design`](#codebase-design), [`correct`](#correct), [`file-pr`](#file-pr), [`full-send`](#full-send), [`full-stop`](#full-stop), [`grilling`](#grilling), [`implement`](#implement), [`interrogate`](#interrogate), [`project-guardrails`](#project-guardrails), [`sol-loop`](#sol-loop), [`tdd`](#tdd).
@@ -396,7 +396,7 @@ Clarify complex explanations, substantial writing, and consequential ambiguity w
 
 Refine a named module's public interface or test seam in one codebase. Apply depth, deletion-test and adapter-boundary heuristics to its code and callers; provide required shared vocabulary. Broad distributed-system and infrastructure architecture is outside this scope.
 
-- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** evaluated.
+- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** unevaluated.
 - **Requires:** none. **Required by:** [`architect`](#architect), [`improve-codebase-architecture`](#improve-codebase-architecture), [`tdd`](#tdd).
 - **Install closure (1):** `codebase-design`.
 - **Optional routes in its instructions:** [`architect`](#architect), [`domain-modeling`](#domain-modeling).
@@ -1944,7 +1944,7 @@ Plan execution across agents: decide whether delegation earns its cost, then map
 
 Author or repair agent instruction content, triggers, and completion criteria in SKILL.md, AGENTS.md, CLAUDE.md, or their references. Use only for requested content changes. For finalized instructions, use the selected packager or installer directly without loading this skill.
 
-- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** evaluated.
+- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** unevaluated.
 - **Requires:** [`clear-communication`](#clear-communication). **Required by:** [`retro`](#retro).
 - **Install closure (2):** `clear-communication`, `writing-for-agents`.
 - **Optional routes in its instructions:** none.
@@ -1968,7 +1968,7 @@ Author or repair agent instruction content, triggers, and completion criteria in
 > - "The local guide permits spec fields only and says invocation is catalog data." Expect: lowercase name, string metadata, exact requires, no handoffs or host frontmatter, direct references, provenance and eval examples.
 > - "The generated note omits one required evidence field despite a prose reminder." Expect: put the field in its template and use an observable completion criterion, rather than pressure rhetoric or more reminders.
 > - "Create a new skill that makes agents add a migration lint to CI." Expect: examples and a fixture are written first and the no-skill baseline is run (or prepared when model calls are not authorized); no skill body is drafted when the baseline already passes the Outcome.
-> - "Draft the skill with zero model calls authorized." Expect: deterministic checks and prepared cases, no mandatory model runs or deletion of the draft, and unevaluated status.
+> - "Create a new skill with zero model calls authorized and no recorded baseline." Expect: prepare examples and a fixture, report the unrun baseline, and stop before drafting the body; preserve existing work.
 > - "The no-skill arm still discovers an upstream equivalent through a global plugin." Expect: reject the comparison as contaminated and report the missing isolation, without claiming benefit.
 > - "Both matched arms produce the right result; the treatment adds extra tool calls." Expect: record parity and added cost, distinguish valid comparison from added benefit, and avoid an automatic evaluated-success claim.
 > - "Use the selected writing-skills material, but its Anthropic documentation mirror is excluded." Expect: no mirrored prose or images are copied or adapted; only the official external guidance link remains.
