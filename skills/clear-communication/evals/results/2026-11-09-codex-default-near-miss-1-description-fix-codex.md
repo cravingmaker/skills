@@ -9,6 +9,7 @@ Comparison: **invalid**. Host: `codex-cli 0.167.0`. Effective model: `default`.
 - **Fixture.** `near-miss-1`, SHA-256 `f32f228fcd55e70ae4c582e9eeff82c502b043fdef3aff6a253f3edddb1b5747`.
 - **Standing contract.** SHA-256 `b4ae56649eab02bf1dff5f69b0f382a17d972a93a7cd4354188b031862e5ba01`, identical in both arms.
 - **Settings.** Requested model `host default`; effort `host default`; each arm has a new session and the same host settings.
+- **Private raw evidence.** Owner-only Google Drive archive [clear-communication.tar.gz](https://drive.google.com/file/d/1aeIJGrgJVddiMx2OHdnS48QfZC4ZRETW/view), folder `2026-11-09-codex-default-near-miss-1-description-fix-codex/` inside.
 
 ## Prompt
 
@@ -34,7 +35,7 @@ The first arm's sentinel was absent from the second arm: `True`. Restored file i
 
 Project candidate copies are excluded from both restored fixtures; only the treatment receives a candidate copy. The manifest lists every excluded project path and its hash. Dependencies are installed in both temporary homes.
 
-Full configuration, input revisions, effective discovery inventory, and expectations: [2026-11-09-codex-default-near-miss-1-description-fix-codex/comparison.json](2026-11-09-codex-default-near-miss-1-description-fix-codex/comparison.json).
+Full configuration, input revisions, effective discovery inventory, and expectations: `2026-11-09-codex-default-near-miss-1-description-fix-codex/comparison.json` (local only, not committed).
 
 ## Invalid comparison
 
@@ -42,16 +43,16 @@ Full configuration, input revisions, effective discovery inventory, and expectat
 
 ## Treatment evidence
 
-- [Raw JSON trace](2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/trace.jsonl)
-- [Standard error](2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/stderr.txt)
-- [Observed response](2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/response.txt)
-- [Input and discovery manifest](2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/manifest.json)
+- Raw JSON trace: `2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/trace.jsonl` (local only, not committed)
+- Standard error: `2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/stderr.txt` (local only, not committed)
+- Observed response: `2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/response.txt` (local only, not committed)
+- Input and discovery manifest: `2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/manifest.json` (local only, not committed)
 - Artifacts: `2026-11-09-codex-default-near-miss-1-description-fix-codex/treatment/artifacts/`.
 
 ## Baseline evidence
 
-- [Raw JSON trace](2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/trace.jsonl)
-- [Standard error](2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/stderr.txt)
-- [Observed response](2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/response.txt)
-- [Input and discovery manifest](2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/manifest.json)
+- Raw JSON trace: `2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/trace.jsonl` (local only, not committed)
+- Standard error: `2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/stderr.txt` (local only, not committed)
+- Observed response: `2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/response.txt` (local only, not committed)
+- Input and discovery manifest: `2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/manifest.json` (local only, not committed)
 - Artifacts: `2026-11-09-codex-default-near-miss-1-description-fix-codex/baseline/artifacts/`.

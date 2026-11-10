@@ -1,0 +1,534 @@
+{
+  "groups": [
+    {
+      "heading": "Understand and explain",
+      "entries": [
+        {
+          "skill": "clear-communication",
+          "want": "Get a long draft, README or explanation written clearly and faithfully",
+          "prompt": "\"tighten this README\", \"explain this simply\"",
+          "neighbor": "`/bro`, which repairs only the agent's last answer",
+          "want_id": "Menulis draf panjang, README, atau penjelasan dengan jelas dan setia pada sumber",
+          "neighbor_id": "`/bro`, yang hanya memperjelas jawaban terakhir agen"
+        },
+        {
+          "skill": "bro",
+          "want": "Have the last answer said plainly",
+          "prompt": "",
+          "neighbor": "`/wait-what`, which explains one point with your context",
+          "want_id": "Meminta jawaban terakhir disampaikan dengan bahasa sederhana",
+          "neighbor_id": "`/wait-what`, yang menjelaskan satu poin dengan konteks Anda"
+        },
+        {
+          "skill": "wait-what",
+          "want": "Understand one point in the last answer that lost me",
+          "prompt": "what is settlement here?",
+          "neighbor": "`/teach`, which builds a whole layered explanation",
+          "want_id": "Memahami satu poin yang membingungkan dalam jawaban terakhir",
+          "neighbor_id": "`/teach`, yang menyusun penjelasan lengkap secara bertahap"
+        },
+        {
+          "skill": "sharpen",
+          "want": "Make my request deeper, not bigger, before anyone works on it",
+          "prompt": "`<your prompt>`",
+          "neighbor": "`grilling`, which settles decisions instead of rewriting the prompt",
+          "want_id": "Memperdalam permintaan saya tanpa memperluas cakupannya sebelum pekerjaan dimulai",
+          "neighbor_id": "`grilling`, yang menyelesaikan keputusan alih-alih menulis ulang prompt"
+        },
+        {
+          "skill": "how",
+          "want": "Know how this code runs today",
+          "prompt": "\"walk me through how checkout works\"",
+          "neighbor": "`why`, which explains history and intent",
+          "want_id": "Mengetahui cara kode ini berjalan saat ini",
+          "neighbor_id": "`why`, yang menjelaskan sejarah dan maksudnya"
+        },
+        {
+          "skill": "why",
+          "want": "Know why it was built this way, or whether a note matches what someone decided",
+          "prompt": "\"why does the cache expire after 90 seconds?\"",
+          "neighbor": "`how`, which traces current behavior only",
+          "want_id": "Mengetahui alasan desainnya, atau apakah suatu catatan sesuai dengan keputusan seseorang",
+          "neighbor_id": "`how`, yang hanya menelusuri perilaku saat ini"
+        },
+        {
+          "skill": "teach",
+          "want": "Learn a concept in layers, or save a course",
+          "prompt": "how the retry queue works",
+          "neighbor": "`how` and `why`, which it uses underneath",
+          "want_id": "Mempelajari konsep secara bertahap, atau menyimpan materi belajar",
+          "neighbor_id": "`how` dan `why`, yang digunakannya sebagai dasar"
+        },
+        {
+          "skill": "research",
+          "want": "Answer a technical question from primary sources",
+          "prompt": "\"find out from the Postgres docs whether ...\"",
+          "neighbor": "`how`, for questions the code itself answers",
+          "want_id": "Menjawab pertanyaan teknis berdasarkan sumber primer",
+          "neighbor_id": "`how`, untuk pertanyaan yang dapat dijawab oleh kodenya sendiri"
+        }
+      ],
+      "heading_id": "Memahami dan menjelaskan"
+    },
+    {
+      "heading": "Decide what to build",
+      "entries": [
+        {
+          "skill": "grilling",
+          "want": "Be interviewed until the plan is settled, with no files written",
+          "prompt": "\"grill me on this plan\", \"stress-test this design\"",
+          "neighbor": "`/grill-me`, the typed shortcut to the same interview",
+          "want_id": "Diwawancarai sampai rencana disepakati, tanpa menulis berkas",
+          "neighbor_id": "`/grill-me`, pintasan perintah untuk wawancara yang sama"
+        },
+        {
+          "skill": "grill-me",
+          "want": "The same interview, started by command",
+          "prompt": "`<plan>`",
+          "neighbor": "`/grill-with-docs`, which writes glossary terms and ADRs",
+          "want_id": "Memulai wawancara yang sama melalui perintah",
+          "neighbor_id": "`/grill-with-docs`, yang menulis istilah glosarium dan ADR"
+        },
+        {
+          "skill": "grill-with-docs",
+          "want": "Be interviewed and have terms and decisions recorded as they settle",
+          "prompt": "`<idea>`",
+          "neighbor": "`domain-modeling`, which edits the glossary or ADRs directly; missing project paths allow a plain interview without document writes",
+          "want_id": "Diwawancarai sambil mencatat istilah dan keputusan yang sudah disepakati",
+          "neighbor_id": "`domain-modeling`, yang langsung mengedit glosarium atau ADR; tanpa path proyek, wawancara biasa tetap dapat berjalan tanpa menulis dokumen"
+        },
+        {
+          "skill": "domain-modeling",
+          "want": "Fix a term conflict, record a definition, rename a concept, or record or supersede an ADR",
+          "prompt": "\"record that a refund means ...\", \"supersede ADR-0003\"",
+          "neighbor": "`decision-log`, which records choices inside one agent run",
+          "want_id": "Menyelesaikan konflik istilah, mencatat definisi, mengganti nama konsep, atau mencatat maupun menggantikan ADR",
+          "neighbor_id": "`decision-log`, yang mencatat pilihan dalam satu proses kerja agen"
+        },
+        {
+          "skill": "wayfinder",
+          "want": "Plan a goal too big and unclear for one session",
+          "prompt": "`<goal>`",
+          "neighbor": "`/to-tickets`, which splits an already approved spec",
+          "want_id": "Merencanakan tujuan yang terlalu besar dan belum jelas untuk satu sesi",
+          "neighbor_id": "`/to-tickets`, yang membagi spec yang sudah disetujui"
+        },
+        {
+          "skill": "to-questionnaire",
+          "want": "Ask another person what only they know",
+          "prompt": "ask the finance lead ...",
+          "neighbor": "`research`, which reads sources instead of asking people",
+          "want_id": "Menanyakan hal yang hanya diketahui orang lain",
+          "neighbor_id": "`research`, yang membaca sumber alih-alih bertanya kepada orang"
+        },
+        {
+          "skill": "prototype",
+          "want": "Try a state model or UI before building it",
+          "prompt": "\"prototype the order states first\"",
+          "neighbor": "`architect`, which designs the real interface",
+          "want_id": "Mencoba model state atau UI sebelum membangunnya",
+          "neighbor_id": "`architect`, yang merancang antarmuka sebenarnya"
+        }
+      ],
+      "heading_id": "Menentukan apa yang akan dibuat"
+    },
+    {
+      "heading": "Write the plan down",
+      "entries": [
+        {
+          "skill": "to-spec",
+          "want": "Turn an agreed plan into a spec with stories, Acceptance and Proof",
+          "prompt": "",
+          "neighbor": "`grilling`, which settles the plan first; `/to-spec` never interviews",
+          "want_id": "Mengubah rencana yang disepakati menjadi spec dengan story, Acceptance, dan Proof",
+          "neighbor_id": "`grilling`, yang menyepakati rencana terlebih dahulu; `/to-spec` tidak melakukan wawancara"
+        },
+        {
+          "skill": "to-tickets",
+          "want": "Split an approved spec into vertical-slice tickets",
+          "prompt": "`<spec>`",
+          "neighbor": "`work-decomposition`, which imports tickets into an execution plan",
+          "want_id": "Membagi spec yang disetujui menjadi tiket berupa irisan vertikal",
+          "neighbor_id": "`work-decomposition`, yang mengimpor tiket ke rencana pelaksanaan"
+        },
+        {
+          "skill": "triage",
+          "want": "Triage new issues and external PRs",
+          "prompt": "move #42 to ready-for-agent",
+          "neighbor": "`/to-tickets`, which writes new tickets from a spec",
+          "want_id": "Melakukan triase issue baru dan PR dari luar",
+          "neighbor_id": "`/to-tickets`, yang menulis tiket baru dari spec"
+        },
+        {
+          "skill": "setup-agent-skills",
+          "want": "Record a project's tracker, labels and domain paths",
+          "prompt": "",
+          "neighbor": "`project-guardrails`, which sets up checks, not the planning contract",
+          "want_id": "Mencatat tracker, label, dan path domain proyek",
+          "neighbor_id": "`project-guardrails`, yang menyiapkan pemeriksaan, bukan kontrak perencanaan"
+        }
+      ],
+      "heading_id": "Menuliskan rencana"
+    },
+    {
+      "heading": "Design code",
+      "entries": [
+        {
+          "skill": "codebase-design",
+          "want": "Improve one module's interface or test seam",
+          "prompt": "\"make this module deeper\", \"where should the seam go?\"",
+          "neighbor": "`architect`, which compares whole alternative designs",
+          "want_id": "Memperbaiki antarmuka atau test seam satu modul",
+          "neighbor_id": "`architect`, yang membandingkan rancangan alternatif secara utuh"
+        },
+        {
+          "skill": "architect",
+          "want": "Compare interface designs and record the chosen one",
+          "prompt": "\"design the interface for the export service\"",
+          "neighbor": "`codebase-design`, the vocabulary it builds on",
+          "want_id": "Membandingkan rancangan antarmuka dan mencatat pilihan akhir",
+          "neighbor_id": "`codebase-design`, yang menyediakan kosakata dasarnya"
+        },
+        {
+          "skill": "improve-codebase-architecture",
+          "want": "Find refactors worth doing across a codebase",
+          "prompt": "",
+          "neighbor": "`architect`, which designs one chosen candidate",
+          "want_id": "Menemukan refaktor yang layak di seluruh codebase",
+          "neighbor_id": "`architect`, yang merancang satu kandidat terpilih"
+        },
+        {
+          "skill": "blast-radius",
+          "want": "Know what a change could break beyond its diff",
+          "prompt": "\"what's the blast radius of this change?\"",
+          "neighbor": "`change-review`, which judges the diff itself",
+          "want_id": "Mengetahui dampak perubahan di luar diff-nya",
+          "neighbor_id": "`change-review`, yang menilai diff itu sendiri"
+        }
+      ],
+      "heading_id": "Merancang kode"
+    },
+    {
+      "heading": "Build and debug",
+      "entries": [
+        {
+          "skill": "implement",
+          "want": "Build one ticket or agreed change, proved and self-reviewed",
+          "prompt": "ticket 03",
+          "neighbor": "`/implement-spec`, which runs the whole ticket graph",
+          "want_id": "Membangun satu tiket atau perubahan yang disepakati, membuktikannya, dan meninjaunya sendiri",
+          "neighbor_id": "`/implement-spec`, yang menjalankan seluruh graf tiket"
+        },
+        {
+          "skill": "implement-spec",
+          "want": "Build a whole approved ticket graph with workers",
+          "prompt": "`<spec>`",
+          "neighbor": "`agent-orchestrator`, which routes approved code tickets to it",
+          "want_id": "Membangun seluruh graf tiket yang disetujui dengan pekerja",
+          "neighbor_id": "`agent-orchestrator`, yang mengarahkan tiket kode yang disetujui kepadanya"
+        },
+        {
+          "skill": "tdd",
+          "want": "Work test-first or add a regression test",
+          "prompt": "\"do this test-first\", \"add a regression test\"",
+          "neighbor": "`diagnosing-bugs`, which first finds the cause",
+          "want_id": "Bekerja dengan test terlebih dahulu atau menambah regression test",
+          "neighbor_id": "`diagnosing-bugs`, yang lebih dahulu menemukan penyebabnya"
+        },
+        {
+          "skill": "diagnosing-bugs",
+          "want": "Find the real cause of a bug or slowdown",
+          "prompt": "\"debug this\", \"why is this slow?\"",
+          "neighbor": "`fix-ci`, which handles a failing CI check",
+          "want_id": "Menemukan penyebab sebenarnya dari bug atau perlambatan",
+          "neighbor_id": "`fix-ci`, yang menangani pemeriksaan CI yang gagal"
+        },
+        {
+          "skill": "wizard",
+          "want": "Walk a human through steps only they can do",
+          "prompt": "\"make a setup wizard for the API keys\"",
+          "neighbor": "`create-verification-skill`, which the agent itself runs",
+          "want_id": "Memandu manusia melalui langkah yang hanya dapat dilakukannya sendiri",
+          "neighbor_id": "`create-verification-skill`, yang dijalankan langsung oleh agen"
+        },
+        {
+          "skill": "benchmark-checklist",
+          "want": "Check a speedup or latency claim before believing it",
+          "prompt": "\"is this 30% faster for real?\"",
+          "neighbor": "`diagnosing-bugs`, which finds a regression's cause",
+          "want_id": "Memeriksa klaim peningkatan kecepatan atau latensi sebelum mempercayainya",
+          "neighbor_id": "`diagnosing-bugs`, yang mencari penyebab regresi"
+        }
+      ],
+      "heading_id": "Membangun dan menelusuri bug"
+    },
+    {
+      "heading": "Review a change",
+      "entries": [
+        {
+          "skill": "change-review",
+          "want": "A report on a change against standards and the spec, without fixes",
+          "prompt": "\"review this branch against the spec\"",
+          "neighbor": "Claude Code's built-in `/code-review` and `/review`, which keep their own behavior",
+          "want_id": "Mendapat laporan penilaian perubahan terhadap standar dan spec, tanpa perbaikan",
+          "neighbor_id": "Perintah bawaan Claude Code `/code-review` dan `/review`, yang tetap mengikuti perilakunya sendiri"
+        },
+        {
+          "skill": "sol-loop",
+          "want": "Review, fix and recheck in bounded rounds",
+          "prompt": "\"run a sol loop on this PR\"",
+          "neighbor": "`change-review`, its report-only primitive",
+          "want_id": "Meninjau, memperbaiki, dan memeriksa ulang dalam putaran terbatas",
+          "neighbor_id": "`change-review`, metode dasarnya yang hanya melaporkan temuan"
+        },
+        {
+          "skill": "council",
+          "want": "A panel of different providers on one question",
+          "prompt": "review this with Claude and Codex",
+          "neighbor": "`agent-debate`, which `/council` uses for design questions",
+          "want_id": "Meminta panel dari beberapa penyedia membahas satu pertanyaan",
+          "neighbor_id": "`agent-debate`, yang digunakan `/council` untuk pertanyaan desain"
+        },
+        {
+          "skill": "interrogate",
+          "want": "An adversarial review that tries to break the change, report only",
+          "prompt": "`<scope>`",
+          "neighbor": "`sol-loop`, which also fixes what it finds",
+          "want_id": "Mendapat tinjauan adversarial yang mencoba merusak perubahan, hanya berupa laporan",
+          "neighbor_id": "`sol-loop`, yang juga memperbaiki temuannya"
+        }
+      ],
+      "heading_id": "Meninjau perubahan"
+    },
+    {
+      "heading": "Prove it works",
+      "entries": [
+        {
+          "skill": "result-verification",
+          "want": "Accept or reject agents' work on evidence",
+          "prompt": "\"check the workers' results before we merge\"",
+          "neighbor": "`change-review`, which judges code quality, not delivery claims",
+          "want_id": "Menerima atau menolak pekerjaan agen berdasarkan bukti",
+          "neighbor_id": "`change-review`, yang menilai mutu kode, bukan klaim penyelesaian"
+        },
+        {
+          "skill": "create-verification-skill",
+          "want": "A project skill that launches and drives the real app",
+          "prompt": "\"make a driver that proves the CLI end to end\"",
+          "neighbor": "`project-guardrails`, which wires deterministic checks",
+          "want_id": "Membuat skill proyek yang menjalankan dan mengendalikan aplikasi sebenarnya",
+          "neighbor_id": "`project-guardrails`, yang memasang pemeriksaan deterministik"
+        },
+        {
+          "skill": "maintain-verification-skill",
+          "want": "Audit an existing driver for drift and coverage",
+          "prompt": "verify-notes-web",
+          "neighbor": "`create-verification-skill`, which writes a new driver",
+          "want_id": "Mengaudit driver yang sudah ada untuk menemukan drift dan celah cakupan",
+          "neighbor_id": "`create-verification-skill`, yang menulis driver baru"
+        }
+      ],
+      "heading_id": "Membuktikan hasilnya"
+    },
+    {
+      "heading": "Ship a pull request",
+      "entries": [
+        {
+          "skill": "file-pr",
+          "want": "A PR title and body, drafted or filed",
+          "prompt": "\"write the PR description\", \"open a PR\"",
+          "neighbor": "`/pr`, which drafts by default and files when the same request or existing task authority permits it",
+          "want_id": "Menyusun atau mengajukan judul dan isi PR",
+          "neighbor_id": "`/pr`, yang membuat draf secara default dan mengajukannya jika permintaan yang sama atau kewenangan tugas yang sudah ada mengizinkan"
+        },
+        {
+          "skill": "pr",
+          "want": "A PR body as a local draft, by command",
+          "prompt": "",
+          "neighbor": "`file-pr`, which can file when the same request or existing task authority permits it",
+          "want_id": "Membuat draf lokal isi PR melalui perintah",
+          "neighbor_id": "`file-pr`, yang dapat mengajukan PR jika permintaan yang sama atau kewenangan tugas yang sudah ada mengizinkan"
+        },
+        {
+          "skill": "babysit-pr",
+          "want": "A PR watched until it is ready",
+          "prompt": "\"babysit this PR\", \"get it green\"",
+          "neighbor": "`/full-send`, which also merges",
+          "want_id": "Memantau PR sampai siap",
+          "neighbor_id": "`/full-send`, yang juga melakukan merge"
+        },
+        {
+          "skill": "fix-ci",
+          "want": "A failing CI check fixed for the right reason",
+          "prompt": "\"CI is red on this PR\"",
+          "neighbor": "`diagnosing-bugs`, which it calls for hard failures",
+          "want_id": "Memperbaiki pemeriksaan CI yang gagal berdasarkan penyebab yang benar",
+          "neighbor_id": "`diagnosing-bugs`, yang dipanggilnya untuk kegagalan yang sulit"
+        },
+        {
+          "skill": "leaving-pr-comments",
+          "want": "Review comments verified and answered",
+          "prompt": "\"answer the review comments\"",
+          "neighbor": "`babysit-pr`, which uses it in a full pass",
+          "want_id": "Memverifikasi dan menjawab komentar tinjauan",
+          "neighbor_id": "`babysit-pr`, yang menggunakannya dalam pemeriksaan lengkap"
+        },
+        {
+          "skill": "modernize",
+          "want": "An old or conflicted PR brought up to date",
+          "prompt": "\"rebase this PR onto main\"",
+          "neighbor": "`takeover`, which also changes who owns the work",
+          "want_id": "Memperbarui PR lama atau yang memiliki konflik",
+          "neighbor_id": "`takeover`, yang juga mengalihkan penanggung jawab pekerjaan"
+        },
+        {
+          "skill": "takeover",
+          "want": "Someone else's PR or branch finished",
+          "prompt": "\"take over this PR and finish it\"",
+          "neighbor": "`modernize`, which only updates it",
+          "want_id": "Menyelesaikan PR atau branch milik orang lain",
+          "neighbor_id": "`modernize`, yang hanya memperbaruinya"
+        },
+        {
+          "skill": "full-send",
+          "want": "A change taken all the way to merged",
+          "prompt": "`<task>`",
+          "neighbor": "`/full-stop`, which stops at ready",
+          "want_id": "Menyelesaikan perubahan sampai PR di-merge",
+          "neighbor_id": "`/full-stop`, yang berhenti ketika PR siap"
+        },
+        {
+          "skill": "full-stop",
+          "want": "A change taken to a ready PR, not merged",
+          "prompt": "`<task>`",
+          "neighbor": "`babysit-pr`, which watches a PR you already have",
+          "want_id": "Menyelesaikan perubahan sampai PR siap tanpa merge",
+          "neighbor_id": "`babysit-pr`, yang memantau PR yang sudah ada"
+        }
+      ],
+      "heading_id": "Mengirim pull request"
+    },
+    {
+      "heading": "Coordinate several agents",
+      "entries": [
+        {
+          "skill": "agent-orchestrator",
+          "want": "Run a multi-agent effort with one coordinator",
+          "prompt": "\"act as agent-orchestrator ...\"",
+          "neighbor": "`/implement-spec`, the single runner for approved code tickets",
+          "want_id": "Menjalankan pekerjaan beberapa agen dengan satu koordinator",
+          "neighbor_id": "`/implement-spec`, satu-satunya pelaksana untuk tiket kode yang disetujui"
+        },
+        {
+          "skill": "work-decomposition",
+          "want": "Decide whether delegating pays, and plan owners and a budget",
+          "prompt": "\"should we split this across agents?\"",
+          "neighbor": "`/to-tickets`, which writes the tickets themselves",
+          "want_id": "Menilai manfaat delegasi serta merencanakan penanggung jawab dan anggaran",
+          "neighbor_id": "`/to-tickets`, yang menulis tiketnya sendiri"
+        },
+        {
+          "skill": "agent-briefing",
+          "want": "Write a brief a fresh agent can run without our chat",
+          "prompt": "\"write a brief for a worker to ...\"",
+          "neighbor": "`/handoff`, which continues this conversation",
+          "want_id": "Menulis brief yang dapat dijalankan agen baru tanpa percakapan kita",
+          "neighbor_id": "`/handoff`, yang melanjutkan percakapan ini"
+        },
+        {
+          "skill": "agent-debate",
+          "want": "Have agents debate, or get a second opinion",
+          "prompt": "\"have two agents debate this\", \"get a second opinion\"",
+          "neighbor": "`change-review`, which owns code review",
+          "want_id": "Meminta agen berdebat atau mencari pendapat kedua",
+          "neighbor_id": "`change-review`, yang menangani tinjauan kode"
+        },
+        {
+          "skill": "decision-log",
+          "want": "Keep a run record that survives compaction",
+          "prompt": "\"keep a durable record of this run\"",
+          "neighbor": "`/handoff`, a temporary note, and `domain-modeling`, for project ADRs",
+          "want_id": "Menyimpan catatan proses kerja yang bertahan setelah pemadatan konteks",
+          "neighbor_id": "`/handoff`, catatan sementara, dan `domain-modeling`, untuk ADR proyek"
+        }
+      ],
+      "heading_id": "Mengoordinasikan beberapa agen"
+    },
+    {
+      "heading": "Keep the environment right",
+      "entries": [
+        {
+          "skill": "project-guardrails",
+          "want": "Set up or audit format, lint, types, tests, CI and hooks",
+          "prompt": "\"audit our guardrails\"",
+          "neighbor": "`correct`, which fixes one recurring mistake",
+          "want_id": "Menyiapkan atau mengaudit format, lint, tipe, test, CI, dan hook",
+          "neighbor_id": "`correct`, yang memperbaiki satu kesalahan berulang"
+        },
+        {
+          "skill": "toolchain-upgrade",
+          "want": "Upgrade lint, format or type tooling without silent drift",
+          "prompt": "\"bump ESLint and its plugins\"",
+          "neighbor": "`project-guardrails`, which assesses what is enforced",
+          "want_id": "Memperbarui alat lint, format, atau tipe tanpa drift yang tidak terlihat",
+          "neighbor_id": "`project-guardrails`, yang menilai aturan apa yang ditegakkan"
+        },
+        {
+          "skill": "correct",
+          "want": "Make a mistake that keeps recurring fail a check",
+          "prompt": "\"this keeps happening; make it impossible\"",
+          "neighbor": "`/retro`, which finds improvements from one session",
+          "want_id": "Membuat kesalahan berulang ditolak oleh pemeriksaan",
+          "neighbor_id": "`/retro`, yang mencari perbaikan dari satu sesi"
+        },
+        {
+          "skill": "writing-for-agents",
+          "want": "Write or fix agent instructions: SKILL.md, AGENTS.md, CLAUDE.md",
+          "prompt": "\"fix this skill's trigger\"",
+          "neighbor": "`clear-communication`, for writing aimed at people",
+          "want_id": "Menulis atau memperbaiki instruksi agen: SKILL.md, AGENTS.md, CLAUDE.md",
+          "neighbor_id": "`clear-communication`, untuk tulisan yang ditujukan kepada manusia"
+        }
+      ],
+      "heading_id": "Menjaga lingkungan kerja"
+    },
+    {
+      "heading": "Continue, catch up and look back",
+      "entries": [
+        {
+          "skill": "handoff",
+          "want": "Hand the work to a fresh session",
+          "prompt": "`<focus for next session>`",
+          "neighbor": "`decision-log`, the durable record a handoff points to",
+          "want_id": "Menyerahkan pekerjaan ke sesi baru",
+          "neighbor_id": "`decision-log`, catatan jangka panjang yang dirujuk handoff"
+        },
+        {
+          "skill": "recall",
+          "want": "Find an earlier run whose link I lost",
+          "prompt": "\"find the run where we fixed the importer\"",
+          "neighbor": "`decision-log`, which resumes a run you can already locate",
+          "want_id": "Menemukan proses kerja sebelumnya yang tautannya hilang",
+          "neighbor_id": "`decision-log`, yang melanjutkan proses kerja yang lokasinya sudah diketahui"
+        },
+        {
+          "skill": "ketchup",
+          "want": "Catch up on what happened since my last message",
+          "prompt": "",
+          "neighbor": "`recall`, which searches older history",
+          "want_id": "Mengejar perkembangan sejak pesan terakhir saya",
+          "neighbor_id": "`recall`, yang menelusuri riwayat lebih lama"
+        },
+        {
+          "skill": "retro",
+          "want": "Review how a session went and what to improve",
+          "prompt": "",
+          "neighbor": "`correct`, which acts on a recurrence",
+          "want_id": "Meninjau jalannya sesi dan hal yang perlu diperbaiki",
+          "neighbor_id": "`correct`, yang menindaklanjuti kesalahan berulang"
+        }
+      ],
+      "heading_id": "Melanjutkan, mengejar kabar, dan melihat kembali"
+    }
+  ]
+}

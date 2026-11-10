@@ -6,6 +6,7 @@
 #   4. The catalog: entries, dependencies, reserved names, generated install profiles,
 #      and the installer, with fixture tests.
 #      The eval harness's offline isolation tests (no model calls).
+#      The generated docs sections and their rules (scripts/build-docs.py --check), with fixture tests.
 #   5. Freshness: skills whose metadata.verified date is older than six months (report only).
 #   6. zizmor, a static analyzer for the GitHub Actions workflows.
 #   7. The ClearCommunication style on this repository's own docs.
@@ -39,6 +40,8 @@ tests/check-skills/run.sh || status=1
 scripts/check-catalog.py || status=1
 scripts/build-profiles.py --check || status=1
 scripts/build-host-config.py --check || status=1
+uv run --quiet --python '>=3.12' python scripts/build-docs.py --check >/dev/null || status=1
+tests/build-docs/run.sh || status=1
 tests/adoption-tooling/run.sh || status=1
 tests/check-catalog/run.sh || status=1
 tests/install/run.sh || status=1
@@ -56,7 +59,7 @@ uvx --quiet "zizmor@${ZIZMOR_VERSION}" --offline .github/workflows || status=1
 
 if command -v "${VALE_BIN:-vale}" >/dev/null 2>&1; then
   tests/clear-communication/run.sh || status=1
-  skills/clear-communication/scripts/check-prose.sh README.md AGENTS.md docs/*.md catalog/*.md skills/*/SKILL.md skills/*/references/*.md skills/*/evals/*.md || status=1
+  skills/clear-communication/scripts/check-prose.sh README.md CHANGELOG.md AGENTS.md docs/*.md handbook/*.md catalog/*.md skills/*/SKILL.md skills/*/references/*.md skills/*/evals/*.md || status=1
 elif [ "${REQUIRE_VALE:-0}" = "1" ]; then
   echo "error: Vale is required (REQUIRE_VALE=1) but not installed." >&2
   status=1

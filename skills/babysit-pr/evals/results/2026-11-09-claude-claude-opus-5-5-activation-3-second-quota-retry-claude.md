@@ -9,6 +9,7 @@ Comparison: **valid**. Host: `2.1.311 (Claude Code)`. Effective model: `claude-o
 - **Fixture.** `activation-3`, SHA-256 `704ae7d6b686438b4ed0b7c5f0d896ccd7bb9b5ff4e2e0c214d68bd58561b7db`.
 - **Standing contract.** SHA-256 `b4ae56649eab02bf1dff5f69b0f382a17d972a93a7cd4354188b031862e5ba01`, identical in both arms.
 - **Settings.** Requested model `claude-opus-5-5`; effort `high`; each arm has a new session and the same host settings.
+- **Private raw evidence.** Owner-only Google Drive archive [babysit-pr.tar.gz](https://drive.google.com/file/d/1iCGfN-bMgHy4eqv6FgFxW-okYJkMzIc0/view), folder `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/` inside.
 
 ## Prompt
 
@@ -40,20 +41,20 @@ The first arm's sentinel was absent from the second arm: `True`. Restored file i
 
 Project candidate copies are excluded from both restored fixtures; only the treatment receives a candidate copy. The manifest lists every excluded project path and its hash. Dependencies are installed in both temporary homes.
 
-Full configuration, input revisions, effective discovery inventory, and expectations: [2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/comparison.json](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/comparison.json).
+Full configuration, input revisions, effective discovery inventory, and expectations: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/comparison.json` (local only, not committed).
 
 ## Treatment evidence
 
-- [Raw JSON trace](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/trace.jsonl)
-- [Standard error](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/stderr.txt)
-- [Observed response](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/response.txt)
-- [Input and discovery manifest](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/manifest.json)
+- Raw JSON trace: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/trace.jsonl` (local only, not committed)
+- Standard error: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/stderr.txt` (local only, not committed)
+- Observed response: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/response.txt` (local only, not committed)
+- Input and discovery manifest: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/manifest.json` (local only, not committed)
 - Artifacts: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/treatment/artifacts/`.
 
 ## Baseline evidence
 
-- [Raw JSON trace](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/trace.jsonl)
-- [Standard error](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/stderr.txt)
-- [Observed response](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/response.txt)
-- [Input and discovery manifest](2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/manifest.json)
+- Raw JSON trace: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/trace.jsonl` (local only, not committed)
+- Standard error: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/stderr.txt` (local only, not committed)
+- Observed response: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/response.txt` (local only, not committed)
+- Input and discovery manifest: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/manifest.json` (local only, not committed)
 - Artifacts: `2026-11-09-claude-claude-opus-5-5-activation-3-second-quota-retry-claude/baseline/artifacts/`.

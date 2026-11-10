@@ -9,6 +9,7 @@ Comparison: **invalid**. Host: `2.1.311 (Claude Code)`. Effective model: `claude
 - **Fixture.** `activation-5`, SHA-256 `97ba29da461bec25587f8a9202645d86da5dbf2e50b638a80c1706b801f738ce`.
 - **Standing contract.** SHA-256 `b4ae56649eab02bf1dff5f69b0f382a17d972a93a7cd4354188b031862e5ba01`, identical in both arms.
 - **Settings.** Requested model `claude-opus-5-5`; effort `high`; each arm has a new session and the same host settings.
+- **Private raw evidence.** Owner-only Google Drive archive [agent-orchestrator.tar.gz](https://drive.google.com/file/d/1TnL4LV36IBdB0QS37EPg7G9Q9ZBKafvB/view), folder `2026-11-09-claude-claude-opus-5-5-activation-5-claude/` inside.
 
 ## Prompt
 
@@ -39,7 +40,7 @@ The first arm's sentinel was absent from the second arm: `True`. Restored file i
 
 Project candidate copies are excluded from both restored fixtures; only the treatment receives a candidate copy. The manifest lists every excluded project path and its hash. Dependencies are installed in both temporary homes.
 
-Full configuration, input revisions, effective discovery inventory, and expectations: [2026-11-09-claude-claude-opus-5-5-activation-5-claude/comparison.json](2026-11-09-claude-claude-opus-5-5-activation-5-claude/comparison.json).
+Full configuration, input revisions, effective discovery inventory, and expectations: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/comparison.json` (local only, not committed).
 
 ## Invalid comparison
 
@@ -47,16 +48,16 @@ Full configuration, input revisions, effective discovery inventory, and expectat
 
 ## Treatment evidence
 
-- [Raw JSON trace](2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/trace.jsonl)
-- [Standard error](2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/stderr.txt)
-- [Observed response](2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/response.txt)
-- [Input and discovery manifest](2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/manifest.json)
+- Raw JSON trace: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/trace.jsonl` (local only, not committed)
+- Standard error: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/stderr.txt` (local only, not committed)
+- Observed response: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/response.txt` (local only, not committed)
+- Input and discovery manifest: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/manifest.json` (local only, not committed)
 - Artifacts: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/treatment/artifacts/`.
 
 ## Baseline evidence
 
-- [Raw JSON trace](2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/trace.jsonl)
-- [Standard error](2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/stderr.txt)
-- [Observed response](2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/response.txt)
-- [Input and discovery manifest](2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/manifest.json)
+- Raw JSON trace: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/trace.jsonl` (local only, not committed)
+- Standard error: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/stderr.txt` (local only, not committed)
+- Observed response: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/response.txt` (local only, not committed)
+- Input and discovery manifest: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/manifest.json` (local only, not committed)
 - Artifacts: `2026-11-09-claude-claude-opus-5-5-activation-5-claude/baseline/artifacts/`.

@@ -4,9 +4,11 @@ Use `scripts/eval-skill.py` to compare one example with the candidate skill avai
 
 The script needs `uv`, Python 3.12 or newer, and the selected host CLI. Its inline dependency is pinned to `pyyaml==6.0.3`. The fixture tests need no host CLI, credentials, or model calls.
 
+Follow [run and review paired evals](running-evals.md) for the budget, execution, cleanup, review, and catalog-status procedure. The sections below define the harness's inputs and evidence contract.
+
 ## Run an example
 
-Example identifiers follow their section and position in `evals/examples.md`: `activation-1`, `activation-2`, `near-miss-1`, and so on. The parser accepts the repository's straight-quoted example prompts.
+The CLI parses the Activation and Near miss sections of `evals/examples.md`: `activation-1`, `activation-2`, `near-miss-1`, and so on. It accepts the repository's straight-quoted example prompts. Outcome items are review criteria; the [eval procedure](running-evals.md#run-the-pairs) explains how to exercise a concrete Outcome prompt without confusing it with source-example coverage.
 
 ```sh
 scripts/eval-skill.py --skill clear-communication --host claude \

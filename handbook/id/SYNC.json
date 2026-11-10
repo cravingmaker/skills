@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "pages": {
+    "README.md": {
+      "english": "d0b7a97ef1a838a05ecd9cde4cb50c21f6586eeb533fd7f8adbcd446d3c44e7a",
+      "indonesian": "8b71224ccf8b90c30a103a2dbc3521242b0f568528dcc3737e1c1f31e3b15214"
+    },
+    "choosing-skills.md": {
+      "english": "aba1f63c27dce0a952273d28c4f38b1e346164b4f89af0e7cb33b594d5433a37",
+      "indonesian": "357ff1ca82f7770f4c474ec41190784d590d7b130c71cbf484a2d881f23297ec"
+    },
+    "cutover.md": {
+      "english": "02e59d4229ce9fc6e4c0bd9bb143f4c51ca37bde456533ba21d7edc519350137",
+      "indonesian": "5701c7b552351c31670540a25d9dfc97b3b14047868f2cee50307231b9560ef8"
+    },
+    "eval-results.md": {
+      "english": "7d7f61faa0ee72a3403fbaa1c0784808dbff8e95bab192e2e4b2eaaf2e09e515",
+      "indonesian": "9d4ff897bf227b8152836247c656a12c66232396bc718abfd6842f32596f73ac"
+    },
+    "getting-started.md": {
+      "english": "b72fe592af4348a7415f4764aa37f6208ac390f87ba4c55f54644bff4548f186",
+      "indonesian": "3f43ba84543e3a2fa9dc40d785f5da7b03a7e5564c6ab096ae79bce9b7aa01c0"
+    },
+    "gotchas.md": {
+      "english": "b133638496a3fee484e00b9a90ef833a3039fad95bf2ee9f13f3602d55bbc079",
+      "indonesian": "fc18de572db8aa2488057cb7b6fa4e148df2a34c781ba18c0b33b50b98b4a211"
+    },
+    "harness-differences.md": {
+      "english": "5abed254de87badd18669f6de0799637f22eafdd88418fc47599fd681f0c318e",
+      "indonesian": "885f75c13ca39aa7d4b36f97c0ea8d990bcabc4163b87677a768dceabc7915e7"
+    },
+    "harnesses.md": {
+      "english": "5353738f579a9eec005c230f1158aa4e776e61199eeca76de0a0c5f8c56c1f76",
+      "indonesian": "ed1a75e0416438105a1af2709c576d112b41e27cac07bc81a8ee35e5a11d592d"
+    },
+    "how-and-why.md": {
+      "english": "548bb5ae0a21b8007f0489c1e80e6b9654a5dd835e92e0587fc29cd898004a4c",
+      "indonesian": "09108c4176f0c44d0d4f0d5fb06b46c51c5481a444f29810285677d19340394a"
+    },
+    "install-and-discovery-proof.md": {
+      "english": "39c6735d0823da44b186bb419116e9c19d61b506e9c643275cd3919d1ba53fff",
+      "indonesian": "6db86a73360fbcb8520ed112d0a875930c00e066b15bb00781626ad1c45e153d"
+    },
+    "known-issues.md": {
+      "english": "421dd80618db31a3ea635304e3fce7b76e942d56d0bc1ebc50814a03b9004893",
+      "indonesian": "6ac5fed145ed6a5f116cbd0fcf6644f4d5cbe023023f41ca24b5fb3b11320312"
+    },
+    "maintaining-docs.md": {
+      "english": "e7fb0be649525766b08e2ce6bbf7fdb2cfddb556b14317efbfc78461cf83e0b7",
+      "indonesian": "b3ecfbcbddcedc20e9daa37cbea825a55da95fefb9e6c3c2e50928c2a449e1af"
+    },
+    "making-skills.md": {
+      "english": "816f173a6e203a67f4ede8baf3cb10d3af95691538f3547f1148d01d2267b6d5",
+      "indonesian": "d3cfac47db61b064e184638ef4900ebaad328c61c04d647dfcbbcdc8fe5c6578"
+    },
+    "recommended-flow.md": {
+      "english": "010a1427094927b53f36d88b7eec155f84eb0d7295752ba93f5d18f51346514a",
+      "indonesian": "e720f24096d4f2a214ac5a615a38bf33e9c674ffd6f3bae1889177ccf339e431"
+    },
+    "routing.md": {
+      "english": "1de4480ba7c826b3f13770770a9b1f815afd4fa16828a63733cbac15de908919",
+      "indonesian": "95dc76da5cc311f6346ddd909c3a6a0d03bf5718bf861feacb8428076e3adf33"
+    },
+    "skills.md": {
+      "english": "6883cbe26084aaa2c1c72d2cd4cf440fd81499a13e6465da79c74bc825c9cd0c",
+      "indonesian": "d5fa5a8fb5b3f5f588ceb4099b84f1bf2f2f689ba09bc2a80b8467ae0bb30abb"
+    },
+    "typed-commands.md": {
+      "english": "326542da462fbda65e645b6c7a11fb822bfacdc06b19d46560857093fa096e5f",
+      "indonesian": "d78f001ed06951cdeb6df9323aa18f395eab69c8198342a89ec9387ae6f69560"
+    }
+  }
+}

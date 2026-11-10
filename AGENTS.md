@@ -6,10 +6,10 @@ This repo holds personal Agent Skills that follow the [Agent Skills specificatio
 
 - `skills/<skill-name>/` holds one skill: `SKILL.md`, optional `references/`, `scripts/`, `assets/`, and a required `evals/examples.md`. The only host-file exception is owned, generated `agents/openai.yaml` for catalog entries with `invocation: user`; preview `scripts/build-host-config.py`, then use `--apply`. Check it with `--check`. Nothing else goes in `skills/`.
 - `template/` starts a capability skill. Do not add skills to it.
-- `catalog/skills.yaml` lists every skill (kind, roles, evaluation status) and the upstream skills routers may name; `catalog/coverage.md` maps every job the collection covers to skills; `catalog/profiles/` holds generated install lists, one per role; `catalog/reserved-names.txt` lists names already taken by the user's other skills.
+- `catalog/skills.yaml` lists every skill (kind, roles, evaluation status) and the upstream skills routers may name; `catalog/coverage.md` maps every job the collection covers to skills; `catalog/profiles/` holds generated install lists, one per router; `catalog/reserved-names.txt` lists names already taken by the user's other skills.
 - `docs/authoring-guide.md` is the bar every skill meets. Read it before writing or reviewing a skill.
 - `scripts/validate.sh` runs every check: the pinned `skills-ref` validator, `check-skills.py`, `check-catalog.py`, `build-profiles.py --check`, `check-freshness.py`, zizmor, the Vale style on the repo's docs, and the fixture tests in `tests/`.
-- `scripts/install-skills.py` installs a role or skill with everything it requires.
+- `scripts/install-skills.py` installs named skills with everything they require.
 
 ## Authoring rules
 
@@ -28,17 +28,33 @@ A skill that adapts third-party material sets `license`, `metadata.source` (the 
 
 `evals/examples.md` has three sections, each with at least one `- ` item: `## Activation` (prompts that should load the skill), `## Near miss` (similar prompts that should not), and `## Outcome` (results a reviewer can check). When adopting or materially changing a skill, run the examples with and without it and record what happened.
 
+Before writing a new skill, write its examples and fixture and run them without the skill. Draft the skill only when that baseline fails an expected Outcome; when it passes, the model already does the job and no skill is needed. Prefer a project check (CI, lint, hook) over a skill when the gap is a rule a script can enforce. Skills earn their place with checks, authority limits and required evidence, not domain knowledge the model already has.
+
 ## Writing
 
 Docs in this repo follow `skills/clear-communication`: lead with the point, plain words, one line per paragraph. `./scripts/validate.sh` lints them with its Vale style when Vale is installed.
 
 ## Dependencies
 
-Declare dependencies in `SKILL.md` as quoted, space-separated strings: `metadata.requires` for skills this one cannot work without. Optional routes are conditional prose pointers and do not add installation edges. Refer to other skills in prose as "the `name` skill". After changing dependencies or adding a role, run `scripts/build-profiles.py` and commit `catalog/profiles/`.
+Declare dependencies in `SKILL.md` as quoted, space-separated strings: `metadata.requires` for skills this one cannot work without. Optional routes are conditional prose pointers and do not add installation edges. Refer to other skills in prose as "the `name` skill". After changing dependencies, run `scripts/build-profiles.py` and include changed `catalog/profiles/` files.
 
 ## Workflow
 
 1. `cp -r template skills/<skill-name>`, then edit `SKILL.md` and `evals/examples.md`.
 2. Add the skill to `catalog/skills.yaml` and update `catalog/coverage.md`.
 3. Run `scripts/build-profiles.py`, preview/apply `scripts/build-host-config.py` if invocation policy changed, then run `./scripts/validate.sh` and fix every error.
-4. Add the skill to the table in `README.md`.
+4. Run `scripts/build-docs.py`, then fix whatever `scripts/build-docs.py --check` reports; it generates the README skill index and asks for the human guidance a new skill needs.
+
+## Common tasks
+
+Read the matching procedure before starting; each names its commands, checks, and done criterion. Commands run from the repository root with uv and Python 3.12 or newer.
+
+| Task | Procedure |
+| --- | --- |
+| Create a new capability skill | [Create a skill](docs/skill-workflows.md#create-a-skill) |
+| Adopt or update upstream material | [Adopt an upstream method](docs/skill-workflows.md#adopt-or-update-an-upstream-method) |
+| Change a skill and select evals | [Change a skill](docs/skill-workflows.md#change-a-skill) |
+| Audit or review a skill | [Review a skill](docs/skill-workflows.md#review-a-skill) |
+| Run paired evals within a fixed budget | [Run and review evals](docs/running-evals.md) |
+| Install or update on Claude Code or Codex | [Install and update](docs/installing.md#install-or-update-skills) |
+| Validate a candidate or prepare stacked PRs | [Validate and prepare delivery](docs/validating.md) |

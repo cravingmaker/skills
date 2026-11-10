@@ -74,8 +74,8 @@ system-design
 tech-debt
 testing-strategy
 
-# Additional installed names in the 2026-11-08 host snapshot used by
-# docs/install-and-discovery-proof.md.
+# Additional installed names measured in the
+# 2026-11-08 discovery snapshot.
 built-in-browser
 chrome-browser
 computer-use

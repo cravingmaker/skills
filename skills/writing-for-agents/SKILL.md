@@ -7,7 +7,7 @@ metadata:
   source: "https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/productivity/writing-for-agents/SKILL.md"
   source-revision: "49dd158d1076134a641b33efb035946536778336"
   source-files: "skills/productivity/writing-for-agents/SKILL.md"
-  local-changes: "Kept instruction hierarchy and pointer craft; aligned mechanics and paired evals to this repo; merged discovery and recurrence methods; excluded the Anthropic mirror and compulsory model trials."
+  local-changes: "Kept instruction hierarchy and pointer craft; aligned mechanics and paired evals to this repo; added a baseline-first gate for new skills; merged discovery and recurrence methods; excluded the Anthropic mirror and compulsory model trials."
 ---
 
 # Writing for agents
@@ -69,6 +69,6 @@ When asked to capture a user's working style, preserve existing applicable guida
 
 ## Validate and report
 
-Read [references/evaluation.md](references/evaluation.md) when designing examples, comparing instruction variants, or claiming evaluation. Run deterministic packaging, link, catalog, prose, script, and template checks first. Use the repo's existing harness for matched final-skill and no-skill examples within actual model-run authority and budget. Drafting requires no model call; without recorded pairs, keep status unevaluated and report the unrun checks. Preserve existing material until a justified scoped change replaces it; an untested draft is not a reason to delete work. Do not bootstrap plugins, prescribe models, launch fixed reviewer panels, or publish merely to finish authoring.
+Read [references/evaluation.md](references/evaluation.md) when designing examples, comparing instruction variants, or claiming evaluation. For a new skill, write its examples and fixture first and run them without the skill; draft the body only when that baseline fails an expected Outcome, and stop when it passes. Run deterministic packaging, link, catalog, prose, script, and template checks first. Use the repo's existing harness for matched final-skill and no-skill examples within actual model-run authority and budget. If a new skill has no recorded failing baseline and model calls are not authorized, prepare its examples and fixture, report the missing baseline, and stop before drafting the body. Editing existing instructions needs no new model call; without the required records, keep status unevaluated and report the unrun checks. Preserve existing material until a justified scoped change replaces it; an untested draft is not a reason to delete work. Do not bootstrap plugins, prescribe models, launch fixed reviewer panels, or publish merely to finish authoring.
 
 Done when the trigger is narrow, the instructions have checkable completion criteria, references and provenance resolve, deterministic checks pass, and evaluation claims match the recorded evidence. Return the changed behavior, validation, and remaining limits. Source files and adaptations: [references/SOURCES.md](references/SOURCES.md). External guidance is link-only: [Anthropic's official skill authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).

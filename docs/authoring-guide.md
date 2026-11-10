@@ -4,7 +4,7 @@ Every skill in this repository meets this guide. Workers drafting skills read it
 
 ## Two kinds of skills
 
-- **Capability skill.** One capability, one trigger, one reusable deliverable, and a demonstrated benefit over the agent's behavior without it. Named for the capability as a practitioner says it: `change-review`, `diagnosing-bugs`, `to-spec`. A technology prefix only when the skill is specific to it. Knowledge that does not justify its own trigger goes into a capability's `references/`.
+- **Capability skill.** One capability, one trigger, one reusable deliverable, and a demonstrated benefit over the agent's behavior without it: run the examples without the skill first, and write it only when that baseline fails. Named for the capability as a practitioner says it: `change-review`, `diagnosing-bugs`, `to-spec`. A technology prefix only when the skill is specific to it. Knowledge that does not justify its own trigger goes into a capability's `references/`.
 - **Router.** `agent-orchestrator` is the one router: it equips an agent in one invocation and routes its work through capability skills.
 
 ## Frontmatter

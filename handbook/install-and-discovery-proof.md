@@ -1,3 +1,25 @@
+> **Human documentation.** Agents should not read this page unless a person asks them to.
+
+Language: [English](install-and-discovery-proof.md) · [Bahasa Indonesia](id/install-and-discovery-proof.md)
+
+# Historical install and discovery proof
+
+This is the 2026-11-08 experiment on its pinned source, including a seven-package historical profile. Current catalog membership and profiles are generated separately.
+
+## Contents
+
+- [Record context](#record-context)
+- [Method and isolation](#method-and-isolation)
+- [Install results](#install-results)
+- [Discovery cost](#discovery-cost)
+- [Budgets and limits](#budgets-and-limits)
+- [Routing correctness with existing skills](#routing-correctness-with-existing-skills)
+- [Reproduce and validate](#reproduce-and-validate)
+
+## Record context
+
+[PR #10](https://github.com/cravingmaker/skills/pull/10) records the later installed core and observed discovery. This record is not current installation instructions; use [Getting started](getting-started.md) and the [current profile reference](routing.md#what-each-profile-installs).
+
 # Install and discovery proof
 
 Copy and symlink installs made exactly the seven `agent-orchestrator` profile skills discoverable on both real hosts outside this checkout. The installer rejected an incomplete distribution with a named prerequisite error.
@@ -56,7 +78,7 @@ The replay preserves source names, descriptions, manual-only flags, and Codex `a
 
 ## Routing correctness with existing skills
 
-All 32 valid routing trials matched the selection sets fixed before execution: eight prompts, two profile scenarios, and both hosts. There were no unexpected first selections or diversions into the existing installed skills. This supplies the routing observations requested by F2-02 and fleet-design-v3 §F4 for the scenarios below; it does not establish a general routing error rate.
+All 32 valid routing trials matched the selection sets fixed before execution: eight prompts, two profile scenarios, and both hosts. There were no unexpected first selections or diversions into the existing installed skills. This supplies routing observations for the scenarios below; it does not establish a general routing error rate.
 
 Measured on 2026-11-08 against the downstream `feat/role-agent-orchestrator` worktree at `10fa1016a0a87e8c1c501d1adde11a9bde6fd683`. Claude Code `2.1.311` reported effective model `claude-opus-5-5`; Codex CLI `0.167.0` reported `gpt-6.1-sol`. Both used the host default in a clean generated configuration. Claude's `system.init` and Codex's session rollout establish those model names; no more specific backend weight revision was exposed.
 
