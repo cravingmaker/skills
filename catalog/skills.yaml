@@ -274,7 +274,7 @@ skills:
   writing-for-agents:
     kind: capability
     roles: [all]
-    status: unevaluated
+    status: evaluated
     invocation: model
   teach:
     kind: capability
