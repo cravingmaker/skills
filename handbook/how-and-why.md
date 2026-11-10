@@ -8,7 +8,7 @@ This is one personal collection with one owned skill per job. Its priorities are
 
 - [Why own the collection](#why-own-the-collection)
 - [Prefer checks that change the result](#prefer-checks-that-change-the-result)
-- [Separate capability from role](#separate-capability-from-role)
+- [Keep capability and coordination separate](#keep-capability-and-coordination-separate)
 - [Draft, review, and evaluate](#draft-review-and-evaluate)
 - [What evaluated means](#what-evaluated-means)
 - [Preserve provenance](#preserve-provenance)
@@ -32,17 +32,19 @@ For example, a hand-maintained dependency table should become generated output w
 
 Token cost matters where it changes decisions. Short descriptions and conditional references reduce default loading; they do not justify hiding a required completion rule. The goal is mutual understanding, not a rigid word ceiling or a larger software factory.
 
-## Separate capability from role
+## Keep capability and coordination separate
 
-A capability owns a reusable job and its completion evidence. A role router equips an agent for a field and selects those methods for common tasks. It does not duplicate generic planning, implementation, review, and verification.
+A capability owns a reusable job and its completion evidence. `agent-orchestrator` is the core router: it selects methods and coordinates work across agents. Planning, implementation, review, and verification stay in their owning capabilities.
 
 The fleet has one coordinating owner for scope, budget, integration, and final acceptance. Workers receive bounded leaf briefs. Delegation earns its cost through useful isolation, independent work, independent checking, or a requested different capability. The presence of a fleet tool does not make every task a fleet task.
 
-The [role reference](routing.md) separates shipped routers from the wider role plan. Role PRs are drafted blind by two models and merged per skill, choosing a coherent base and grafting only supported improvements.
+The [routing reference](routing.md) lists the coordinator's flows and required dependencies. The [changelog](../CHANGELOG.md) records why the backend and DevOps proposals were closed unmerged.
 
 ## Draft, review, and evaluate
 
-A new method starts from primary research or a licensed upstream source. Its author defines the trigger, concrete deliverable, evidence standard, failure modes, and stopping point. The package includes activation, near-miss, and outcome examples.
+A new skill starts with its examples and a fixture, not its body. The examples run first without any skill. If that baseline already produces the expected outcome, the skill is not written: the model already does the job. This rule comes from the dropped role skills, whose outcome evals mostly matched the no-skill baseline after the full drafting cost had been paid. When the gap is a rule a script can enforce, a project check (CI, lint or a hook) is preferred over a skill.
+
+When the baseline fails, the method is written from primary research or a licensed upstream source, aimed at what the baseline missed: checks, authority limits and required evidence. Its author defines the trigger, concrete deliverable, evidence standard, failure modes, and stopping point.
 
 An independent evaluator reviews the actual artifact and evidence until the remaining substantive findings are resolved. Disagreement is settled with source evidence or a discriminating check; agreement alone is not correctness. Bounded review rules leave unresolved decisions visible rather than treating exhaustion as approval.
 

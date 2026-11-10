@@ -1,6 +1,10 @@
 # Changelog
 
-Each entry records one merged pull request, newest first. The snapshot ends at PR #10 on 2026-11-09; PR #11 is in progress and has no release entry.
+Each entry records one merged pull request, newest first. The merged snapshot ends at PR #10 on 2026-11-09.
+
+[PR #11](https://github.com/cravingmaker/skills/pull/11) (backend-engineer) and [PR #12](https://github.com/cravingmaker/skills/pull/12) (devops-engineer) were closed unmerged because their Outcome evals mostly matched the no-skill baseline at high token cost. Their skills are not part of this collection.
+
+[PR #14](https://github.com/cravingmaker/skills/pull/14) removes the planned role entries, role template, and unused Android provider, and maps jobs to shipped skills. It keeps `agent-orchestrator` as the core router. It is open as of 2026-11-10, so it has no merged-PR entry here.
 
 ## Contents
 

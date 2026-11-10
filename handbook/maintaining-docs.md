@@ -16,14 +16,14 @@ Edit explanations where judgment belongs and regenerate inventories from their s
 
 | Content | Source of truth |
 | --- | --- |
-| Skill membership, kind, role assignment, aliases, invocation preference, evaluation status | `catalog/skills.yaml` |
+| Skill membership, kind, coverage assignment, aliases, invocation preference, evaluation status | `catalog/skills.yaml` |
 | Description, required edges, conditional named method pointers | Each `skills/*/SKILL.md` and directly linked owned Markdown references/assets |
 | Activation, near-miss, and outcome examples | Each skill's `evals/examples.md` |
 | Profile membership | Required closure, checked against `catalog/profiles/` |
 | Explanations, worked journeys, status qualifications | Authored handbook text with public source links |
 | Changelog | Merged PR metadata and main history |
 
-Generated sections carry paired `BEGIN GENERATED` and `END GENERATED` markers. Edit their source rather than their rendered rows. The catalog owns membership and modes. `handbook/intent-guide.json` adds editorial intent, prompt and neighboring-job explanations, without copying roles, status or required edges. Every catalog entry needs exactly one nonempty guidance row; unknown and duplicate rows fail.
+Generated sections carry paired `BEGIN GENERATED` and `END GENERATED` markers. Edit their source rather than their rendered rows. The catalog owns membership and modes. `handbook/intent-guide.json` adds editorial intent, prompt and neighboring-job explanations, without copying status or required edges. Its groups set the heading and row order of the README's visible tables. Every catalog entry needs exactly one nonempty guidance row; unknown, missing, and duplicate rows fail.
 
 ## Generate and check
 
@@ -43,11 +43,11 @@ Data and help go to stdout. Diagnostics go to stderr. Exit 0 means success; 1 me
 
 ## Understand the checks
 
-The proposed validator calls `uv run --quiet --python '>=3.12' python scripts/build-docs.py --check` after the profile and host-policy checks. It explicitly runs `tests/build-docs/run.sh` because the existing skill-test loop runs only directories with a matching skill package. It also adds the handbook and changelog to the prose check.
+The validator calls `uv run --quiet --python '>=3.12' python scripts/build-docs.py --check` after the profile and host-policy checks. It explicitly runs `tests/build-docs/run.sh` because the skill-test loop runs only directories with a matching skill package. It also checks prose in the handbook and changelog.
 
-A new role PR must add useful intent guidance for each new catalog entry in `handbook/intent-guide.json`, regenerate and commit every changed generated page, and add a detailed command section for any new manual entry. Missing guidance remains a hard error.
+A new skill must have useful intent guidance in exactly one group in `handbook/intent-guide.json`. Regenerate every changed page and add a detailed command section for any new manual entry. Missing guidance remains a hard error.
 
-The fixtures prove clean output, deterministic repeat generation, drift rejection, malformed metadata rejection, missing required dependency rejection, profile drift rejection, and forbidden links in representative agent-facing files. A deliberately broken generator copy must fail those tests. They do not evaluate prose quality, future host behavior, or raw private evaluation evidence.
+The fixtures prove clean output, deterministic repeat generation, visible README category order, missing and duplicate skill rejection, drift rejection, malformed metadata rejection, missing required dependency rejection, profile drift rejection, and forbidden links in representative agent-facing files. A deliberately broken generator copy must fail those tests. They do not evaluate prose quality, future host behavior, or raw private evaluation evidence.
 
 ## Keep agents out by default
 
@@ -61,4 +61,4 @@ Host ignore settings may reduce incidental indexing, but this task has no record
 
 Update an issue only when its current revision and claimed surface have evidence. Keep historical failures and invalid attempts labeled. A clean deterministic docs build is not a new live-host or model-evaluation result.
 
-The changelog uses one entry per merged PR, newest first, with stack landing distinguished from earlier stacked merges. Keep open role examples outside the main inventory until their source lands. Public prose must omit private paths, personal identities, credentials, and review transcripts.
+The changelog uses one entry per merged PR, newest first, with stack landing distinguished from earlier stacked merges. Label open and closed-unmerged work separately from those entries. Public prose must omit private paths, personal identities, credentials, and review transcripts.

@@ -3,6 +3,7 @@
 import json
 import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -92,7 +93,7 @@ class BuildDocs(unittest.TestCase):
         self.edit("handbook/gotchas.md", "> **Human documentation.**", "> **Documentation.**")
         self.assertFails("handbook/gotchas.md: the first line must be exactly")
 
-    def test_choosing_page_must_cover_every_skill(self):
+    def test_readme_categories_must_cover_every_skill(self):
         path = self.copy / "handbook/intent-guide.json"
         before = path.read_bytes()
         self.addCleanup(path.write_bytes, before)
@@ -101,6 +102,31 @@ class BuildDocs(unittest.TestCase):
             group["entries"] = [row for row in group["entries"] if row["skill"] != "wizard"]
         path.write_text(json.dumps(data))
         self.assertFails("no intent guidance for wizard")
+
+    def test_readme_categories_reject_a_duplicate_skill(self):
+        path = self.copy / "handbook/intent-guide.json"
+        before = path.read_bytes()
+        self.addCleanup(path.write_bytes, before)
+        data = json.loads(before)
+        data["groups"][-1]["entries"].append(data["groups"][0]["entries"][0])
+        path.write_text(json.dumps(data))
+        self.assertFails("duplicate skill clear-communication", "exactly one README category")
+
+    def test_readme_has_one_visible_table_per_category_in_source_order(self):
+        data = json.loads((self.copy / "handbook/intent-guide.json").read_text())
+        readme = (self.copy / "README.md").read_text()
+        index = readme.split("<!-- BEGIN GENERATED skill-index:", 1)[1].split("<!-- END GENERATED skill-index -->", 1)[0]
+        self.assertNotIn("<details", readme.lower())
+        headings = re.findall(r"^### (.+)$", index, re.M)
+        self.assertEqual(headings, [group["heading"] for group in data["groups"]])
+        self.assertEqual(index.count("| Skill | Starts | What it does |"), len(headings))
+        expected = [row["skill"] for group in data["groups"] for row in group["entries"]]
+        rows = re.findall(r"^\| \[([^]]+)\]\(skills/([^)]*)\) \| ([^|]+) \| (.+) \|$", index, re.M)
+        self.assertEqual([row[0] for row in rows], expected)
+        self.assertEqual([row[1] for row in rows], expected)
+        self.assertEqual(len(expected), len(set(expected)))
+        self.assertIn("| [tdd](skills/tdd) | auto |", index)
+        self.assertIn("| [bro](skills/bro) | typed: `/bro` · `$bro` |", index)
 
     def test_broken_link_and_anchor_are_rejected(self):
         self.edit("handbook/README.md", "- [Start and choose](#start-and-choose)", "- [Start and choose](#nowhere)\n- [Gone](missing.md)")
@@ -141,6 +167,10 @@ class BuildDocs(unittest.TestCase):
     def test_unsupported_yaml_fails_with_a_message(self):
         self.edit("skills/tdd/SKILL.md", "description: Test-driven", "description: >\n  Test-driven")
         self.assertFails("skills/tdd/SKILL.md:3: unsupported YAML syntax")
+
+    def test_nonempty_flow_mapping_is_rejected(self):
+        self.edit("catalog/skills.yaml", "external: {}", "external: {provider: skills}")
+        self.assertFails("unsupported YAML syntax '{'")
 
     def test_unsupported_plain_scalars_fail_before_any_write(self):
         path = self.copy / "skills/tdd/SKILL.md"
@@ -199,7 +229,6 @@ class BuildDocs(unittest.TestCase):
                  ("docs/extra.md", "[guide](../handbook%2FREADME.md)"),
                  ("catalog/extra.md", "[guide](../handbook&#47;README.md)"),
                  ("template/extra.md", "[guide](../" + target + ")"),
-                 ("template-role/extra.md", "[guide](../" + target + ")"),
                  ("scripts/extra.js", "// [guide](../" + target + ")")]
         for relative, content in cases:
             with self.subTest(path=relative):

@@ -4,7 +4,7 @@
 
 Find what you want to do, then use the skill in that row. Typed-only skills appear as `/<name>`: type them, or `$<name>` in Codex. For the others, say what you want in plain words; the phrases shown are examples, not required wording.
 
-Each generated row includes an example prompt and a neighboring method to compare. The catalog owns membership and invocation mode; `intent-guide.json` supplies the human explanation. Every catalog skill needs its own useful intent row. Missing guidance is an error, including in a new role PR.
+Each generated row includes an example prompt and a neighboring method to compare. The catalog owns membership and invocation mode; `intent-guide.json` supplies the human explanation and the README's categories. Every skill belongs to exactly one group. Missing or duplicate guidance is an error for any new skill.
 
 ## Contents
 

@@ -6,10 +6,10 @@ This repo holds personal Agent Skills that follow the [Agent Skills specificatio
 
 - `skills/<skill-name>/` holds one skill: `SKILL.md`, optional `references/`, `scripts/`, `assets/`, and a required `evals/examples.md`. The only host-file exception is owned, generated `agents/openai.yaml` for catalog entries with `invocation: user`; preview `scripts/build-host-config.py`, then use `--apply`. Check it with `--check`. Nothing else goes in `skills/`.
 - `template/` starts a capability skill. Do not add skills to it.
-- `catalog/skills.yaml` lists every skill (kind, roles, evaluation status) and the upstream skills routers may name; `catalog/coverage.md` maps every job the collection covers to skills; `catalog/profiles/` holds generated install lists, one per role; `catalog/reserved-names.txt` lists names already taken by the user's other skills.
+- `catalog/skills.yaml` lists every skill (kind, roles, evaluation status) and the upstream skills routers may name; `catalog/coverage.md` maps every job the collection covers to skills; `catalog/profiles/` holds generated install lists, one per router; `catalog/reserved-names.txt` lists names already taken by the user's other skills.
 - `docs/authoring-guide.md` is the bar every skill meets. Read it before writing or reviewing a skill.
 - `scripts/validate.sh` runs every check: the pinned `skills-ref` validator, `check-skills.py`, `check-catalog.py`, `build-profiles.py --check`, `check-freshness.py`, zizmor, the Vale style on the repo's docs, and the fixture tests in `tests/`.
-- `scripts/install-skills.py` installs a role or skill with everything it requires.
+- `scripts/install-skills.py` installs named skills with everything they require.
 
 ## Authoring rules
 
@@ -34,7 +34,7 @@ Docs in this repo follow `skills/clear-communication`: lead with the point, plai
 
 ## Dependencies
 
-Declare dependencies in `SKILL.md` as quoted, space-separated strings: `metadata.requires` for skills this one cannot work without. Optional routes are conditional prose pointers and do not add installation edges. Refer to other skills in prose as "the `name` skill". After changing dependencies or adding a role, run `scripts/build-profiles.py` and commit `catalog/profiles/`.
+Declare dependencies in `SKILL.md` as quoted, space-separated strings: `metadata.requires` for skills this one cannot work without. Optional routes are conditional prose pointers and do not add installation edges. Refer to other skills in prose as "the `name` skill". After changing dependencies, run `scripts/build-profiles.py` and include changed `catalog/profiles/` files.
 
 ## Workflow
 
@@ -42,3 +42,17 @@ Declare dependencies in `SKILL.md` as quoted, space-separated strings: `metadata
 2. Add the skill to `catalog/skills.yaml` and update `catalog/coverage.md`.
 3. Run `scripts/build-profiles.py`, preview/apply `scripts/build-host-config.py` if invocation policy changed, then run `./scripts/validate.sh` and fix every error.
 4. Run `scripts/build-docs.py`, then fix whatever `scripts/build-docs.py --check` reports; it generates the README skill index and asks for the human guidance a new skill needs.
+
+## Common tasks
+
+Read the matching procedure before starting; each names its commands, checks, and done criterion. Commands run from the repository root with uv and Python 3.12 or newer.
+
+| Task | Procedure |
+| --- | --- |
+| Create a new capability skill | [Create a skill](docs/skill-workflows.md#create-a-skill) |
+| Adopt or update upstream material | [Adopt an upstream method](docs/skill-workflows.md#adopt-or-update-an-upstream-method) |
+| Change a skill and select evals | [Change a skill](docs/skill-workflows.md#change-a-skill) |
+| Audit or review a skill | [Review a skill](docs/skill-workflows.md#review-a-skill) |
+| Run paired evals within a fixed budget | [Run and review evals](docs/running-evals.md) |
+| Install or update on Claude Code or Codex | [Install and update](docs/installing.md#install-or-update-skills) |
+| Validate a candidate or prepare stacked PRs | [Validate and prepare delivery](docs/validating.md) |

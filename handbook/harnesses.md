@@ -82,8 +82,8 @@ The generated table counts retained historical summaries at all revisions. Valid
 | `2.1.311 (Claude Code)` | `claude-opus-5-5` | 588 | 108 | 696 |
 | `2.1.311 (Claude Code)` | `default` | 0 | 2 | 2 |
 | `codex-cli 0.167.0` | `default` | 0 | 3 | 3 |
-| `codex-cli 0.167.0` | `gpt-6.1-sol` | 765 | 0 | 765 |
-| All | | 1353 | 113 | 1466 |
+| `codex-cli 0.167.0` | `gpt-6.1-sol` | 766 | 0 | 766 |
+| All | | 1354 | 113 | 1467 |
 
 <!-- END GENERATED eval-records -->
 

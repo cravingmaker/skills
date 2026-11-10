@@ -9,7 +9,7 @@ Install a small useful set, preserve the host's invocation policy, then verify d
 - [Prepare the source](#prepare-the-source)
 - [Install on Codex](#install-on-codex)
 - [Install on Claude Code](#install-on-claude-code)
-- [Install a role or several skills](#install-a-role-or-several-skills)
+- [Install the coordinator or several skills](#install-the-coordinator-or-several-skills)
 - [Know what changes](#know-what-changes)
 - [Verify the installation](#verify-the-installation)
 - [Update, move, and remove an install](#update-move-and-remove-an-install)
@@ -75,9 +75,9 @@ The adapter checks the installed native Claude binary's supported `skillOverride
 
 The current adapter accepts a standalone project or its main checkout root. It rejects linked Git worktrees, separate Git directories, and repository subdirectories before writing. Choose a supported root rather than guessing which settings file would take precedence. See the [canonical adapter contract](../docs/installing.md#claude-code).
 
-## Install a role or several skills
+## Install the coordinator or several skills
 
-Pass several names in one invocation to install the union of their required dependencies. A role's install is its router plus the transitive required closure; overlapping requirements are installed once.
+Pass several names in one invocation to install the union of their required dependencies. Installing `agent-orchestrator` includes its transitive required closure; overlapping requirements are installed once.
 
 ```sh
 scripts/install-skills.py --host codex --target ~/.codex/skills \
@@ -88,7 +88,7 @@ scripts/install-skills.py --host codex --target ~/.codex/skills agent-orchestrat
 scripts/install-skills.py --host codex --target ~/.codex/skills --apply agent-orchestrator
 ```
 
-Use the same names in the Claude commands above for Claude's adapter. Check the [generated role and profile reference](routing.md#roles-and-their-routers) before choosing a role. A role listed as planned is unavailable on main, even if existing generic capabilities already mention that role.
+Use the same names in the Claude commands above for Claude's adapter. The [generated profile reference](routing.md#what-each-profile-installs) lists the coordinator's dependencies; other skills can be installed directly.
 
 A required external skill is reported with its upstream source and installation instructions. The installer does not fetch it automatically. The current owned orchestrator profile has no external prerequisite.
 

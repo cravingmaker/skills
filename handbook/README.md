@@ -27,7 +27,7 @@ This handbook explains what to type, what the agent should do next, and what the
 | Your question | Read |
 | --- | --- |
 | How do I get an idea through spec, tickets, implementation, and review? | [Recommended flow](recommended-flow.md) |
-| What does a role load, and what gets installed with it? | [Routing and dependencies](routing.md) |
+| What does the coordinator load, and what gets installed with it? | [Routing and dependencies](routing.md) |
 | How do I stop at a draft, a filed PR, readiness, or a merge? | [Delivery boundaries](recommended-flow.md#choose-the-delivery-boundary) |
 
 ## Understand the limits
@@ -49,12 +49,12 @@ Read [why and how it is made](how-and-why.md), the [merged-PR changelog](../CHAN
 | --- | --- |
 | Skill | A folder with a `SKILL.md` that an agent loads when a task calls for it, following the [Agent Skills specification](https://agentskills.io/specification). |
 | Capability skill | A skill that does one job, such as `tdd` or `file-pr`. |
-| Role router | A skill that equips an agent for a role and routes the role's work through capability skills, such as `agent-orchestrator`. |
+| Router | `agent-orchestrator`, the core skill that coordinates work and routes it through capability methods. |
 | Model selection | The agent may pick the skill on its own when your request matches its description. Explicit selection depends on the host. |
 | Manual only | The catalog marks the skill `invocation: user`: the host suppresses implicit selection, and you select it by typing `/<name>` in Claude Code or `$<name>` in Codex. |
 | Requires | A `metadata.requires` edge: the skill cannot work without the other skill, so installing it installs that skill too. |
 | Optional route | A sentence such as "use the `how` skill" in a skill's instructions. It is followed only when that branch applies and installs nothing. |
-| Profile | The full set of skills a role router installs: the router plus every skill reachable through `requires`. |
+| Profile | The full set of skills the coordinator installs: the router plus every skill reachable through `requires`. |
 | Proof | The surface to drive or source to open, and the result to observe there, that shows a story or ticket is done. |
 | Evaluated | The catalog status for a skill whose Activation and Near miss examples all have valid paired runs on record, with no unresolved regression against the run without the skill. See [what evaluated means](how-and-why.md#what-evaluated-means). |
 | Host or harness | The agent program that loads skills: Claude Code or the Codex CLI. T3 Code is a front end that runs both. |

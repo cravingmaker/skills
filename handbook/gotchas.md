@@ -41,7 +41,7 @@ The installer is conservative about ownership because a same-named folder may be
 | A typed entry is visible in one Claude project but implicit in another | The adapter checks the supplied project's precedence, not every project on disk | Check that project's effective local/project/user override; multi-project runtime behavior is untested |
 | A linked Git worktree is rejected | The adapter cannot safely infer effective settings placement there | Select the main checkout root or a standalone project |
 | Copy and symlink installs expose different extra files | Copy omits evaluation results; a symlink exposes the source folder | Use copy for a stable installed package and keep the source for evaluation evidence |
-| A role name appears in the catalog but cannot install | The router is planned rather than shipped | Check [availability](routing.md#roles-and-their-routers) |
+| An unknown name cannot install | The installer accepts shipped skills and declared external prerequisites | Check the [skill reference](skills.md) for the exact name |
 | Removing a plugin leaves an orphaned cache | Existing sessions can still reference its cached files | Verify registration and fresh-session discovery; let the host clear its cache later |
 | `codex plugin list` appears stuck | Remote-catalog access can hang | Use a bounded inventory attempt and sufficient local registration/skill evidence; do not retry in a loop |
 

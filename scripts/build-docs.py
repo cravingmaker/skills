@@ -14,7 +14,8 @@ Rules checked in both modes:
   - every block appears exactly once in each of its home files and matches its sources;
   - every handbook page starts with the human-documentation line (HEADER);
   - no agent-facing file mentions a path into handbook/ (see MENTION_ALLOWED);
-  - intent-guide.json has a useful row for every catalog skill; the intent page is generated;
+  - intent-guide.json puts every catalog skill in exactly one README category;
+    the category order and intent page come from the same groups;
   - handbook/typed-commands.md has a heading with `/name` for exactly the typed-only skills;
   - in README.md, CHANGELOG.md and handbook/, relative links and #anchors resolve,
     "the `name` skill" pointers and `/name` or `$name` commands name real skills.
@@ -65,8 +66,8 @@ class SourceError(ValueError):
     """A source the generator cannot read; the message names the file and the fix."""
 
 
-# A strict YAML subset: block mappings and sequences, flow sequences of plain
-# scalars, plain and quoted single-line scalars, and comments. Everything else fails.
+# A strict YAML subset: block mappings and sequences, empty mappings, flow
+# sequences of plain scalars, single-line scalars, and comments. Everything else fails.
 def _scalar(text: str, where: str):
     text = text.strip()
     rest = ""
@@ -108,6 +109,8 @@ def _scalar(text: str, where: str):
             if not item or re.search(r"[\[\]{}\"'#&*!|>]|:\s|:$", item):
                 raise SourceError(f"{where}: flow lists may hold only plain names; got {item!r}")
         return [_scalar(item, where) for item in items]
+    elif re.fullmatch(r"\{\}(?:\s+#.*)?", text):
+        return {}
     elif text[:1] in set("{&*!|>%@`"):
         raise SourceError(f"{where}: unsupported YAML syntax {text[:1]!r}; use a plain or quoted single-line value")
     else:
@@ -245,7 +248,6 @@ class Skill:
 @dataclass
 class Repo:
     root: Path
-    roles: list
     skills: dict
     external: dict
     reserved: set
@@ -340,11 +342,15 @@ def load(root: Path) -> Repo:
             if not isinstance(row, dict) or set(row) != {"skill", "want", "prompt", "neighbor"} or not all(isinstance(v, str) for v in row.values()):
                 raise SourceError("handbook/intent-guide.json: each row needs string skill, want, prompt and neighbor fields")
             name = row["skill"]
-            if name not in skills or name in covered or not row["want"].strip() or not row["neighbor"].strip():
-                raise SourceError(f"handbook/intent-guide.json: unknown, duplicate or empty guidance for {name}; repair its intent row")
+            if name not in skills:
+                raise SourceError(f"handbook/intent-guide.json: unknown skill {name}; use a catalog skill in each README category")
+            if name in covered:
+                raise SourceError(f"handbook/intent-guide.json: duplicate skill {name}; list each skill in exactly one README category")
+            if not row["want"].strip() or not row["neighbor"].strip():
+                raise SourceError(f"handbook/intent-guide.json: empty guidance for {name}; repair its intent row")
             covered.add(name)
     if missing := sorted(set(skills) - covered):
-        raise SourceError("handbook/intent-guide.json: no intent guidance for " + ", ".join(missing) + "; add one useful row per new skill, then run scripts/build-docs.py")
+        raise SourceError("handbook/intent-guide.json: no intent guidance for " + ", ".join(missing) + "; add one useful row per skill in its README category, then run scripts/build-docs.py")
     for skill in skills.values():
         if skill.kind not in ("role", "capability") or skill.invocation not in ("model", "user") or skill.status not in ("evaluated", "unevaluated"):
             raise SourceError(f"catalog/skills.yaml: invalid kind, invocation or status for {skill.name}; run scripts/check-catalog.py")
@@ -357,7 +363,7 @@ def load(root: Path) -> Repo:
     actual = {path.name: path.read_text(encoding="utf-8") for path in (root / "catalog/profiles").glob("*.txt")}
     if actual != expected:
         raise SourceError("catalog/profiles: profile drift; run scripts/build-profiles.py and commit the result")
-    return Repo(root=root, roles=list(catalog.get("roles") or []), skills=skills,
+    return Repo(root=root, skills=skills,
                 external=external, reserved=reserved, records=records, guidance=groups)
 
 
@@ -400,13 +406,6 @@ def render_workflow(repo: Repo) -> str:
     return "\n".join(lines)
 
 
-def render_roadmap(repo: Repo) -> str:
-    priority = ("devops", "sysadmin", "security", "data-engineer", "data-analyst", "data-scientist", "frontend", "mobile", "ui-ux", "qa", "technical", "seo", "business", "financial", "marketing", "copywriter")
-    roles = [r for r in repo.roles if r not in repo.skills and not r.startswith("backend-")]
-    roles.sort(key=lambda r: next((i for i, prefix in enumerate(priority) if r.startswith(prefix)), len(priority)))
-    return "\n".join(["| Planned order after the backend PR | Catalog role |", "| --- | --- |", *(f"| {i} | `{role}` |" for i, role in enumerate(roles, 1))])
-
-
 def cell(text: str) -> str:
     return text.replace("|", "\\|")
 
@@ -417,28 +416,26 @@ def names(items, anchor: bool = False) -> str:
     return ", ".join(f"[`{item}`](#{item})" if anchor else f"`{item}`" for item in items)
 
 
-def start(skill: Skill) -> str:
-    return "typed" if skill.typed else "auto"
-
-
 def render_counts(repo: Repo) -> str:
     skills = list(repo.skills.values())
     routers = sum(skill.kind == "role" for skill in skills)
     typed = sum(skill.typed for skill in skills)
     evaluated = sum(skill.status == "evaluated" for skill in skills)
-    return (f"**{len(skills)} skills:** {routers} role {'router' if routers == 1 else 'routers'} and "
+    return (f"**{len(skills)} skills:** {routers} {'router' if routers == 1 else 'routers'} and "
             f"{len(skills) - routers} capability skills. {typed} prefer explicit selection; "
             f"the agent can pick the other {len(skills) - typed} on its own. "
             f"Evaluation status: {evaluated} evaluated, {len(skills) - evaluated} unevaluated.")
 
 
 def render_index(repo: Repo) -> str:
-    lines = ["**Starts:** *auto* permits selection when the task fits; *typed* requests native explicit selection: "
-             "`/<name>` in Claude Code or `$<name>` in Codex. Visibility policy is not filesystem access control.", "",
-             "| Skill | Starts | What it does |", "| --- | --- | --- |"]
-    for skill in repo.skills.values():
-        label = f"{skill.name} (role)" if skill.kind == "role" else skill.name
-        lines.append(f"| [{label}](skills/{skill.name}) | {start(skill)} | {cell(skill.summary)} |")
+    lines = ["**Starts:** *auto* lets the agent select a matching skill. Typed commands show Claude Code's "
+             "`/name` followed by Codex's `$name`."]
+    for group in repo.guidance:
+        lines += ["", "### " + group["heading"], "", "| Skill | Starts | What it does |", "| --- | --- | --- |"]
+        for row in group["entries"]:
+            skill = repo.skills[row["skill"]]
+            how = f"typed: `/{skill.name}` · `${skill.name}`" if skill.typed else "auto"
+            lines.append(f"| [{skill.name}](skills/{skill.name}) | {how} | {cell(skill.summary)} |")
     return "\n".join(lines)
 
 
@@ -451,13 +448,13 @@ def render_reference(repo: Repo) -> str:
         lines += ["", f"### `{skill.name}`", "", skill.description, ""]
         how = (f"typed only: `/{skill.name}` in Claude Code, `${skill.name}` in Codex" if skill.typed
                else "model selection when the task fits")
-        kind = "role router" if skill.kind == "role" else "capability"
-        roles = ("every role" if "all" in skill.roles else ", ".join(skill.roles)) if skill.roles else f"router for the `{skill.name}` role"
+        kind = "router" if skill.kind == "role" else "capability"
         lines.append(f"- **Starts:** {how}. **Kind:** {kind}. **Status:** {skill.status}.")
         lines.append(f"- **Requires:** {names(skill.requires, anchor=True)}. **Required by:** {names(skill.required_by, anchor=True)}.")
         lines.append(f"- **Install closure ({len(skill.closure)}):** {names(skill.closure)}.")
         lines.append(f"- **Optional routes in its instructions:** {names(skill.routes, anchor=True)}.")
-        lines.append(f"- **Roles:** {roles}." + (f" **Search aliases:** {names(skill.aliases)}." if skill.aliases else ""))
+        if skill.aliases:
+            lines.append(f"- **Search aliases:** {names(skill.aliases)}.")
         lines.append(f"- **Provenance:** {provenance(skill)}")
         lines.append(f"- **Folder:** [`skills/{skill.name}/`](../skills/{skill.name}/)")
         for title, section in (("Try this job", "Activation"), ("Keep these neighboring requests separate", "Near miss"), ("Check the result", "Outcome")):
@@ -496,13 +493,13 @@ def render_typed(repo: Repo) -> str:
 
 def render_roles(repo: Repo) -> str:
     every = [skill.name for skill in repo.skills.values() if "all" in skill.roles]
-    lines = [f"The catalog assigns {len(every)} common capabilities to every role: {names(every)}. These are coverage assignments; installation follows required edges only.", "",
-             "| Role | Router | Capabilities the catalog assigns to this role |", "| --- | --- | --- |"]
-    for role in repo.roles:
-        router = repo.skills.get(role)
-        status = (f"[`{role}`](../skills/{role}/), installs {len(router.closure)}" if router and router.kind == "role" else "planned")
-        assigned = [skill.name for skill in repo.skills.values() if skill.kind == "capability" and role in skill.roles]
-        lines.append(f"| `{role}` | {status} | {len(assigned)}: {names(assigned)} |")
+    lines = [f"The catalog marks {len(every)} capabilities for any task: {names(every)}. Coverage assignments do not install skills; only required edges do.", "",
+             "| Router | Installs | Capabilities assigned to it |", "| --- | --- | --- |"]
+    for router in repo.skills.values():
+        if router.kind != "role":
+            continue
+        assigned = [skill.name for skill in repo.skills.values() if skill.kind == "capability" and router.name in skill.roles]
+        lines.append(f"| [`{router.name}`](../skills/{router.name}/) | {len(router.closure)} | {len(assigned)}: {names(assigned)} |")
     return "\n".join(lines)
 
 
@@ -530,7 +527,7 @@ def render_profiles(repo: Repo) -> str:
             external = [name for name in skill.closure if name in repo.external]
             lines += [f"**`{skill.name}` installs {len(skill.closure)} skills:** {names(skill.closure)}."
                       + (f" External prerequisites: {names(external)}." if external else " No external prerequisites."), ""]
-    return "\n".join(lines).rstrip() or "No role routers yet."
+    return "\n".join(lines).rstrip() or "No router profiles."
 
 
 def render_upstream(repo: Repo) -> str:
@@ -564,7 +561,6 @@ BLOCKS = {
     "skill-counts": (render_counts, ("README.md",)),
     "intent-guide": (render_intent, ("handbook/choosing-skills.md",)),
     "workflow": (render_workflow, ("handbook/routing.md",)),
-    "roadmap": (render_roadmap, ("handbook/routing.md",)),
     "skill-index": (render_index, ("README.md",)),
     "skill-reference": (render_reference, ("handbook/skills.md",)),
     "typed-commands": (render_typed, ("handbook/typed-commands.md",)),

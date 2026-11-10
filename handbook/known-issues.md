@@ -2,14 +2,13 @@
 
 # Known issues and evidence limits
 
-The main-branch core is evaluated, with specific host limits and a small recorded nit still visible. This page separates current limitations from fixed defects and in-progress role work; it does not infer bugs from untested paths.
+The main-branch core is evaluated, with specific host limits and a small recorded nit still visible. This page separates current limitations from fixed defects; it does not infer bugs from untested paths.
 
 ## Contents
 
 - [Manual-only is not a file-access boundary](#manual-only-is-not-a-file-access-boundary)
 - [Current limits and nits](#current-limits-and-nits)
 - [Fixed defects](#fixed-defects)
-- [In-progress role checks](#in-progress-role-checks)
 - [What remains untested](#what-remains-untested)
 - [How to report a useful issue](#how-to-report-a-useful-issue)
 
@@ -33,7 +32,6 @@ Each workaround stays within the existing task and host permissions.
 | Hanging Codex remote plugin listing | Observed cutover limitation | A remote-catalog inventory call can hang; a bounded alternative inventory is needed |
 | Minor source-label error in a final retrospective answer | Open response nit | [Claude Outcome 6](../skills/retro/evals/results/2026-11-09-claude-claude-opus-5-5-outcome-6-round4-fix5-claude.md) attributes an off-topic instruction to the wrong source label; the destination check and scope result still pass |
 | Public raw-evidence links do not resolve in a clone | Intentional evidence-access limit | [Harness evidence contract](../docs/eval-harness.md#read-the-evidence): raw traces remain private; inspect the committed summary and its limits |
-| Coverage matrix retains historical "in PR" wording | Documentation nit in main | The [matrix](../catalog/coverage.md) still uses `in PR` at rows for shipped orchestration and core communication (lines 12-13 and 44 onward); this handbook's generated role availability uses actual catalog entries and skill folders |
 | `--host codex` currently adds no behavior | Open installer interface nit | [`install-skills.py`](../scripts/install-skills.py): the flag is parsed at line 45, while only the Claude value branches at lines 53, 55 and 161. Source-policy checking at lines 126-127 runs regardless; retain the flag to state intent or omit it |
 | Catalog status checks do not bind current bytes or semantic hurt | Deliberate structural-check limit | [`check-catalog.py`](../scripts/check-catalog.py) `missing_evaluations` (lines 25-52) checks valid/completed example coverage. Final-byte and unresolved-hurt decisions require the campaign review |
 | No general uninstall command | Open installer capability limit | [`install-skills.py`](../scripts/install-skills.py) `parse` exposes install/update flags and no remove operation. Inspect ownership and dependent packages before scoped manual reconciliation; removal is not exercised here |
@@ -43,7 +41,7 @@ Each workaround stays within the existing task and host permissions.
 | Evaluation guide omits some later Claude activation details | Documentation gap in main | Compare the [base guide](../docs/eval-harness.md) with [PR #9](https://github.com/cravingmaker/skills/pull/9) and the [current observer](../scripts/evalharness/hosts.py) for native replay and Bash-body evidence |
 | Older overview names additional clients | Unproved historical support wording | The [original overview](https://github.com/cravingmaker/skills/blob/812abc3e9ed0ffe1ffc85dc9505bb6473deb5081/README.md) names Cursor and other clients; retained installation and behavioral records cover Claude Code and Codex. Format compatibility does not prove another host's runtime behavior |
 | Old automatic activation fields retain observer misses | Historical evidence limitation; observer fixed before PR #8 landed | [Evaluation contract](../docs/eval-harness.md#codex) now recognizes trusted native selection. Earlier records can retain the automatic `false` field with a reviewed correction; read both before drawing a behavioral conclusion |
-| Historical install proof describes an earlier smaller profile | Snapshot limitation | Its pinned revision is valid historical evidence; the [current generated profile reference](routing.md#roles-and-their-routers) gives current membership |
+| Historical install proof describes an earlier smaller profile | Snapshot limitation | Its pinned revision is valid historical evidence; the [current generated profile reference](routing.md#what-each-profile-installs) gives current membership |
 
 The memory, cache, and hanging-list observations are published here as sanitized observations supplied for the cutover documentation. The public cutover PR establishes installed/discovered policy state; it does not contain every low-level diagnostic from that operation.
 
@@ -68,14 +66,6 @@ These are historical failures with corrections in merged work. Their old records
 | Narrow description misses for contextual repair, human-ruling checks, and staged-hook wiring | Fixed and retested in PR #9 | [PR #9](https://github.com/cravingmaker/skills/pull/9) records description changes and their paired retests |
 
 The architecture-report row describes the shipped safeguards. It does not claim an independently reproduced exploit against the old upstream code. Importer strictness and blocker/Proof parsing were reviewed and corrected within the stack; the current template/importer fixtures define the supported forms.
-
-## In-progress role checks
-
-[PR #11](https://github.com/cravingmaker/skills/pull/11) is outside main and remains in progress. Its role and domain methods are not part of the generated main-branch skill inventory.
-
-The PR reports disposable PostgreSQL fixture execution and a real pinned dependency-cruiser adapter check during review. Its CI does not explicitly provision PostgreSQL, dependency-cruiser or Cargo. PostgreSQL and dependency-cruiser fixtures can skip when the required tools or target are absent; the PR reports its Cargo metadata fixture uses the runner's existing toolchain. A green wrapper/fixture suite is not proof that those external paths ran.
-
-The migration wrapper's tests use a fake Squawk command to prove delegation, refusal, and exit handling. That proves the wrapper, not a real Squawk run. The PR states that Cargo, ESLint and Squawk against real projects, Neon-target checks, and paired-model evaluations remain unrun. No real Squawk execution is established by the fake-command wrapper fixtures. Keep those distinct from the offline checks that did pass. No new CI lane is claimed as merged here.
 
 ## What remains untested
 

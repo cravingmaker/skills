@@ -2,7 +2,7 @@
 
 # Skill reference
 
-One entry per skill, in alphabetical order: its full description, how it starts, what it requires and what requires it, what installing it brings along, the other skills its instructions point to, its roles, its evaluation status and where it came from.
+One entry per skill, in alphabetical order: its full description, how it starts, what it requires and what requires it, what installing it brings along, the other skills its instructions point to, its evaluation status and where it came from.
 
 Everything below the "How to read an entry" section is generated from `catalog/skills.yaml` and each `SKILL.md` by `scripts/build-docs.py`. To change an entry, change those sources and rerun the generator.
 
@@ -17,12 +17,11 @@ Everything below the "How to read an entry" section is generated from `catalog/s
 | --- | --- |
 | Description | The skill's own `description`, which is also what the host shows the model. |
 | Starts | *auto*: the agent may pick it, and you can type it. *typed only*: you type it; the agent does not pick it on its own. |
-| Kind | `capability` or `role router`. |
+| Kind | `capability` or `router`. |
 | Status | `evaluated` or `unevaluated`; see [what evaluated means](how-and-why.md#what-evaluated-means). |
 | Requires, Required by | Direct `metadata.requires` edges in each direction. |
 | Install closure | Every skill an install of this one brings, itself included. |
 | Optional routes | Other skills its instructions name, beyond its requirements. Following them is conditional and installs nothing. |
-| Roles | The roles the catalog assigns it to. |
 | Provenance | The upstream it was adapted from, with the pinned revision, and every legal file in its folder. |
 
 ## All skills
@@ -40,7 +39,6 @@ Write a self-contained task brief for a fresh agent, with skills, permissions, e
 - **Requires:** none. **Required by:** [`agent-debate`](#agent-debate), [`agent-orchestrator`](#agent-orchestrator), [`implement-spec`](#implement-spec).
 - **Install closure (1):** `agent-briefing`.
 - **Optional routes in its instructions:** [`agent-orchestrator`](#agent-orchestrator), [`clear-communication`](#clear-communication), [`decision-log`](#decision-log), [`result-verification`](#result-verification), [`work-decomposition`](#work-decomposition).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/principle-guard-the-context-window/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/agent-briefing/`](../skills/agent-briefing/)
 
@@ -75,7 +73,6 @@ Find the best approach through structured disagreement between agents, with blin
 - **Requires:** [`agent-briefing`](#agent-briefing), [`decision-log`](#decision-log), [`work-decomposition`](#work-decomposition). **Required by:** [`agent-orchestrator`](#agent-orchestrator), [`council`](#council).
 - **Install closure (4):** `agent-briefing`, `agent-debate`, `decision-log`, `work-decomposition`.
 - **Optional routes in its instructions:** [`architect`](#architect), [`change-review`](#change-review), [`council`](#council), [`result-verification`](#result-verification), [`sol-loop`](#sol-loop).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/arena/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-tstack`, `NOTICE-skills.md`.
 - **Folder:** [`skills/agent-debate/`](../skills/agent-debate/)
 
@@ -111,11 +108,10 @@ Find the best approach through structured disagreement between agents, with blin
 
 Coordinate a multi-agent run: plan, delegate, debate, and verify combined results. Use when asked to act as agent-orchestrator, manage agents, or pick up an earlier agent run and finish it; resume from its durable record.
 
-- **Starts:** model selection when the task fits. **Kind:** role router. **Status:** evaluated.
+- **Starts:** model selection when the task fits. **Kind:** router. **Status:** evaluated.
 - **Requires:** [`work-decomposition`](#work-decomposition), [`agent-briefing`](#agent-briefing), [`agent-debate`](#agent-debate), [`result-verification`](#result-verification), [`decision-log`](#decision-log), [`clear-communication`](#clear-communication), [`grill-with-docs`](#grill-with-docs), [`to-spec`](#to-spec), [`to-tickets`](#to-tickets), [`implement-spec`](#implement-spec), [`retro`](#retro). **Required by:** none.
 - **Install closure (19):** `agent-briefing`, `agent-debate`, `agent-orchestrator`, `change-review`, `clear-communication`, `codebase-design`, `decision-log`, `domain-modeling`, `grill-with-docs`, `grilling`, `implement`, `implement-spec`, `result-verification`, `retro`, `tdd`, `to-spec`, `to-tickets`, `work-decomposition`, `writing-for-agents`.
 - **Optional routes in its instructions:** [`architect`](#architect), [`babysit-pr`](#babysit-pr), [`change-review`](#change-review), [`codebase-design`](#codebase-design), [`correct`](#correct), [`file-pr`](#file-pr), [`full-send`](#full-send), [`full-stop`](#full-stop), [`grilling`](#grilling), [`implement`](#implement), [`interrogate`](#interrogate), [`project-guardrails`](#project-guardrails), [`sol-loop`](#sol-loop), [`tdd`](#tdd).
-- **Roles:** router for the `agent-orchestrator` role.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/ask-matt/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/agent-orchestrator/`](../skills/agent-orchestrator/)
 
@@ -161,7 +157,6 @@ Design module interfaces inside one codebase with caller usage, type sketches, a
 - **Requires:** [`codebase-design`](#codebase-design). **Required by:** none.
 - **Install closure (2):** `architect`, `codebase-design`.
 - **Optional routes in its instructions:** [`agent-debate`](#agent-debate), [`how`](#how), [`implement`](#implement), [`interrogate`](#interrogate), [`why`](#why).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/architect/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/architect/`](../skills/architect/)
 
@@ -193,7 +188,6 @@ Keep an open pull request moving to merge-ready as the root agent's one watcher,
 - **Requires:** [`fix-ci`](#fix-ci), [`leaving-pr-comments`](#leaving-pr-comments). **Required by:** [`full-send`](#full-send).
 - **Install closure (4):** `babysit-pr`, `diagnosing-bugs`, `fix-ci`, `leaving-pr-comments`.
 - **Optional routes in its instructions:** [`full-send`](#full-send), [`modernize`](#modernize).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/babysit-pr/SKILL.md) at `1085050`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-tstack`, `NOTICE-pstack-claude.md`.
 - **Folder:** [`skills/babysit-pr/`](../skills/babysit-pr/)
 
@@ -231,7 +225,6 @@ Vet a measured speedup, slowdown, latency, or throughput claim before reporting 
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `benchmark-checklist`.
 - **Optional routes in its instructions:** none.
-- **Roles:** backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer, data-scientist.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/benchmark-checklist/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/benchmark-checklist/`](../skills/benchmark-checklist/)
 
@@ -265,7 +258,6 @@ Trace what a proposed or actual code change could break beyond its diff, and tes
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `blast-radius`.
 - **Optional routes in its instructions:** [`agent-debate`](#agent-debate), [`how`](#how), [`why`](#why).
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/blast-radius/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/blast-radius/`](../skills/blast-radius/)
 
@@ -298,7 +290,6 @@ Repair the last answer plainly when the user explicitly invokes bro. Quoted or i
 - **Requires:** [`clear-communication`](#clear-communication). **Required by:** none.
 - **Install closure (2):** `bro`, `clear-communication`.
 - **Optional routes in its instructions:** none.
-- **Roles:** every role.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/bro/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/bro/`](../skills/bro/)
 
@@ -329,7 +320,6 @@ Review a branch, PR, or working change against repository standards and its agre
 - **Requires:** none. **Required by:** [`implement`](#implement), [`interrogate`](#interrogate), [`sol-loop`](#sol-loop).
 - **Install closure (1):** `change-review`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/code-review/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `LICENSE-thermos`, `LICENSE-tstack`, `NOTICE-skills.md`.
 - **Folder:** [`skills/change-review/`](../skills/change-review/)
 
@@ -365,7 +355,6 @@ Clarify complex explanations, substantial writing, and consequential ambiguity w
 - **Requires:** none. **Required by:** [`agent-orchestrator`](#agent-orchestrator), [`bro`](#bro), [`file-pr`](#file-pr), [`ketchup`](#ketchup), [`teach`](#teach), [`wait-what`](#wait-what), [`writing-for-agents`](#writing-for-agents).
 - **Install closure (1):** `clear-communication`.
 - **Optional routes in its instructions:** [`bro`](#bro), [`grilling`](#grilling), [`result-verification`](#result-verification), [`wait-what`](#wait-what).
-- **Roles:** every role.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/in-your-own-words/SKILL.md) at `6b03002`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `NOTICE-skills.md`.
 - **Folder:** [`skills/clear-communication/`](../skills/clear-communication/)
 
@@ -411,7 +400,6 @@ Refine a named module's public interface or test seam in one codebase. Apply dep
 - **Requires:** none. **Required by:** [`architect`](#architect), [`improve-codebase-architecture`](#improve-codebase-architecture), [`tdd`](#tdd).
 - **Install closure (1):** `codebase-design`.
 - **Optional routes in its instructions:** [`architect`](#architect), [`domain-modeling`](#domain-modeling).
-- **Roles:** agent-orchestrator, backend-engineer.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/codebase-design/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/codebase-design/`](../skills/codebase-design/)
 
@@ -443,7 +431,6 @@ Turn a repeated agent mistake into a check that fails, at the highest layer that
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `correct`.
 - **Optional routes in its instructions:** [`change-review`](#change-review).
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/correct) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/correct/`](../skills/correct/)
 
@@ -476,7 +463,6 @@ Explicit council entry for a requested provider panel. Dispatch code review and 
 - **Requires:** [`sol-loop`](#sol-loop), [`agent-debate`](#agent-debate). **Required by:** none.
 - **Install closure (7):** `agent-briefing`, `agent-debate`, `change-review`, `council`, `decision-log`, `sol-loop`, `work-decomposition`.
 - **Optional routes in its instructions:** [`change-review`](#change-review).
-- **Roles:** every role.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/council/SKILL.md) at `1085050`. Legal files: `LICENSE-tstack`.
 - **Folder:** [`skills/council/`](../skills/council/)
 
@@ -510,7 +496,6 @@ Author a project-local skill that launches, checks, and drives the real app with
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `create-verification-skill`.
 - **Optional routes in its instructions:** [`maintain-verification-skill`](#maintain-verification-skill).
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/create-verification-skill/SKILL.md) at `6b03002`. Legal files: `LICENSE-cravingmaker`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/create-verification-skill/`](../skills/create-verification-skill/)
 
@@ -546,7 +531,6 @@ Keep a durable run record with task state, dispatch receipts, raw reports, versi
 - **Requires:** [`work-decomposition`](#work-decomposition). **Required by:** [`agent-debate`](#agent-debate), [`agent-orchestrator`](#agent-orchestrator), [`implement-spec`](#implement-spec), [`result-verification`](#result-verification), [`sol-loop`](#sol-loop), [`work-decomposition`](#work-decomposition).
 - **Install closure (2):** `decision-log`, `work-decomposition`.
 - **Optional routes in its instructions:** [`agent-briefing`](#agent-briefing), [`agent-debate`](#agent-debate), [`agent-orchestrator`](#agent-orchestrator), [`recall`](#recall), [`result-verification`](#result-verification).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/show-me-your-work/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/decision-log/`](../skills/decision-log/)
 
@@ -590,7 +574,6 @@ Diagnose bugs and performance regressions through reproduction, ranked hypothese
 - **Requires:** none. **Required by:** [`fix-ci`](#fix-ci).
 - **Install closure (1):** `diagnosing-bugs`.
 - **Optional routes in its instructions:** [`benchmark-checklist`](#benchmark-checklist), [`tdd`](#tdd).
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/diagnosing-bugs/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `NOTICE-skills.md`.
 - **Folder:** [`skills/diagnosing-bugs/`](../skills/diagnosing-bugs/)
 
@@ -623,7 +606,6 @@ Edit a project's configured glossary or architecture decision records. Use when 
 - **Requires:** none. **Required by:** [`grill-with-docs`](#grill-with-docs), [`to-spec`](#to-spec), [`triage`](#triage), [`wayfinder`](#wayfinder).
 - **Install closure (1):** `domain-modeling`.
 - **Optional routes in its instructions:** [`decision-log`](#decision-log), [`grill-with-docs`](#grill-with-docs), [`setup-agent-skills`](#setup-agent-skills).
-- **Roles:** agent-orchestrator, ui-ux-designer, business-analyst.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/domain-modeling/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/domain-modeling/`](../skills/domain-modeling/)
 
@@ -657,7 +639,6 @@ Write a pull request title and body grounded in the actual diff, as a local draf
 - **Requires:** [`clear-communication`](#clear-communication). **Required by:** [`full-send`](#full-send), [`pr`](#pr).
 - **Install closure (2):** `clear-communication`, `file-pr`.
 - **Optional routes in its instructions:** [`babysit-pr`](#babysit-pr), [`full-send`](#full-send), [`full-stop`](#full-stop), [`leaving-pr-comments`](#leaving-pr-comments).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/file-pr/SKILL.md) at `1085050`. Legal files: `LICENSE-cursor-team-kit`, `LICENSE-humanlayer`, `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-tstack`, `NOTICE-pstack-claude.md`.
 - **Folder:** [`skills/file-pr/`](../skills/file-pr/)
 
@@ -695,7 +676,7 @@ CI failure triage and repair for a failing check on the current head. Bind the r
 - **Requires:** [`diagnosing-bugs`](#diagnosing-bugs). **Required by:** [`babysit-pr`](#babysit-pr).
 - **Install closure (2):** `diagnosing-bugs`, `fix-ci`.
 - **Optional routes in its instructions:** [`modernize`](#modernize).
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer. **Search aliases:** `ci-failure-triage`, `ci-failure-diagnosis`.
+- **Search aliases:** `ci-failure-triage`, `ci-failure-diagnosis`.
 - **Provenance:** adapted from [pstack Claude/Codex port](https://github.com/michael-denyer/pstack-claude/blob/91ab921ab92d9ccfe503c93c3524410277f012e1/plugins/pstack/skills/fix-ci/SKILL.md) at `91ab921`. Legal files: `LICENSE-cursor-team-kit`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-pstack-claude.md`.
 - **Folder:** [`skills/fix-ci/`](../skills/fix-ci/)
 
@@ -730,7 +711,6 @@ Finish authorized delivery end to end. Prove the change, review it, file the PR 
 - **Requires:** [`file-pr`](#file-pr), [`babysit-pr`](#babysit-pr), [`sol-loop`](#sol-loop), [`result-verification`](#result-verification). **Required by:** [`full-stop`](#full-stop).
 - **Install closure (12):** `babysit-pr`, `change-review`, `clear-communication`, `decision-log`, `diagnosing-bugs`, `file-pr`, `fix-ci`, `full-send`, `leaving-pr-comments`, `result-verification`, `sol-loop`, `work-decomposition`.
 - **Optional routes in its instructions:** [`full-stop`](#full-stop), [`modernize`](#modernize).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/full-send/SKILL.md) at `1085050`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `LICENSE-tstack`, `NOTICE-pstack-claude.md`.
 - **Folder:** [`skills/full-send/`](../skills/full-send/)
 
@@ -768,7 +748,6 @@ Prepare a change all the way to a verified, ready pull request and stop before m
 - **Requires:** [`full-send`](#full-send). **Required by:** none.
 - **Install closure (13):** `babysit-pr`, `change-review`, `clear-communication`, `decision-log`, `diagnosing-bugs`, `file-pr`, `fix-ci`, `full-send`, `full-stop`, `leaving-pr-comments`, `result-verification`, `sol-loop`, `work-decomposition`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/full-stop/SKILL.md) at `1085050`. Legal files: `LICENSE-tstack`.
 - **Folder:** [`skills/full-stop/`](../skills/full-stop/)
 
@@ -801,7 +780,6 @@ Manual entry that starts a grilling interview in no-doc mode, with no glossary o
 - **Requires:** [`grilling`](#grilling). **Required by:** none.
 - **Install closure (2):** `grill-me`, `grilling`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/productivity/grill-me/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/grill-me/`](../skills/grill-me/)
 
@@ -832,7 +810,6 @@ Interview the user about a plan or design while recording the resolved terms in 
 - **Requires:** [`grilling`](#grilling), [`domain-modeling`](#domain-modeling). **Required by:** [`agent-orchestrator`](#agent-orchestrator).
 - **Install closure (3):** `domain-modeling`, `grill-with-docs`, `grilling`.
 - **Optional routes in its instructions:** [`setup-agent-skills`](#setup-agent-skills), [`to-spec`](#to-spec).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/grill-with-docs/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-superpowers`.
 - **Folder:** [`skills/grill-with-docs/`](../skills/grill-with-docs/)
 
@@ -865,7 +842,6 @@ Interview the user about a plan, design, or decision in numbered rounds with rec
 - **Requires:** none. **Required by:** [`grill-me`](#grill-me), [`grill-with-docs`](#grill-with-docs), [`triage`](#triage), [`wayfinder`](#wayfinder).
 - **Install closure (1):** `grilling`.
 - **Optional routes in its instructions:** [`to-spec`](#to-spec).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/productivity/grilling/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/grilling/`](../skills/grilling/)
 
@@ -898,7 +874,6 @@ Write a temporary continuation note so a fresh agent can pick up the current con
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `handoff`.
 - **Optional routes in its instructions:** [`decision-log`](#decision-log), [`recall`](#recall).
-- **Roles:** every role.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/productivity/handoff/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/handoff/`](../skills/handoff/)
 
@@ -932,7 +907,6 @@ Explain a concrete subsystem's current execution from source: entry points, flow
 - **Requires:** none. **Required by:** [`teach`](#teach).
 - **Install closure (1):** `how`.
 - **Optional routes in its instructions:** [`research`](#research), [`why`](#why).
-- **Roles:** every role.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/how/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/how/`](../skills/how/)
 
@@ -964,7 +938,6 @@ Build one approved piece of work from its spec or ticket, prove the result, and 
 - **Requires:** [`tdd`](#tdd), [`change-review`](#change-review). **Required by:** [`implement-spec`](#implement-spec).
 - **Install closure (4):** `change-review`, `codebase-design`, `implement`, `tdd`.
 - **Optional routes in its instructions:** [`codebase-design`](#codebase-design), [`how`](#how).
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, data-engineer.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/implement/SKILL.md) at `49dd158`. Legal files: `LICENSE-cursor-team-kit`, `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `NOTICE-skills.md`.
 - **Folder:** [`skills/implement/`](../skills/implement/)
 
@@ -996,7 +969,6 @@ Run an approved spec's tickets to an integrated, verified result, in dependency 
 - **Requires:** [`work-decomposition`](#work-decomposition), [`agent-briefing`](#agent-briefing), [`decision-log`](#decision-log), [`result-verification`](#result-verification), [`implement`](#implement). **Required by:** [`agent-orchestrator`](#agent-orchestrator).
 - **Install closure (9):** `agent-briefing`, `change-review`, `codebase-design`, `decision-log`, `implement`, `implement-spec`, `result-verification`, `tdd`, `work-decomposition`.
 - **Optional routes in its instructions:** [`agent-orchestrator`](#agent-orchestrator), [`change-review`](#change-review), [`setup-agent-skills`](#setup-agent-skills).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/implement-spec/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-superpowers`.
 - **Folder:** [`skills/implement-spec/`](../skills/implement-spec/)
 
@@ -1028,7 +1000,6 @@ Survey a codebase for deepening opportunities, present source-backed candidates 
 - **Requires:** [`codebase-design`](#codebase-design). **Required by:** none.
 - **Install closure (2):** `codebase-design`, `improve-codebase-architecture`.
 - **Optional routes in its instructions:** [`architect`](#architect), [`domain-modeling`](#domain-modeling), [`grilling`](#grilling).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/improve-codebase-architecture/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/improve-codebase-architecture/`](../skills/improve-codebase-architecture/)
 
@@ -1059,7 +1030,6 @@ Explicit interrogate entry for a report-only adversarial code review with target
 - **Requires:** [`change-review`](#change-review). **Required by:** none.
 - **Install closure (2):** `change-review`, `interrogate`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, security-engineer, data-engineer.
 - **Provenance:** adapted from [pstack Claude/Codex port](https://github.com/michael-denyer/pstack-claude/blob/91ab921ab92d9ccfe503c93c3524410277f012e1/plugins/pstack/skills/interrogate/SKILL.md) at `91ab921`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/interrogate/`](../skills/interrogate/)
 
@@ -1090,7 +1060,6 @@ Give a read-only catch-up on this chat since the user's last human message, with
 - **Requires:** [`clear-communication`](#clear-communication). **Required by:** none.
 - **Install closure (2):** `clear-communication`, `ketchup`.
 - **Optional routes in its instructions:** none.
-- **Roles:** every role.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/ketchup/SKILL.md) at `6b03002`. Legal files: `LICENSE-cursor-team-kit`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/ketchup/`](../skills/ketchup/)
 
@@ -1125,7 +1094,6 @@ Collect, verify and answer pull request review feedback. Gather every unresolved
 - **Requires:** none. **Required by:** [`babysit-pr`](#babysit-pr).
 - **Install closure (1):** `leaving-pr-comments`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/leaving-pr-comments/SKILL.md) at `1085050`. Legal files: `LICENSE-cursor-team-kit`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `LICENSE-tstack`, `NOTICE-pstack-claude.md`.
 - **Folder:** [`skills/leaving-pr-comments/`](../skills/leaving-pr-comments/)
 
@@ -1160,7 +1128,6 @@ Audit an existing project's verification driver and full declared feature map ag
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `maintain-verification-skill`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/maintain-verification-skill/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/maintain-verification-skill/`](../skills/maintain-verification-skill/)
 
@@ -1195,7 +1162,6 @@ Bring an aging or conflicted pull request up to date with its base without losin
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `modernize`.
 - **Optional routes in its instructions:** [`full-stop`](#full-stop), [`leaving-pr-comments`](#leaving-pr-comments).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/modernize/SKILL.md) at `1085050`. Legal files: `LICENSE-cursor-team-kit`, `LICENSE-pstack-claude`, `LICENSE-tstack`, `NOTICE-pstack-claude.md`.
 - **Folder:** [`skills/modernize/`](../skills/modernize/)
 
@@ -1232,7 +1198,6 @@ Write a pull request body for the current change as a local draft, through the f
 - **Requires:** [`file-pr`](#file-pr). **Required by:** none.
 - **Install closure (3):** `clear-communication`, `file-pr`, `pr`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/pr/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/pr/`](../skills/pr/)
 
@@ -1265,7 +1230,6 @@ Set up or audit project guardrails so wrong changes fail checks: format, lint, t
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `project-guardrails`.
 - **Optional routes in its instructions:** [`create-verification-skill`](#create-verification-skill).
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack) at `6b03002`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/project-guardrails/`](../skills/project-guardrails/)
 
@@ -1302,7 +1266,6 @@ Build a bounded throwaway artifact to answer a design question. Use when the use
 - **Requires:** none. **Required by:** [`wayfinder`](#wayfinder).
 - **Install closure (1):** `prototype`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, ui-ux-designer.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/prototype/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/prototype/`](../skills/prototype/)
 
@@ -1334,7 +1297,6 @@ Find a relevant earlier agent run when its link or path is unknown. Use when the
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `recall`.
 - **Optional routes in its instructions:** [`decision-log`](#decision-log).
-- **Roles:** every role.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/recall/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/recall/`](../skills/recall/)
 
@@ -1368,7 +1330,6 @@ Answer a bounded technical or project question from primary sources. Use when th
 - **Requires:** none. **Required by:** [`wayfinder`](#wayfinder).
 - **Install closure (1):** `research`.
 - **Optional routes in its instructions:** [`how`](#how), [`why`](#why).
-- **Roles:** agent-orchestrator, data-analyst, data-scientist, technical-writer, seo-engineer, financial-analyst, marketing-expert.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/research/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/research/`](../skills/research/)
 
@@ -1400,7 +1361,6 @@ Accept or reject sub-agents' work by saving raw reports, checking each against i
 - **Requires:** [`decision-log`](#decision-log). **Required by:** [`agent-orchestrator`](#agent-orchestrator), [`full-send`](#full-send), [`implement-spec`](#implement-spec), [`takeover`](#takeover).
 - **Install closure (3):** `decision-log`, `result-verification`, `work-decomposition`.
 - **Optional routes in its instructions:** [`agent-briefing`](#agent-briefing), [`agent-debate`](#agent-debate), [`change-review`](#change-review), [`create-verification-skill`](#create-verification-skill), [`maintain-verification-skill`](#maintain-verification-skill).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/principle-prove-it-works/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `NOTICE-skills.md`.
 - **Folder:** [`skills/result-verification/`](../skills/result-verification/)
 
@@ -1442,7 +1402,6 @@ Review a coding session against what the user requested and identify evidence-ba
 - **Requires:** [`writing-for-agents`](#writing-for-agents). **Required by:** [`agent-orchestrator`](#agent-orchestrator).
 - **Install closure (3):** `clear-communication`, `retro`, `writing-for-agents`.
 - **Optional routes in its instructions:** [`correct`](#correct), [`recall`](#recall).
-- **Roles:** every role.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/retro/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `NOTICE-skills.md`.
 - **Folder:** [`skills/retro/`](../skills/retro/)
 
@@ -1477,7 +1436,6 @@ Configure a project's Agent skills block, issue tracker, triage vocabulary, and 
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `setup-agent-skills`.
 - **Optional routes in its instructions:** [`domain-modeling`](#domain-modeling), [`triage`](#triage).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/setup-matt-pocock-skills/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/setup-agent-skills/`](../skills/setup-agent-skills/)
 
@@ -1510,7 +1468,6 @@ Make a requested task deeper without making it bigger, then rewrite its prompt. 
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `sharpen`.
 - **Optional routes in its instructions:** none.
-- **Roles:** every role.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/sharpen/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/sharpen/`](../skills/sharpen/)
 
@@ -1540,7 +1497,6 @@ Run a bounded review, fix, and recheck loop over an authorized code change, with
 - **Requires:** [`change-review`](#change-review), [`decision-log`](#decision-log). **Required by:** [`council`](#council), [`full-send`](#full-send).
 - **Install closure (4):** `change-review`, `decision-log`, `sol-loop`, `work-decomposition`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator, backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, security-engineer, data-engineer.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/sol-loop/SKILL.md) at `1085050`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-tstack`, `NOTICE-skills.md`.
 - **Folder:** [`skills/sol-loop/`](../skills/sol-loop/)
 
@@ -1575,7 +1531,6 @@ Take over existing work and finish its original goal. Reconstruct the author's i
 - **Requires:** [`result-verification`](#result-verification). **Required by:** none.
 - **Install closure (4):** `decision-log`, `result-verification`, `takeover`, `work-decomposition`.
 - **Optional routes in its instructions:** [`babysit-pr`](#babysit-pr), [`file-pr`](#file-pr), [`full-stop`](#full-stop), [`leaving-pr-comments`](#leaving-pr-comments), [`modernize`](#modernize).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [tstack](https://github.com/t3dotgg/tstack/blob/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/takeover/SKILL.md) at `1085050`. Legal files: `LICENSE-tstack`.
 - **Folder:** [`skills/takeover/`](../skills/takeover/)
 
@@ -1610,7 +1565,6 @@ Test-driven development through public seams, with a failing test that measures 
 - **Requires:** [`codebase-design`](#codebase-design). **Required by:** [`implement`](#implement).
 - **Install closure (2):** `codebase-design`, `tdd`.
 - **Optional routes in its instructions:** [`change-review`](#change-review).
-- **Roles:** agent-orchestrator, qa-engineer.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/tdd/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `NOTICE-skills.md`.
 - **Folder:** [`skills/tdd/`](../skills/tdd/)
 
@@ -1642,7 +1596,6 @@ Explain a requested concept or subsystem in layers, grounding its mechanism and 
 - **Requires:** [`clear-communication`](#clear-communication), [`how`](#how), [`why`](#why). **Required by:** none.
 - **Install closure (4):** `clear-communication`, `how`, `teach`, `why`.
 - **Optional routes in its instructions:** none.
-- **Roles:** every role.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/teach/SKILL.md) at `6b03002`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/teach/`](../skills/teach/)
 
@@ -1676,7 +1629,6 @@ Turn a decision the user cannot fully answer into a local Markdown questionnaire
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `to-questionnaire`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/productivity/to-questionnaire/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/to-questionnaire/`](../skills/to-questionnaire/)
 
@@ -1707,7 +1659,6 @@ Turn an already agreed plan into an engineering spec with numbered user stories,
 - **Requires:** [`domain-modeling`](#domain-modeling). **Required by:** [`agent-orchestrator`](#agent-orchestrator).
 - **Install closure (2):** `domain-modeling`, `to-spec`.
 - **Optional routes in its instructions:** [`setup-agent-skills`](#setup-agent-skills), [`to-tickets`](#to-tickets).
-- **Roles:** agent-orchestrator, business-analyst.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/to-spec/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/to-spec/`](../skills/to-spec/)
 
@@ -1740,7 +1691,6 @@ Break an approved spec into numbered vertical-slice tickets, each with status, a
 - **Requires:** none. **Required by:** [`agent-orchestrator`](#agent-orchestrator).
 - **Install closure (1):** `to-tickets`.
 - **Optional routes in its instructions:** [`setup-agent-skills`](#setup-agent-skills), [`work-decomposition`](#work-decomposition).
-- **Roles:** agent-orchestrator, business-analyst.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/to-tickets/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/to-tickets/`](../skills/to-tickets/)
 
@@ -1772,7 +1722,6 @@ Upgrade linters, formatters, type checkers, their plugins, and other dev tooling
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `toolchain-upgrade`.
 - **Optional routes in its instructions:** none.
-- **Roles:** backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, data-engineer.
 - **Provenance:** original to this repository.
 - **Folder:** [`skills/toolchain-upgrade/`](../skills/toolchain-upgrade/)
 
@@ -1802,7 +1751,6 @@ Triage tracker issues and external pull requests through the project's configure
 - **Requires:** [`grilling`](#grilling), [`domain-modeling`](#domain-modeling). **Required by:** none.
 - **Install closure (3):** `domain-modeling`, `grilling`, `triage`.
 - **Optional routes in its instructions:** [`setup-agent-skills`](#setup-agent-skills).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/triage/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/triage/`](../skills/triage/)
 
@@ -1836,7 +1784,6 @@ Explain the last unclear point in the user's context when the user explicitly in
 - **Requires:** [`clear-communication`](#clear-communication). **Required by:** none.
 - **Install closure (2):** `clear-communication`, `wait-what`.
 - **Optional routes in its instructions:** none.
-- **Roles:** every role.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/productivity/wait-what/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/wait-what/`](../skills/wait-what/)
 
@@ -1868,7 +1815,6 @@ Chart a goal too large and unclear for one agent session as a map of decision ti
 - **Requires:** [`research`](#research), [`prototype`](#prototype), [`grilling`](#grilling), [`domain-modeling`](#domain-modeling). **Required by:** none.
 - **Install closure (5):** `domain-modeling`, `grilling`, `prototype`, `research`, `wayfinder`.
 - **Optional routes in its instructions:** [`setup-agent-skills`](#setup-agent-skills).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/wayfinder/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/wayfinder/`](../skills/wayfinder/)
 
@@ -1902,7 +1848,6 @@ Reconstruct why a design or behavior exists, or check whether agent notes match 
 - **Requires:** none. **Required by:** [`teach`](#teach).
 - **Install closure (1):** `why`.
 - **Optional routes in its instructions:** [`how`](#how).
-- **Roles:** every role.
 - **Provenance:** adapted from [pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/why/SKILL.md) at `6b03002`. Legal files: `LICENSE-pstack`, `LICENSE-pstack-claude`, `NOTICE-skills.md`.
 - **Folder:** [`skills/why/`](../skills/why/)
 
@@ -1935,7 +1880,6 @@ Generate an interactive bash wizard that walks a human through steps only they c
 - **Requires:** none. **Required by:** none.
 - **Install closure (1):** `wizard`.
 - **Optional routes in its instructions:** none.
-- **Roles:** agent-orchestrator, devops-engineer.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/wizard/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`.
 - **Folder:** [`skills/wizard/`](../skills/wizard/)
 
@@ -1966,7 +1910,6 @@ Plan execution across agents: decide whether delegation earns its cost, then map
 - **Requires:** [`decision-log`](#decision-log). **Required by:** [`agent-debate`](#agent-debate), [`agent-orchestrator`](#agent-orchestrator), [`decision-log`](#decision-log), [`implement-spec`](#implement-spec).
 - **Install closure (2):** `decision-log`, `work-decomposition`.
 - **Optional routes in its instructions:** [`agent-briefing`](#agent-briefing), [`agent-debate`](#agent-debate), [`agent-orchestrator`](#agent-orchestrator), [`implement-spec`](#implement-spec), [`result-verification`](#result-verification), [`setup-agent-skills`](#setup-agent-skills), [`to-tickets`](#to-tickets).
-- **Roles:** agent-orchestrator.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/in-progress/loop-me/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `NOTICE-skills.md`.
 - **Folder:** [`skills/work-decomposition/`](../skills/work-decomposition/)
 
@@ -2005,7 +1948,6 @@ Author or repair agent instruction content, triggers, and completion criteria in
 - **Requires:** [`clear-communication`](#clear-communication). **Required by:** [`retro`](#retro).
 - **Install closure (2):** `clear-communication`, `writing-for-agents`.
 - **Optional routes in its instructions:** none.
-- **Roles:** every role.
 - **Provenance:** adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/productivity/writing-for-agents/SKILL.md) at `49dd158`. Legal files: `LICENSE-mattpocock`, `LICENSE-pstack`, `LICENSE-pstack-claude`, `LICENSE-superpowers`, `NOTICE-skills.md`.
 - **Folder:** [`skills/writing-for-agents/`](../skills/writing-for-agents/)
 

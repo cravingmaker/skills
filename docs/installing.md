@@ -2,6 +2,33 @@
 
 The installer keeps the multiple-name interface and resolves only the transitive `metadata.requires` closure. Optional prose pointers do not install packages. It reports upstream prerequisites for a separate installation; a listed name alone establishes neither installed discovery nor invocation authority.
 
+## Install or update skills
+
+Use this to install named skills or update an installation owned by this repository's installer. Use disposable targets for tests; an actual host install needs authority for that destination and its settings.
+
+1. Run `scripts/install-skills.py --help` and `scripts/build-host-config.py --help`. Choose the names, host, target, and copy or symlink mode. Read [preview and apply](#preview-and-apply) for ownership rules. Done when the required closure and destination are known.
+2. For Codex, follow the [source-policy generation and install commands](#codex). For Claude Code, use the [explicit target, settings, and scope commands](#claude-code) from a standalone project or main checkout; the adapter rejects linked worktrees. Preview before adding `--apply`. Done when the JSON plan contains only intended packages and settings, and applying it reports success.
+3. To update, fetch and review the intended source revision, regenerate/check source policy, then use `--force` in both preview and apply. Set `task_skill` to the chosen skill and `task_skills` to its actual host target. For Codex:
+
+   ```sh
+   scripts/install-skills.py --host codex --target "$task_skills" --force "$task_skill"
+   scripts/install-skills.py --host codex --target "$task_skills" --force --apply "$task_skill"
+   ```
+
+   For Claude, also set `task_settings` to the effective settings file, `task_scope` to `user`, `project`, or `local`, and `task_project` to the supported project root:
+
+   ```sh
+   scripts/install-skills.py --host claude --target "$task_skills" \
+     --settings "$task_settings" --settings-scope "$task_scope" \
+     --project-root "$task_project" --force "$task_skill"
+   scripts/install-skills.py --host claude --target "$task_skills" \
+     --settings "$task_settings" --settings-scope "$task_scope" \
+     --project-root "$task_project" --force --apply "$task_skill"
+   ```
+
+   `--force` updates only unchanged owned content. Reconcile a foreign destination, edited install, or changed receipt source explicitly; the flag does not override them. Done when the reviewed revision is installed with its intended policy and unrelated content is preserved.
+4. Repeat the same apply command and verify that matching content stays unchanged. For installer or adapter changes, run `tests/install/run.sh` and `tests/adoption-tooling/run.sh`, then [candidate validation](validating.md). Use [live-host checks](#live-host-checks) only within authorized session and model budgets. Done when installed bytes and receipts agree, a repeat install changes nothing, and discovery claims are either observed in a fresh isolated session or reported as untested.
+
 ## Preview and apply
 
 Repository tools use Python 3.12 or later through uv with pinned dependencies. The installer and host generator print JSON plans on stdout and diagnostics on stderr, with no prompts. Exit 0 means success or a successful preview; 1 means findings, drift or a conflict; 2 means usage. `--help` exits 0 without host inspection or writes. Read-only checks never apply changes.

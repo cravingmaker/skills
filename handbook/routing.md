@@ -2,20 +2,19 @@
 
 # Routing and dependencies
 
-Skills connect in three ways. A `requires` edge means one skill cannot work without another, so installing it installs both. An optional route is a sentence such as "use the `how` skill" in a skill's instructions; it installs nothing. A role assignment in the catalog says which roles a capability serves.
+Skills connect in three ways. A `requires` edge means one skill cannot work without another, so installing it installs both. An optional route is a sentence such as "use the `how` skill" in a skill's instructions; it installs nothing. A catalog assignment records which capabilities serve the coordinator or any task.
 
-Only `requires` changes what gets installed. This page lists every edge, every route and what each role's profile installs, all generated from the catalog and the `SKILL.md` files.
+Only `requires` changes what gets installed. This page lists every edge, every route and what the coordinator's profile installs, all generated from the catalog and the `SKILL.md` files.
 
 ## Contents
 
 - [Three kinds of links](#three-kinds-of-links)
-- [How a role router works](#how-a-role-router-works)
-- [Roles and their routers](#roles-and-their-routers)
+- [How the coordinator works](#how-the-coordinator-works)
+- [Catalog assignments](#catalog-assignments)
 - [What each profile installs](#what-each-profile-installs)
 - [Requires edges](#requires-edges)
 - [Optional routes](#optional-routes)
 - [Shapes worth knowing in the graph](#shapes-worth-knowing-in-the-graph)
-- [Role routers still to come](#role-routers-still-to-come)
 - [How the installer resolves names](#how-the-installer-resolves-names)
 
 ## Three kinds of links
@@ -24,23 +23,15 @@ Only `requires` changes what gets installed. This page lists every edge, every r
 | --- | --- | --- | --- |
 | Requires | `metadata.requires` in the skill's frontmatter, a quoted space-separated list | Installs the named skills with this one; the skill reads them before relying on them and stops if one is missing. | Grant authority, or make a typed-only skill auto. |
 | Optional route | A sentence in the skill's body: "the `<name>` skill" | Points the agent to another skill when that branch of the task applies, if it is installed. | Install anything. A missing optional skill is skipped or reported. |
-| Role assignment | `roles:` on a capability in `catalog/skills.yaml` | Records which roles the capability serves; `[all]` means every role. It records intended coverage. | Install anything, or route anything. A role's router decides its flows. |
+| Catalog assignment | `roles:` on a capability in `catalog/skills.yaml` | Records coverage for `agent-orchestrator` or `[all]` tasks. | Install or route anything. The coordinator decides its flows. |
 
 The repository checks all three. `check-catalog.py` fails on a `requires` name that does not exist, and on an optional route that names neither an owned skill nor a supported external entry. `build-profiles.py --check` fails when a committed profile no longer matches the `requires` closure.
 
-## How a role router works
+## How the coordinator works
 
-A role router is a skill whose catalog `kind` is `role`. Invoking it equips the agent for that role in one step: its `requires` list names every capability the role's flows need, so installing the router installs them all.
+`agent-orchestrator` is the collection's one router, represented by catalog `kind: role`. It coordinates agents and selects capability methods. Its `requires` list names the capabilities its flows need, so installing it installs those dependencies too.
 
-Every router has the same five parts, in this order:
-
-1. **Mission and quality bar.** What the role delivers and the standard it holds.
-2. **Before relying on a capability.** Read that capability's `SKILL.md`; the router's summary is orientation only. If a required capability is missing, name it and stop that flow.
-3. **Flows.** The role's common jobs as conditional paths through its capabilities. The agent enters at the step the task needs; no flow is a mandatory pipeline.
-4. **Handoffs.** Which role owns adjacent work, and what to hand over.
-5. **Done.** The role's completion criteria and the evidence to report.
-
-Skills are capability-specific, not role-specific. One capability, such as `diagnosing-bugs`, serves many roles, and each role's router decides when to use it.
+The [authoring guide](../docs/authoring-guide.md#routers) defines the router's structure: mission, capability reads, conditional flows, handoffs, and completion evidence. Each flow starts at the step the task needs. A required capability must be installed and read before the agent relies on it.
 
 ### On main: `agent-orchestrator`
 
@@ -60,53 +51,21 @@ The shipped router owns coordination, budget, integration and acceptance. Its cu
 
 <!-- END GENERATED workflow -->
 
-### In progress: `backend-engineer` (PR #11, not on main)
-
-This example is pinned to [`e9edac0`](https://github.com/cravingmaker/skills/blob/e9edac02d6313d7c90c37390be560e9e69240ec7/skills/backend-engineer/SKILL.md); its details may change. It is excluded from generated main inventory.
-
-The open pull request #11 shows what a domain role router looks like. It is not on `main`; everything in it is `unevaluated`, and details may change before it merges.
-
-- **Requires:** 21 new capabilities (architecture decisions, review and fitness functions; API design, compatibility, authorization and idempotency; logical data modeling and seven PostgreSQL skills; an integration-test harness; async messaging, service resilience, OpenTelemetry, TypeScript Node services and Rust async services), plus `project-guardrails`, `clear-communication`, `implement`, `diagnosing-bugs`, `codebase-design`, `blast-radius` and `correct`.
-- **Flows:** a new or changed endpoint; a schema change or database access; a race, double effect or duplicate; events, jobs and webhooks; a new outbound dependency; a slow endpoint; an architecture choice; a new service or repository.
-- **Handoffs:** delivery operations, system administration, security, QA, frontend and mobile, data engineering, technical writing and business analysis each own their adjacent work.
-- **Done:** a test that fails before and passes after; typecheck, lint, format and tests run separately; real PostgreSQL evidence for data claims; a breaking-change diff for contract changes; Squawk output and a rehearsal for migrations.
-
-It keeps the generic workflow in its owners: `implement` executes, `change-review` reviews. The router adds domain methods around them and no second controller.
-
-## Roles and their routers
+## Catalog assignments
 
 <!-- BEGIN GENERATED roles: generated by scripts/build-docs.py; edit the catalog or SKILL.md files, then rerun it -->
 
-The catalog assigns 13 common capabilities to every role: `clear-communication`, `sharpen`, `how`, `why`, `bro`, `wait-what`, `council`, `retro`, `handoff`, `writing-for-agents`, `teach`, `recall`, `ketchup`. These are coverage assignments; installation follows required edges only.
+The catalog marks 15 capabilities for any task: `clear-communication`, `toolchain-upgrade`, `sharpen`, `how`, `why`, `bro`, `wait-what`, `council`, `benchmark-checklist`, `retro`, `handoff`, `writing-for-agents`, `teach`, `recall`, `ketchup`. Coverage assignments do not install skills; only required edges do.
 
-| Role | Router | Capabilities the catalog assigns to this role |
+| Router | Installs | Capabilities assigned to it |
 | --- | --- | --- |
-| `agent-orchestrator` | [`agent-orchestrator`](../skills/agent-orchestrator/), installs 19 | 42: `project-guardrails`, `correct`, `work-decomposition`, `agent-briefing`, `agent-debate`, `result-verification`, `decision-log`, `grilling`, `grill-with-docs`, `grill-me`, `domain-modeling`, `to-spec`, `to-tickets`, `triage`, `wayfinder`, `to-questionnaire`, `setup-agent-skills`, `prototype`, `research`, `codebase-design`, `architect`, `improve-codebase-architecture`, `implement`, `implement-spec`, `tdd`, `diagnosing-bugs`, `wizard`, `change-review`, `sol-loop`, `interrogate`, `blast-radius`, `create-verification-skill`, `maintain-verification-skill`, `file-pr`, `pr`, `babysit-pr`, `fix-ci`, `leaving-pr-comments`, `modernize`, `takeover`, `full-send`, `full-stop` |
-| `backend-engineer` | planned | 15: `project-guardrails`, `toolchain-upgrade`, `correct`, `prototype`, `codebase-design`, `implement`, `diagnosing-bugs`, `change-review`, `sol-loop`, `interrogate`, `blast-radius`, `benchmark-checklist`, `create-verification-skill`, `maintain-verification-skill`, `fix-ci` |
-| `frontend-engineer` | planned | 14: `project-guardrails`, `toolchain-upgrade`, `correct`, `prototype`, `implement`, `diagnosing-bugs`, `change-review`, `sol-loop`, `interrogate`, `blast-radius`, `benchmark-checklist`, `create-verification-skill`, `maintain-verification-skill`, `fix-ci` |
-| `mobile-engineer` | planned | 14: `project-guardrails`, `toolchain-upgrade`, `correct`, `prototype`, `implement`, `diagnosing-bugs`, `change-review`, `sol-loop`, `interrogate`, `blast-radius`, `benchmark-checklist`, `create-verification-skill`, `maintain-verification-skill`, `fix-ci` |
-| `ui-ux-designer` | planned | 2: `domain-modeling`, `prototype` |
-| `qa-engineer` | planned | 13: `project-guardrails`, `toolchain-upgrade`, `correct`, `tdd`, `diagnosing-bugs`, `change-review`, `sol-loop`, `interrogate`, `blast-radius`, `benchmark-checklist`, `create-verification-skill`, `maintain-verification-skill`, `fix-ci` |
-| `devops-engineer` | planned | 13: `project-guardrails`, `toolchain-upgrade`, `correct`, `implement`, `diagnosing-bugs`, `wizard`, `change-review`, `sol-loop`, `blast-radius`, `benchmark-checklist`, `create-verification-skill`, `maintain-verification-skill`, `fix-ci` |
-| `sysadmin` | planned | 5: `project-guardrails`, `diagnosing-bugs`, `benchmark-checklist`, `create-verification-skill`, `maintain-verification-skill` |
-| `security-engineer` | planned | 5: `project-guardrails`, `change-review`, `sol-loop`, `interrogate`, `blast-radius` |
-| `data-engineer` | planned | 13: `project-guardrails`, `toolchain-upgrade`, `correct`, `implement`, `diagnosing-bugs`, `change-review`, `sol-loop`, `interrogate`, `blast-radius`, `benchmark-checklist`, `create-verification-skill`, `maintain-verification-skill`, `fix-ci` |
-| `data-scientist` | planned | 2: `research`, `benchmark-checklist` |
-| `data-analyst` | planned | 1: `research` |
-| `technical-writer` | planned | 1: `research` |
-| `seo-engineer` | planned | 1: `research` |
-| `business-analyst` | planned | 3: `domain-modeling`, `to-spec`, `to-tickets` |
-| `financial-analyst` | planned | 1: `research` |
-| `marketing-expert` | planned | 1: `research` |
-| `copywriter` | planned | 0: none |
+| [`agent-orchestrator`](../skills/agent-orchestrator/) | 19 | 42: `project-guardrails`, `correct`, `work-decomposition`, `agent-briefing`, `agent-debate`, `result-verification`, `decision-log`, `grilling`, `grill-with-docs`, `grill-me`, `domain-modeling`, `to-spec`, `to-tickets`, `triage`, `wayfinder`, `to-questionnaire`, `setup-agent-skills`, `prototype`, `research`, `codebase-design`, `architect`, `improve-codebase-architecture`, `implement`, `implement-spec`, `tdd`, `diagnosing-bugs`, `wizard`, `change-review`, `sol-loop`, `interrogate`, `blast-radius`, `create-verification-skill`, `maintain-verification-skill`, `file-pr`, `pr`, `babysit-pr`, `fix-ci`, `leaving-pr-comments`, `modernize`, `takeover`, `full-send`, `full-stop` |
 
 <!-- END GENERATED roles -->
 
-"Planned" roles have catalog assignments but no router yet. Their assigned capabilities already work on their own; a router will add the role's domain skills and flows.
-
 ## What each profile installs
 
-A profile is a role router plus everything reachable through `requires`. `scripts/build-profiles.py` writes it to `catalog/profiles/<role>.txt`; the lists below are computed the same way.
+The coordinator profile contains the router and everything reachable through `requires`. `scripts/build-profiles.py` writes `catalog/profiles/agent-orchestrator.txt`; the list below is computed the same way.
 
 <!-- BEGIN GENERATED profiles: generated by scripts/build-docs.py; edit the catalog or SKILL.md files, then rerun it -->
 
@@ -229,41 +188,14 @@ These are the other skills each `SKILL.md` names in its instructions, outside co
 - **The runner never routes back.** Nothing requires `agent-orchestrator`, and `implement-spec` neither requires it nor hands work back to it.
 - **The shipping chain is deep.** `/full-stop` pulls in `full-send`, and through it `file-pr`, `babysit-pr`, `sol-loop`, `result-verification` and their own requirements; the table above gives the count.
 
-## Role routers still to come
-
-Each role arrives in its own pull request, with its router and capability skills drafted blind by two models and merged skill by skill. After `backend-engineer` (PR #11), the planned order is:
-
-<!-- BEGIN GENERATED roadmap: generated by scripts/build-docs.py; edit the catalog or SKILL.md files, then rerun it -->
-
-| Planned order after the backend PR | Catalog role |
-| --- | --- |
-| 1 | `devops-engineer` |
-| 2 | `sysadmin` |
-| 3 | `security-engineer` |
-| 4 | `data-engineer` |
-| 5 | `data-analyst` |
-| 6 | `data-scientist` |
-| 7 | `frontend-engineer` |
-| 8 | `mobile-engineer` |
-| 9 | `ui-ux-designer` |
-| 10 | `qa-engineer` |
-| 11 | `technical-writer` |
-| 12 | `seo-engineer` |
-| 13 | `business-analyst` |
-| 14 | `financial-analyst` |
-| 15 | `marketing-expert` |
-| 16 | `copywriter` |
-
-<!-- END GENERATED roadmap -->
-
-[`catalog/coverage.md`](../catalog/coverage.md) maps every specialty requested for each role to the skills that cover it, and marks what is still planned.
+[`catalog/coverage.md`](../catalog/coverage.md) maps the jobs this collection covers to shipped skills.
 
 ## How the installer resolves names
 
 `scripts/install-skills.py` takes one or more names and follows `metadata.requires` transitively:
 
 - **A name in `skills/`** is installed, and its requirements are queued.
-- **A name listed under `external:` in the catalog** is reported as an upstream prerequisite to install from its source; the installer does not copy it. The catalog lists one external provider, Google's `android/skills`, with no skills named yet.
+- **A name listed under `external:` in the catalog** is reported as an upstream prerequisite to install from its source; the installer does not copy it. The current catalog has no external providers.
 - **Any other name** stops the whole install before anything is written, with `<name> is required but is neither in .../skills nor an external skill in the catalog`.
 
 Optional routes are never followed. If you want `how` alongside `architect`, name both.
