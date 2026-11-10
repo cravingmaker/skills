@@ -127,6 +127,10 @@ def validate_policy(policy):
             expected = {"attributes", "max_series"} if signal == "metrics" else {"required_attributes"}
             if signal == "logs":
                 expected |= {"required_values"}
+                if "require_span_context" in rule:
+                    expected.add("require_span_context")
+                    if type(rule["require_span_context"]) is not bool:
+                        raise ValueError("require_span_context must be boolean")
             if set(rule) != expected:
                 raise ValueError("unknown or missing rule field")
             if signal != "metrics":
@@ -240,8 +244,12 @@ def inspect(policy, docs):
                 spans.append({"key": (trace, span), "parent": (trace, parent) if parent else None,
                               "links": links, "name": name, "location": location, "attrs": attrs})
             elif signal == "logs":
-                logs.append((identifier(record.get("traceId"), 32, location),
-                             identifier(record.get("spanId"), 16, location), location))
+                required = rule.get("require_span_context", True) if rule else True
+                has_trace, has_span = "traceId" in record, "spanId" in record
+                trace = identifier(record.get("traceId"), 32, location) if has_trace or has_span or required else None
+                span = identifier(record.get("spanId"), 16, location) if has_span or required else None
+                if has_trace or has_span or required:
+                    logs.append((trace, span, location))
                 if rule:
                     for key, allowed in rule["required_values"].items():
                         value = canon(attrs.get(key))
@@ -283,7 +291,10 @@ def inspect(policy, docs):
             visited.add(current["key"])
             current = by_key.get(current["parent"])
     for trace, span, location in logs:
-        if (trace, span) not in by_key:
+        if span is None:
+            if not any(key[0] == trace for key in by_key):
+                fail("context.log_trace_missing", location)
+        elif (trace, span) not in by_key:
             fail("context.log_span_missing", location)
     for ei, edge in enumerate(policy["edges"]):
         for target in (s for s in spans if s["name"] == edge["target"]):

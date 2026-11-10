@@ -8,6 +8,8 @@ Paired model runs are pending; keep the catalog entry unevaluated.
 - "Can this Neon operation use HTTP, or does it need WebSockets?" Expect: distinguish a fixed transaction batch from an interactive read-then-decide transaction and check deployed support.
 - "Our LISTEN handler fails only on the pooled endpoint." Expect: trace backend-session requirements and test a compatible connection path.
 
+- "Find pooled session features in this directory." Expect: run the candidate scanner on only the pooled code, distinguish `SET LOCAL` and transaction advisory locks from session forms, then confirm behavior through reassignment tests.
+
 ## Near miss
 
 - "One SQL call scans too many rows." Expect: use the `postgres-query-performance` skill for plans and workload evidence.
@@ -15,7 +17,6 @@ Paired model runs are pending; keep the catalog entry unevaluated.
 - "Rehearse this table migration on a hot database." Expect: use the `postgres-migrations` skill when available for rollout and locking evidence.
 - "Create a Neon project and production branch." Expect: handle provisioning as a separate authorized job without treating a pool budget as provisioning authority.
 
-- "Find pooled session features in this directory." Expect: run the candidate scanner on only the pooled code, distinguish `SET LOCAL` and transaction advisory locks from session forms, then confirm behavior through reassignment tests.
 
 ## Outcome
 

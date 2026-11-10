@@ -21,7 +21,7 @@ Compare [assets/retry-policy.json](assets/retry-policy.json) with the actual pat
 python3 <skill-dir>/scripts/retry-amplification.py path/to/retry-policy.json
 ```
 
-The helper multiplies nested attempt counts and checks per-hop allocations. Its sequential worst-case bound includes maximum configured delay, including a server-directed delay the caller elects to honor. It is not a simulator of parallel calls or a substitute for fault tests.
+The helper multiplies nested attempt counts and checks per-hop allocations. Each `max_backoff_ms` bounds one gap between attempts; the calculation includes `(attempts - 1)` such gaps, including a server-directed delay the caller elects to honor. It is not a simulator of parallel calls or a substitute for fault tests.
 
 Use the asset's `layers` for nested retry owners, outermost first. Replace that field with `hops` for sequential dependency operations; their worst-case times and total leaf attempts add. Include caller work in `overhead_ms`. A parallel path needs its own workload model and fault test. The helper prints JSON on stdout and diagnostics on stderr; exits are 0 pass, 1 findings, 2 invalid input.
 

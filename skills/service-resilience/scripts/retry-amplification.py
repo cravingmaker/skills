@@ -8,8 +8,9 @@ stderr: usage/input diagnostics. Exit: 0 pass, 1 policy findings, 2 bad input.
 Attempts include the first call. Layers are outermost to innermost.
 Use "hops" instead of "layers" for sequential dependency operations: their
 worst-case times add and their leaf attempt counts add. Nested layers multiply.
-max_backoff_ms includes the maximum total delay between attempts, including
-Retry-After if honored. This is a bound, not measured execution time.
+max_backoff_ms bounds each gap between attempts, including Retry-After if
+honored. The bound includes (attempts - 1) such gaps, not one total delay.
+This is a bound, not measured execution time.
 """
 
 import argparse

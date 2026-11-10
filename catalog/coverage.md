@@ -71,10 +71,6 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | security-engineer | HTTP boundary contracts and access enforcement | `api-design`, `api-authorization` | none | in PR |
 | data-engineer | Tenant authorization across PostgreSQL, jobs, and exports | `api-authorization` | none | in PR |
 | technical-writer | Source-backed HTTP contracts and deprecation lifecycle | `api-design`, `api-compatibility` | none | in PR |
-| `api-design` | Design HTTP operation contracts and prove schema, generated-caller, and wire agreement. |
-| `api-compatibility` | Check deployed-consumer compatibility and evidence-backed deprecation/removal. |
-| `api-authorization` | Enforce access and tenant policy across primary and alternate paths with a denial matrix. |
-| `idempotent-requests` | Define durable request admission, replay, expiry, and external-effect reconciliation. |
 | backend-engineer, data-engineer, data-analyst, data-scientist, business-analyst, financial-analyst | Cross-store entities, identity, cardinality, grain and lifecycle | `logical-data-modeling` | none | in PR |
 | backend-engineer, mobile-engineer, data-engineer, data-analyst | PostgreSQL physical schema and constraint proofs preserving the logical crosswalk | `postgres-schema-design` | none | in PR |
 | backend-engineer, qa-engineer, devops-engineer, data-engineer | Live PostgreSQL schema evolution, mixed-version compatibility and resumable backfill | `postgres-migrations` | none | in PR |

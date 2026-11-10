@@ -130,6 +130,36 @@ class Export(unittest.TestCase):
         self.policy["edges"][0]["relation"] = "parent"
         self.assertEqual(self.call().returncode, 0)
 
+    def test_standalone_logs_need_an_explicit_context_policy(self):
+        for log in self.logs():
+            log.pop("traceId")
+            log.pop("spanId")
+        self.expect("context.invalid_id")  # Required request context still fails.
+        self.policy["logs"]["security.access_decision"]["require_span_context"] = False
+        self.assertEqual(self.call().returncode, 0)
+        self.policy.update(spans={}, metrics={}, edges=[])
+        self.assertEqual(self.call([self.docs[1]]).returncode, 0)
+
+    def test_optional_log_context_still_validates_supplied_ids(self):
+        self.policy["logs"]["security.access_decision"]["require_span_context"] = False
+        for log in self.logs():
+            log.pop("spanId")
+        self.assertEqual(self.call().returncode, 0)  # Trace-only correlation.
+        self.logs()[0]["traceId"] = "9" * 32
+        self.expect("context.log_trace_missing")
+        self.reset_capture()
+        self.logs()[0].pop("traceId")
+        self.expect("context.invalid_id")  # A span still needs its trace.
+        for invalid in ("", 0, False, None):
+            self.reset_capture()
+            self.logs()[0]["traceId"] = invalid
+            self.logs()[0].pop("spanId")
+            self.expect("context.invalid_id")
+
+    def test_log_context_policy_rejects_nonboolean_values(self):
+        self.policy["logs"]["security.access_decision"]["require_span_context"] = "false"
+        self.assertEqual(self.call().returncode, 2)
+
     def test_log_correlation_and_normalized_ids(self):
         for span in self.spans():
             span["traceId"] = span["traceId"].upper()
