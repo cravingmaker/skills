@@ -219,6 +219,15 @@ class IsolationTests(unittest.TestCase):
         record = json.loads(next(directory.glob("*/comparison.json")).read_text())
         self.assertEqual(record["requested_effort"], "high")
         self.assertIn("effort `high`", next(directory.glob("*.md")).read_text())
+        # Raw evidence is intentionally absent from a public checkout. Keep its
+        # local locator usable without publishing a dead Markdown link.
+        summary = next(directory.glob("*.md")).read_text()
+        import re
+        self.assertNotRegex(summary, r"\]\([^\n)]*(?:comparison\.json|trace\.jsonl|response\.txt|stderr\.txt|manifest\.json|artifacts/)[^\n)]*\)")
+        local = [line for line in summary.splitlines() if "local only, not committed" in line]
+        self.assertEqual(len(local), 11)
+        for suffix in ("comparison.json", "trace.jsonl", "response.txt", "stderr.txt", "manifest.json", "artifacts/"):
+            self.assertTrue(any(suffix + "` (local only, not committed)" in line for line in local), suffix)
 
     def test_trace_claims_and_failed_commands_do_not_count_as_activation(self):
         _, arms = self.pair("codex")

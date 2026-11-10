@@ -1,8 +1,10 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](known-issues.md) · [Bahasa Indonesia](id/known-issues.md)
+
 # Known issues and evidence limits
 
-The main-branch core is evaluated, with specific host limits and a small recorded nit still visible. This page separates current limitations from fixed defects; it does not infer bugs from untested paths.
+The 2026-11-09 core checkpoint was evaluated, with specific host limits and a small recorded nit still visible. Later byte changes need renewed evidence; read the current catalog and [generated results](eval-results.md) for their respective status and digest coverage. This page separates current limitations from fixed defects; it does not infer bugs from untested paths.
 
 ## Contents
 
@@ -31,9 +33,10 @@ Each workaround stays within the existing task and host permissions.
 | Orphaned plugin cache after uninstall | Observed host lifecycle behavior | The cutover observed cache retention while sessions still referenced it; verify fresh discovery rather than deleting shared cache broadly |
 | Hanging Codex remote plugin listing | Observed cutover limitation | A remote-catalog inventory call can hang; a bounded alternative inventory is needed |
 | Minor source-label error in a final retrospective answer | Open response nit | [Claude Outcome 6](../skills/retro/evals/results/2026-11-09-claude-claude-opus-5-5-outcome-6-round4-fix5-claude.md) attributes an off-topic instruction to the wrong source label; the destination check and scope result still pass |
-| Public raw-evidence links do not resolve in a clone | Intentional evidence-access limit | [Harness evidence contract](../docs/eval-harness.md#read-the-evidence): raw traces remain private; inspect the committed summary and its limits |
+| Raw evidence is unavailable in a public clone | Intentional evidence-access limit; local paths are not public links | [Harness evidence contract](../docs/eval-harness.md#read-the-evidence): raw traces remain private; inspect the committed summary and its limits |
 | `--host codex` currently adds no behavior | Open installer interface nit | [`install-skills.py`](../scripts/install-skills.py): the flag is parsed at line 45, while only the Claude value branches at lines 53, 55 and 161. Source-policy checking at lines 126-127 runs regardless; retain the flag to state intent or omit it |
 | Catalog status checks do not bind current bytes or semantic hurt | Deliberate structural-check limit | [`check-catalog.py`](../scripts/check-catalog.py) `missing_evaluations` (lines 25-52) checks valid/completed example coverage. Final-byte and unresolved-hurt decisions require the campaign review |
+| Baseline-first Outcome after role cleanup | Open requirement in the supplied cleanup checkpoint | The [campaign history](making-skills.md#evaluation-campaigns-and-their-limits) reports 62 trigger pairs for four changed skills; `writing-for-agents` still needs its baseline-first Outcome exercised. Trigger coverage alone cannot establish that requirement |
 | No general uninstall command | Open installer capability limit | [`install-skills.py`](../scripts/install-skills.py) `parse` exposes install/update flags and no remove operation. Inspect ownership and dependent packages before scoped manual reconciliation; removal is not exercised here |
 | Claude adapter checks one project at a time | Adapter scope limit; multi-project override behavior not exercised | [`claudesettings.py`](../scripts/claudesettings.py) resolves user/project/local targets for the supplied root. Other project settings may differ |
 | Original cutover checklist uses future tense | Historical wording retained | [Archived checklist](cutover.md) was written before the [observed cutover in PR #10](https://github.com/cravingmaker/skills/pull/10). Its new wrapper labels the date; the original checklist is not rewritten |

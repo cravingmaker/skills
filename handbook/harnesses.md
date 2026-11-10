@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](harnesses.md) · [Bahasa Indonesia](id/harnesses.md)
+
 # Supported harnesses
 
 Claude Code and Codex CLI have recorded installation, discovery, invocation, and paired-evaluation evidence. T3 Code is a front end for those providers; it is not a third independently evaluated model host in this repository.
@@ -79,11 +81,11 @@ The generated table counts retained historical summaries at all revisions. Valid
 
 | Host as recorded | Effective model | Valid | Invalid | Total |
 | --- | --- | ---: | ---: | ---: |
-| `2.1.311 (Claude Code)` | `claude-opus-5-5` | 593 | 108 | 701 |
+| `2.1.311 (Claude Code)` | `claude-opus-5-5` | 626 | 108 | 734 |
 | `2.1.311 (Claude Code)` | `default` | 0 | 2 | 2 |
 | `codex-cli 0.167.0` | `default` | 0 | 3 | 3 |
-| `codex-cli 0.167.0` | `gpt-6.1-sol` | 770 | 0 | 770 |
-| All | | 1363 | 113 | 1476 |
+| `codex-cli 0.167.0` | `gpt-6.1-sol` | 802 | 0 | 802 |
+| All | | 1428 | 113 | 1541 |
 
 <!-- END GENERATED eval-records -->
 

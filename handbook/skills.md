@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](skills.md) · [Bahasa Indonesia](id/skills.md)
+
 # Skill reference
 
 One entry per skill, in alphabetical order: its full description, how it starts, what it requires and what requires it, what installing it brings along, the other skills its instructions point to, its evaluation status and where it came from.
@@ -35,7 +37,7 @@ Everything below the "How to read an entry" section is generated from `catalog/s
 
 Write a self-contained task brief for a fresh agent, with skills, permissions, evidence, and a return contract. Use when preparing a delegation or repairing a brief that depends on missing history.
 
-- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** unevaluated.
+- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** evaluated.
 - **Requires:** none. **Required by:** [`agent-debate`](#agent-debate), [`agent-orchestrator`](#agent-orchestrator), [`implement-spec`](#implement-spec).
 - **Install closure (1):** `agent-briefing`.
 - **Optional routes in its instructions:** [`agent-orchestrator`](#agent-orchestrator), [`clear-communication`](#clear-communication), [`decision-log`](#decision-log), [`result-verification`](#result-verification), [`work-decomposition`](#work-decomposition).
@@ -46,13 +48,13 @@ Write a self-contained task brief for a fresh agent, with skills, permissions, e
 
 > - "Write the brief for a fresh QA agent to verify this migration, with a unique report and no repository edits." Expect: complete context, explicit report exception, evidence, skills, and return obligations.
 > - "This agent keeps missing constraints from our chat; repair its delegation brief." Expect: the missing constraints and open decisions appear in the brief itself.
-> - Brief a worker from this approved spec and ticket, using exact paths and hashes, named Proof, and the existing testing seams.
+> - "Brief a worker from this approved spec and ticket." Expect exact paths and hashes, named Proof, and the existing testing seams.
 
 #### Keep these neighboring requests separate
 
 > - "Write a creative brief for a summer ad campaign." Expect: marketing work without an agent dispatch contract.
 > - "Implement the small change described in this complete worker brief; do not delegate." Expect: direct execution of the assignment without generating another brief.
-> - Explain how an existing subsystem works. Expect a source-grounded answer, with no dispatch brief.
+> - "Explain how the existing billing subsystem works." Expect a source-grounded answer, with no dispatch brief.
 
 #### Check the result
 
@@ -108,7 +110,7 @@ Find the best approach through structured disagreement between agents, with blin
 
 Coordinate a multi-agent run: plan, delegate, debate, and verify combined results. Use when asked to act as agent-orchestrator, manage agents, or pick up an earlier agent run and finish it; resume from its durable record.
 
-- **Starts:** model selection when the task fits. **Kind:** router. **Status:** unevaluated.
+- **Starts:** model selection when the task fits. **Kind:** router. **Status:** evaluated.
 - **Requires:** [`work-decomposition`](#work-decomposition), [`agent-briefing`](#agent-briefing), [`agent-debate`](#agent-debate), [`result-verification`](#result-verification), [`decision-log`](#decision-log), [`clear-communication`](#clear-communication), [`grill-with-docs`](#grill-with-docs), [`to-spec`](#to-spec), [`to-tickets`](#to-tickets), [`implement-spec`](#implement-spec), [`retro`](#retro). **Required by:** none.
 - **Install closure (19):** `agent-briefing`, `agent-debate`, `agent-orchestrator`, `change-review`, `clear-communication`, `codebase-design`, `decision-log`, `domain-modeling`, `grill-with-docs`, `grilling`, `implement`, `implement-spec`, `result-verification`, `retro`, `tdd`, `to-spec`, `to-tickets`, `work-decomposition`, `writing-for-agents`.
 - **Optional routes in its instructions:** [`architect`](#architect), [`babysit-pr`](#babysit-pr), [`change-review`](#change-review), [`codebase-design`](#codebase-design), [`correct`](#correct), [`file-pr`](#file-pr), [`full-send`](#full-send), [`full-stop`](#full-stop), [`grilling`](#grilling), [`implement`](#implement), [`interrogate`](#interrogate), [`project-guardrails`](#project-guardrails), [`sol-loop`](#sol-loop), [`tdd`](#tdd).
@@ -132,8 +134,8 @@ Coordinate a multi-agent run: plan, delegate, debate, and verify combined result
 > - "Fix this typo in the README." Expect: the fix, done directly; no plan, briefs, or agents.
 > - "Explain the difference between a subagent and a skill." Expect: a direct explanation; nothing is dispatched.
 > - "You are the research worker; write only the dossier at this path and do not delegate." Expect: the bounded worker task; the orchestrator does not activate inside the worker.
-> - Explain one settled implementation choice. Expect a scoped explanation without an interview or task graph.
-> - A worker asks for its independent review. Expect a report to the coordinator, without a child controller.
+> - "Explain why we chose this settled implementation." Expect a scoped explanation without an interview or task graph.
+> - "You are a worker; give your independent review of this change to the coordinator." Expect a report to the coordinator, without a child controller.
 
 #### Check the result
 
@@ -396,7 +398,7 @@ Clarify complex explanations, substantial writing, and consequential ambiguity w
 
 Refine a named module's public interface or test seam in one codebase. Apply depth, deletion-test and adapter-boundary heuristics to its code and callers; provide required shared vocabulary. Broad distributed-system and infrastructure architecture is outside this scope.
 
-- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** unevaluated.
+- **Starts:** model selection when the task fits. **Kind:** capability. **Status:** evaluated.
 - **Requires:** none. **Required by:** [`architect`](#architect), [`improve-codebase-architecture`](#improve-codebase-architecture), [`tdd`](#tdd).
 - **Install closure (1):** `codebase-design`.
 - **Optional routes in its instructions:** [`architect`](#architect), [`domain-modeling`](#domain-modeling).

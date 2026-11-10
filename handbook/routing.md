@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](routing.md) · [Bahasa Indonesia](id/routing.md)
+
 # Routing and dependencies
 
 Skills connect in three ways. A `requires` edge means one skill cannot work without another, so installing it installs both. An optional route is a sentence such as "use the `how` skill" in a skill's instructions; it installs nothing. A catalog assignment records which capabilities serve the coordinator or any task.

@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](how-and-why.md) · [Bahasa Indonesia](id/how-and-why.md)
+
 # Why and how the collection is made
 
 This is one personal collection with one owned skill per job. Its priorities are shared understanding without verbosity, then an environment that rejects wrong work through structure and checks.
@@ -116,5 +118,7 @@ Deterministic fixtures need no model calls. Model evaluation needs an explicitly
 Human documentation has its own generation and separation checks. See [maintaining these pages](maintaining-docs.md) for the exact command and failure cases.
 
 ## Read the history
+
+[How the collection was made](making-skills.md#construction-phases-and-pull-requests) records the phase-by-phase work, models, blind drafts, independent reviews, core adoption, role experiment, and 2026-11-10 retrospective. It distinguishes PRs #2–#7 merging into stacked parents from PR #8 landing them on main, and keeps PRs #11–#12 closed-unmerged separate from the cleanup and documentation follow-ups. The [making-skills method table](making-skills.md#skills-and-tools-used-to-make-skills) also distinguishes methods followed by hand from actual skill loading.
 
 The [changelog](../CHANGELOG.md) gives one plain-language entry for every merged PR through the documented main snapshot. Public PR bodies provide history, including old draft and "not yet verified" statements. Use the current catalog, current source bytes, later evaluation records, and subsequent PRs to establish today's state.

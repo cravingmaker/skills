@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](choosing-skills.md) · [Bahasa Indonesia](id/choosing-skills.md)
+
 # Choosing a skill
 
 Find what you want to do, then use the skill in that row. Typed-only skills appear as `/<name>`: type them, or `$<name>` in Codex. For the others, say what you want in plain words; the phrases shown are examples, not required wording.

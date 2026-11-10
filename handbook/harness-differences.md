@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](harness-differences.md) · [Bahasa Indonesia](id/harness-differences.md)
+
 # Claude Code, Codex, and T3 Code
 
 The skill method is shared, while discovery, invocation policy, activation traces, and available execution tools differ. The evidence supports specific differences; it does not isolate host effects from model, permission, or fixture effects.
@@ -80,6 +82,8 @@ A skill's scope is not a sandbox, and test-needed authority does not bypass syst
 These are harness configurations, not recommendations for weakening a real user's permissions. The source adapter and [PR #9](https://github.com/cravingmaker/skills/pull/9) establish the recorded behavior. Server-enforced settings outside local traces remain a limit.
 
 An empty Claude settings-source list hid user skills on the recorded version, so the harness enables only its controlled temporary user source. A clean project alone does not remove user plugins or memory context. A long Claude temporary path also triggered shared-temp fallback before the harness correction. Those confounds explain why some attempted comparisons were invalid rather than behavioral evidence.
+
+The [construction incidents](making-skills.md#protocol-exceptions-and-lessons) also record two campaign-worker startup memory reads and one personal-preference probe despite brief boundaries. Those worker incidents are separate from the configured paired arms. Treat host-injected context, per-arm temporary roots, fork rejection, and stable dedicated worktrees as conditions to verify; a prose promise is insufficient.
 
 ## Observed result differences
 

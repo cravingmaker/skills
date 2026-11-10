@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](gotchas.md) · [Bahasa Indonesia](id/gotchas.md)
+
 # Gotchas
 
 Most surprises come from confusing visibility with access, installation with execution, or a draft with delivery authority. Each entry below names the symptom, its cause, and the next useful action.
@@ -61,6 +63,8 @@ An approved artifact should be consumed with its identity and decisions intact. 
 | A graph is imported but dispatch is blocked | Execution overlays, finite budget, ownership, or host capabilities are missing | Fill the coordinator-owned fields and report the actual blocked step |
 | Unit tests pass but the story's Proof is unresolved | The declared surface was never observed | Run the named CLI/UI/native/API journey on the exact artifact |
 | A worker says COMPLETE but integration fails | Worker and combined revisions differ | Accept the integrated result with its own Proof |
+| Evaluation reads change while another task switches branches | Shared checkout bytes moved during a campaign | Stop affected runs and rerun from a dedicated worktree with pinned inputs |
+| A large campaign stays under its concurrency cap but costs too much | Active-run limits do not bound total starts or tokens | Set both budgets before the campaign and carry spent counters forward |
 | A new context window seems to offer more starts | Resumption was mistaken for a new budget | Carry the original spent, reserved, active, and remaining counters |
 
 See the [ticket importer method](../skills/work-decomposition/SKILL.md#import-approved-tickets) for accepted and rejected field forms. Its strictness prevents a hidden or ambiguous Proof or blocker from silently disappearing.
@@ -94,14 +98,18 @@ The shell's default interpreter may differ from the one available on PATH. Check
 | Claude denies a composite command in a no-prompt run | Permission rules can evaluate its subcommands independently | Inspect the denied operation; use a permitted simple command when sufficient |
 | Claude denies a hook-file edit despite general Write permission | Protected paths have additional permission behavior | Keep the real path blocked unless permitted; a stand-in fixture proves only the stand-in |
 | A report or continuation note is absent from the repository | The architecture and handoff methods use an OS temporary path | Open the returned path; preserve a durable run in its existing record before temporary cleanup |
+| New disposable PostgreSQL clusters stop starting | Killed clusters can leave shared-memory resources | Shut test databases down cleanly; reconcile leftovers within authorized scope |
+| A flaky macOS process cleanup reports `killpg` EPERM | A zombie-only process group affected a recorded zsh test | Distinguish a live process from a zombie-only group; see the [incident and repeated-test counts](making-skills.md#protocol-exceptions-and-lessons) |
 | A dotenv write refuses a secret-shaped value | The serializer cannot prove the real loader reads it unchanged | Use the declared secret store/manual destination or prove a correct serializer round trip |
 
 Never loosen a parser just to accept a value that reads back differently. The [wizard method](../skills/wizard/SKILL.md) explains its dotenv and shell formats, destination constraints, and refusal rules.
 
 ## Evaluation records
 
-Public Markdown summaries intentionally link to raw artifacts that are retained privately and ignored by Git. A missing raw trace in a public clone is an evidence-access limit, not proof that the comparison never ran.
+Public Markdown summaries mark raw artifacts as local-only code text; those artifacts are retained privately and ignored by Git. A missing raw trace in a public clone is an evidence-access limit, not proof that the comparison never ran.
 
 Treat an invalid record as an attempted comparison, not coverage. Treat a valid record as an isolated completed comparison, then read its behavioral judgment. An old digest or a superseded hurt remains history until final-byte evidence establishes the current state.
+
+Select intended records explicitly and validate a clean export: an untracked record can affect the catalog gate, and a stray record once entered a documentation commit. The [construction lessons](making-skills.md#protocol-exceptions-and-lessons) distinguish campaign-worker boundary breaches from controlled paired arms.
 
 If validation says `Skipped the prose tests: Vale is not installed.`, its exit 0 does not establish prose lint. Install the declared Vale version and use `REQUIRE_VALE=1`; [`scripts/validate.sh`](../scripts/validate.sh) makes that requirement explicit.

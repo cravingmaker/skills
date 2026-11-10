@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](typed-commands.md) · [Bahasa Indonesia](id/typed-commands.md)
+
 # Typed commands
 
 Manual-only entries request deliberate selection: `/<name>` in Claude Code, `$<name>` in Codex. Host policy suppresses implicit selection; it does not prevent filesystem reads or required composition. Each entry below explains the practical reason to select that workflow explicitly; the catalog records the preference, not a historical rationale.

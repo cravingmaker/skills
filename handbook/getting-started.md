@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](getting-started.md) · [Bahasa Indonesia](id/getting-started.md)
+
 # Getting started
 
 Install a small useful set, preserve the host's invocation policy, then verify discovery in a fresh session. Installing a skill supplies instructions and resources; it grants no new tools, credentials, subscriptions, or task authority.

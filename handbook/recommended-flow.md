@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](recommended-flow.md) · [Bahasa Indonesia](id/recommended-flow.md)
+
 # The recommended flow
 
 The usual path is a grounded interview, an agreed spec, stable tickets, implementation with proof, then a requested retrospective. Enter at the stage your work needs; an already agreed decision or small fix does not need the whole sequence.

@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](README.md) · [Bahasa Indonesia](id/README.md)
+
 # Using the skills collection
 
 This handbook explains what to type, what the agent should do next, and what the evidence actually proves. Start with installation, then use the intent guide for the job in front of you.
@@ -36,12 +38,13 @@ This handbook explains what to type, what the agent should do next, and what the
 | --- | --- |
 | What commonly surprises people? | [Gotchas](gotchas.md) |
 | What is broken, fixed, blocked, or still unproven? | [Known issues](known-issues.md) |
+| What do the committed evaluations show at current skill bytes? | [Evaluation results](eval-results.md) |
 | Which hosts and versions have evidence? | [Supported harnesses](harnesses.md) |
 | How do host mechanics, flows, and results differ? | [Harness differences](harness-differences.md) |
 
 ## How the collection is maintained
 
-Read [why and how it is made](how-and-why.md), the [merged-PR changelog](../CHANGELOG.md), and [how these pages are generated](maintaining-docs.md). The [authoring guide](../docs/authoring-guide.md), [installation contract](../docs/installing.md), [evaluation harness](../docs/eval-harness.md) remain the agent-facing technical documents. The [cutover checklist](cutover.md) and [install and discovery proof](install-and-discovery-proof.md) are human-only historical records.
+Read [how the collection was made](making-skills.md), [why and how it is maintained](how-and-why.md), the [merged-PR changelog](../CHANGELOG.md), and [how these pages are generated](maintaining-docs.md). The [authoring guide](../docs/authoring-guide.md), [installation contract](../docs/installing.md), [evaluation harness](../docs/eval-harness.md) remain the agent-facing technical documents. The [cutover checklist](cutover.md) and [install and discovery proof](install-and-discovery-proof.md) are human-only historical records.
 
 ## Words used throughout
 

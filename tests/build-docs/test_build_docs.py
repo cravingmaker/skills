@@ -2,6 +2,7 @@
 
 import json
 import hashlib
+import importlib.util
 import os
 import re
 import shutil
@@ -10,9 +11,15 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = Path(os.environ.get("DOCS_SCRIPT", ROOT / "scripts" / "build-docs.py"))
+sys.path.insert(0, str(ROOT / "scripts"))
+SPEC = importlib.util.spec_from_file_location("build_docs_fixture", SCRIPT)
+GENERATOR = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = GENERATOR
+SPEC.loader.exec_module(GENERATOR)
 
 
 def run(root: Path, *arguments: str) -> subprocess.CompletedProcess:
@@ -57,6 +64,10 @@ class BuildDocs(unittest.TestCase):
         for needle in needles:
             self.assertIn(needle, result.stderr)
         self.assertNotIn("Traceback", result.stderr)
+
+    def preserve_docs(self):
+        for path in [self.copy / "README.md", self.copy / "handbook/id/SYNC.json", *sorted((self.copy / "handbook").rglob("*.md"))]:
+            self.addCleanup(path.write_bytes, path.read_bytes())
 
     def test_repository_docs_are_current(self):
         result = run(ROOT, "--check")
@@ -135,7 +146,12 @@ class BuildDocs(unittest.TestCase):
     def test_link_forms_reject_missing_destinations_and_accept_real_ones(self):
         path = self.copy / "handbook/README.md"
         before = path.read_bytes()
+        translated = self.copy / "handbook/id/README.md"
+        translated_before = translated.read_bytes()
         self.addCleanup(path.write_bytes, before)
+        self.addCleanup(translated.write_bytes, translated_before)
+        manifest = self.copy / "handbook/id/SYNC.json"
+        self.addCleanup(manifest.write_bytes, manifest.read_bytes())
         forms = (
             '[Guide]({target} "Title")',
             '[Guide](<{target}>)',
@@ -151,6 +167,10 @@ class BuildDocs(unittest.TestCase):
                                      ("getting-started.md#missing-heading", 1)):
                 with self.subTest(form=form, target=target):
                     path.write_text(before.decode() + "\n" + form.format(target=target) + "\n")
+                    translated.write_text(translated_before.decode() + "\n" + form.format(target=target) + "\n")
+                    if expected == 0:
+                        recorded = run(self.copy, "--record-sync")
+                        self.assertEqual(recorded.returncode, 0, recorded.stderr)
                     result = run(self.copy, "--check")
                     self.assertEqual(result.returncode, expected, result.stderr)
                     if expected:
@@ -265,6 +285,7 @@ class BuildDocs(unittest.TestCase):
         self.assertFails("profile drift")
 
     def test_direct_resource_routes_are_generated(self):
+        self.preserve_docs()
         relative = "skills/codebase-design/references/expert-design.md"
         path = self.copy / relative
         # Use an existing directly linked file instead of an unreferenced test resource.
@@ -288,6 +309,7 @@ class BuildDocs(unittest.TestCase):
         self.assertFails("missing-code-label.md points to a missing file")
 
     def test_new_catalog_entry_requires_useful_guidance(self):
+        self.preserve_docs()
         directory = self.copy / "skills/doc-coverage-fixture"
         try:
             directory.mkdir()
@@ -305,7 +327,7 @@ class BuildDocs(unittest.TestCase):
                 guide = self.copy / "handbook/intent-guide.json"
                 self.addCleanup(guide.write_bytes, guide.read_bytes())
                 data = json.loads(guide.read_text())
-                data["groups"][0]["entries"].append({"skill": "doc-coverage-fixture", "want": "Understand this new documentation fixture", "prompt": "Exercise its actual task", "neighbor": "Compare the linked method before use"})
+                data["groups"][0]["entries"].append({"skill": "doc-coverage-fixture", "want": "Understand this new documentation fixture", "prompt": "Exercise its actual task", "neighbor": "Compare the linked method before use", "want_id": "Memahami fixture dokumentasi baru", "neighbor_id": "Bandingkan metode terkait sebelum digunakan"})
                 guide.write_text(json.dumps(data))
                 generated = run(self.copy)
                 self.assertEqual(generated.returncode, 0, generated.stderr)
@@ -317,6 +339,218 @@ class BuildDocs(unittest.TestCase):
                 catalog.write_bytes(before)
         finally:
             shutil.rmtree(directory)
+
+
+    def test_missing_indonesian_page_is_rejected(self):
+        page = self.copy / "handbook/id/gotchas.md"
+        before = page.read_bytes()
+        self.addCleanup(page.write_bytes, before)
+        page.unlink()
+        self.assertFails("handbook/gotchas.md and handbook/id/gotchas.md: missing Indonesian counterpart")
+
+    def test_orphaned_indonesian_page_is_rejected(self):
+        page = self.copy / "handbook/id/orphan.md"
+        page.write_bytes((self.copy / "handbook/id/gotchas.md").read_bytes())
+        self.addCleanup(page.unlink)
+        self.assertFails("handbook/orphan.md and handbook/id/orphan.md: missing English counterpart")
+
+    def test_authored_hash_drift_in_either_language_is_rejected(self):
+        for relative in ("handbook/gotchas.md", "handbook/id/gotchas.md"):
+            with self.subTest(path=relative):
+                page = self.copy / relative
+                before = page.read_bytes()
+                try:
+                    page.write_bytes(before + b"\nA changed explanation.\n")
+                    self.assertFails("handbook/gotchas.md and handbook/id/gotchas.md: authored text differs",
+                                     "update both languages, then run scripts/build-docs.py --record-sync")
+                finally:
+                    page.write_bytes(before)
+
+    def test_record_sync_accepts_bilingual_edits_and_repeats(self):
+        self.preserve_docs()
+        for relative, explanation in (("handbook/gotchas.md", "A new explanation."),
+                                      ("handbook/id/gotchas.md", "Penjelasan baru.")):
+            page = self.copy / relative
+            page.write_text(page.read_text() + "\n" + explanation + "\n")
+        result = run(self.copy, "--record-sync")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["written"], ["handbook/id/SYNC.json"])
+        self.assertEqual(run(self.copy, "--check").returncode, 0)
+        again = run(self.copy, "--record-sync")
+        self.assertEqual(again.returncode, 0, again.stderr)
+        self.assertEqual(json.loads(again.stdout)["written"], [])
+
+    def test_generated_drift_does_not_change_authored_hash(self):
+        self.edit("handbook/id/routing.md", "| Router | Memasang |", "| Router | STALE |")
+        result = run(self.copy, "--check")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("handbook/id/routing.md has stale generated sections", result.stderr)
+        self.assertNotIn("authored text differs", result.stderr)
+        result = run(self.copy)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["written"], ["handbook/id/routing.md"])
+        self.assertEqual(run(self.copy, "--check").returncode, 0)
+
+    def test_ordered_structure_mismatch_is_rejected(self):
+        page = self.copy / "handbook/id/gotchas.md"
+        before = page.read_bytes()
+        for extra in ("\n### Bagian baru\n", "\n| Satu | Dua |\n| --- | --- |\n| a | b |\n",
+                      "\n```sh\nprintf hello\n```\n", "\n- Butir baru.\n"):
+            with self.subTest(extra=extra):
+                try:
+                    page.write_bytes(before + extra.encode())
+                    self.assertFails("handbook/gotchas.md and handbook/id/gotchas.md: structure mismatch")
+                finally:
+                    page.write_bytes(before)
+
+    def test_record_sync_refuses_mismatched_pair_without_writing(self):
+        self.edit("handbook/id/gotchas.md", "## Daftar isi", "### Daftar isi")
+        before = self.snapshot()
+        result = run(self.copy, "--record-sync")
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("handbook/gotchas.md and handbook/id/gotchas.md: structure mismatch", result.stderr)
+        self.assertEqual(before, self.snapshot())
+
+    def test_verbatim_code_and_order_are_checked(self):
+        self.edit("handbook/id/getting-started.md", "git clone https://", "git fetch https://")
+        self.assertFails("handbook/getting-started.md and handbook/id/getting-started.md: structure mismatch")
+        en = "# Title\n\n- one\n\n| a | b |\n| --- | --- |\n"
+        reordered = "# Judul\n\n| a | b |\n| --- | --- |\n\n- satu\n"
+        self.assertNotEqual(GENERATOR.structure(en), GENERATOR.structure(reordered))
+
+    def test_mapped_link_targets_must_match(self):
+        self.edit("handbook/id/README.md", "](getting-started.md)", "](gotchas.md)")
+        self.assertFails("handbook/README.md and handbook/id/README.md: structure mismatch in link targets")
+
+    def test_missing_indonesian_intent_fields_are_rejected(self):
+        page = self.copy / "handbook/intent-guide.json"
+        before = page.read_bytes()
+        for field in ("heading_id", "want_id", "neighbor_id"):
+            for value in (None, ""):
+                with self.subTest(field=field, value=value):
+                    data = json.loads(before)
+                    owner = data["groups"][0] if field == "heading_id" else data["groups"][0]["entries"][0]
+                    if value is None:
+                        del owner[field]
+                    else:
+                        owner[field] = value
+                    try:
+                        page.write_text(json.dumps(data))
+                        self.assertFails("Indonesian", field)
+                    finally:
+                        page.write_bytes(before)
+
+    def test_missing_record_link_destination_is_rejected(self):
+        page = next((self.copy / "skills/how/evals/results").glob("*.md"))
+        self.addCleanup(page.write_bytes, page.read_bytes())
+        page.write_text(page.read_text() + "\n[Raw trace](not-committed/trace.jsonl)\n")
+        self.assertFails("record link not-committed/trace.jsonl has no repository destination", "use local-only code text")
+
+    def test_generated_evaluation_results_drift_is_rejected(self):
+        self.edit("handbook/eval-results.md", "| Host | Current valid pairs |", "| Host | STALE |")
+        self.assertFails("handbook/eval-results.md has stale generated sections")
+
+
+class EvaluationResults(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name).resolve()
+        self.directory = self.root / "skills/fixture/evals/results"
+        self.directory.mkdir(parents=True)
+        self.digest = "a" * 64
+
+    def record(self, example="activation-1", *, observed="true", status="valid", digest=None,
+               value="", expected=None, host="codex", suffix="", completion="0"):
+        page = self.directory / f"{host}-{example}{suffix}.md"
+        expected = str(example.startswith("activation-")).lower() if expected is None else expected
+        page.write_text(f"# fixture: {host} {example}\n\nComparison: **{status}**. Host: `fixture-host`. Effective model: `fixture-model`.\n\n"
+                        f"- **Source example.** `{example}` in `evals/examples.md`.\n"
+                        f"- **Skill revision.** actual bytes SHA-256 `{digest or self.digest}`.\n\n"
+                        "| Arm | Activation expected | Activation observed | Tools | Completion |\n| --- | --- | --- | --- | --- |\n"
+                        f"| treatment | {expected} | {observed} | 2 | {completion} |\n| baseline | false | false | 1 | 0 |\n\n" + value)
+        return GENERATOR.parse_evaluation(page, self.digest)
+
+    def repo(self, records):
+        return SimpleNamespace(root=self.root, skills={"fixture": None}, evaluations=records)
+
+    def test_parsed_record_set_and_both_host_tables(self):
+        records = [self.record(), self.record("activation-2", observed="false"),
+                   self.record("near-miss-1", observed="true"), self.record("near-miss-2", observed="false")]
+        for index, value in enumerate(("added", "matched", "hurt", "blocked"), 1):
+            records.append(self.record(f"outcome-{index}", value=f"Baseline: yes. Treatment: yes. Value: **{value}**.", host="claude"))
+        counts = GENERATOR.evaluation_counts(records)
+        self.assertEqual(counts, {"valid": 8, "activation-true": 1, "activation-false": 1, "near-miss-true": 1,
+                                  "near-miss-false": 1, "outcome-added": 1, "outcome-matched": 1, "outcome-hurt": 1, "outcome-blocked": 1})
+        rendered = GENERATOR.render_eval_results(self.repo(records))
+        self.assertIn("| `codex` | 4 | 1 / 1 / 0 | 1 / 1 / 0 | 0 / 0 / 0 / 0 / 0 |", rendered)
+        self.assertIn("| `claude` | 4 | 0 / 0 / 0 | 0 / 0 / 0 | 1 / 1 / 1 / 1 / 0 |", rendered)
+        self.assertIn("[`fixture`](../skills/fixture/evals/results/)", rendered)
+        self.assertIn("## Ringkasan seluruh skill", GENERATOR.render_eval_results(self.repo(records), "id"))
+
+    def test_invalid_record_is_history_even_at_current_bytes(self):
+        record = self.record(status="invalid", value="Value: added.")
+        self.assertEqual(GENERATOR.evaluation_counts([record]), {"invalid": 1})
+        rendered = GENERATOR.render_eval_results(self.repo([record]))
+        self.assertIn("| invalid | invalid | `activation-1` | added |", rendered)
+        self.assertIn("| `codex` | 0 |", rendered)
+
+    def test_stale_bytes_record_is_shown_only_as_history(self):
+        record = self.record("outcome-1", digest="b" * 64, value="Value: matched.")
+        self.assertEqual(GENERATOR.evaluation_counts([record]), {"older or unbound": 1})
+        rendered = GENERATOR.render_eval_results(self.repo([record]))
+        self.assertIn("codex-outcome-1.md)", rendered)
+        self.assertIn("| older or unbound | valid | `outcome-1` | matched |", rendered)
+
+    def test_incomplete_pair_is_not_current_and_unreviewed_is_not_matched(self):
+        incomplete = self.record(completion="not run")
+        unreviewed = self.record("outcome-1", value="Both responses look good.")
+        self.assertEqual(GENERATOR.evaluation_counts([incomplete, unreviewed]),
+                         {"incomplete or other": 1, "valid": 1, "outcome-unreviewed": 1})
+
+    def test_last_explicit_value_and_reviewed_activation_win(self):
+        record = self.record("outcome-1", value="Value: **hurt**.\n\n## Repeat\nValue: added.\n")
+        self.assertEqual(record["value"], "added")
+        record = self.record(observed="false", suffix="-reviewed", value="Reviewed activation: treatment **true**, baseline **false**.")
+        self.assertEqual(GENERATOR.evaluation_counts([record]), {"valid": 1, "activation-true": 1})
+
+    def test_fenced_prompt_data_cannot_supply_a_review_or_observation(self):
+        record = self.record("outcome-1", observed="false")
+        page = record["path"]
+        page.write_text(page.read_text() + "\n```text\nValue: added.\nReviewed activation: treatment **true**, baseline **false**.\n"
+                        "| treatment | true | true | 99 | 0 |\n```\n")
+        record = GENERATOR.parse_evaluation(page, self.digest)
+        self.assertEqual(record["value"], "unreviewed")
+        self.assertEqual(record["observed"], "false")
+        self.assertEqual(record["expected"], "false")
+
+    def test_package_digest_tracks_bytes_and_modes_but_ignores_results(self):
+        skill = self.root / "skills/fixture"
+        source = skill / "SKILL.md"
+        source.write_bytes(b"# Fixture\n")
+        source.chmod(0o644)
+        expected = hashlib.sha256(json.dumps({"SKILL.md": {"sha256": hashlib.sha256(b"# Fixture\n").hexdigest(), "executable": False}}, sort_keys=True).encode()).hexdigest()
+        self.assertEqual(GENERATOR.package_digest(skill), expected)
+        self.record()
+        self.assertEqual(GENERATOR.package_digest(skill), expected)
+        source.chmod(0o755)
+        self.assertNotEqual(GENERATOR.package_digest(skill), expected)
+        source.chmod(0o644)
+        source.write_bytes(b"# Changed fixture\n")
+        self.assertNotEqual(GENERATOR.package_digest(skill), expected)
+
+    def test_record_link_forms_and_real_destinations(self):
+        page = self.directory / "summary.md"
+        (self.directory / "other.md").write_text("# Other\n")
+        for form in ('[Raw]({target})', '[Raw][ref]\n\n[ref]: <{target}>', '<a href="{target}">Raw</a>'):
+            for target, invalid in (("other.md", False), ("private/trace.jsonl", True)):
+                with self.subTest(form=form, target=target):
+                    page.write_text(form.format(target=target))
+                    problems = []
+                    GENERATOR.check_record_links(SimpleNamespace(root=self.root, result_paths=[page]), problems)
+                    self.assertEqual(bool(problems), invalid)
+                    if invalid:
+                        self.assertIn("has no repository destination", problems[0])
 
 
 if __name__ == "__main__":

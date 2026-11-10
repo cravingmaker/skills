@@ -1,5 +1,7 @@
 > **Human documentation.** Agents should not read this page unless a person asks them to.
 
+Language: [English](cutover.md) · [Bahasa Indonesia](id/cutover.md)
+
 # Historical core cutover checklist
 
 This checklist was written before cutover. PR #10 records the observed 2026-11-09 result; the archived future tense below is retained as history.
