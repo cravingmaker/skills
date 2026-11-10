@@ -1,0 +1,42 @@
+# Expect: FAIL lint (dangling-service). The Service selects app=api; the pods are labeled app=api-v2,
+# so the Service has no endpoints and every request fails.
+apiVersion: v1
+kind: Service
+metadata:
+  name: negative-api
+spec:
+  selector: {app: api}
+  ports:
+    - {port: 80, targetPort: 8080}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: negative-api
+spec:
+  selector:
+    matchLabels: {app: api-v2}
+  template:
+    metadata:
+      labels: {app: api-v2}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: app
+          image: example.test/app@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          resources:
+            requests: {cpu: 100m, memory: 64Mi}
+            limits: {memory: 64Mi}
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet: {path: /healthz/ready, port: 8080}
+          livenessProbe:
+            httpGet: {path: /healthz/live, port: 8080}

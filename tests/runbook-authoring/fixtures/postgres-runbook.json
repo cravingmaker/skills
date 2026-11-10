@@ -1,0 +1,154 @@
+{
+  "title": "Synthetic PostgreSQL acquisition runbook",
+  "alert": "SyntheticPoolQueue",
+  "runbook_url": "https://docs.example.invalid/runbooks/synthetic-db",
+  "owner": "synthetic-oncall",
+  "escalation": "synthetic-database-owner",
+  "target": "disposable synthetic fixture only",
+  "preconditions": [
+    "Reviewed saved observations; no database connections or commands executed"
+  ],
+  "abort": [
+    "Collector unknown or mitigation fails"
+  ],
+  "recovery": "Independent synthetic user-path result",
+  "last_rehearsed": "2000-01-01",
+  "rehearsal_receipt": "synthetic-receipt.txt",
+  "steps": [
+    {
+      "id": "observe",
+      "kind": "diagnostic",
+      "command": "Inspect authorized provider, pool and native database observation coverage",
+      "expected": "collector_visible",
+      "on_expected": "provider",
+      "otherwise": "escalate",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    },
+    {
+      "id": "provider",
+      "kind": "diagnostic",
+      "command": "Check direct authorized reachability and provider endpoint/status observations",
+      "expected": "database_reachable",
+      "on_expected": "locks",
+      "otherwise": "escalate",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    },
+    {
+      "id": "locks",
+      "kind": "diagnostic",
+      "command": "Inspect bounded pg_stat_activity/pg_locks and blocking relationships without query text",
+      "expected": "blocked",
+      "on_expected": "lock_change",
+      "otherwise": "capacity",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    },
+    {
+      "id": "capacity",
+      "kind": "diagnostic",
+      "command": "Compare actual connection and pool budgets, utilization and queued work",
+      "expected": "connections_exhausted",
+      "on_expected": "capacity_change",
+      "otherwise": "pool",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    },
+    {
+      "id": "capacity_change",
+      "kind": "mitigation",
+      "command": "Prepared bounded capacity mitigation through target-bound execution owner",
+      "expected": "mitigation_succeeds",
+      "on_expected": "verify",
+      "otherwise": "abort",
+      "timeout_seconds": 10,
+      "authority": "synthetic disposable-target authority receipt",
+      "undo": "Prepared inverse or explicit irreversible effects with independent recovery evidence"
+    },
+    {
+      "id": "lock_change",
+      "kind": "mitigation",
+      "command": "Prepared blocker mitigation through target-bound execution owner",
+      "expected": "mitigation_succeeds",
+      "on_expected": "verify",
+      "otherwise": "abort",
+      "timeout_seconds": 10,
+      "authority": "synthetic disposable-target authority receipt",
+      "undo": "Prepared inverse or explicit irreversible effects with independent recovery evidence"
+    },
+    {
+      "id": "pool",
+      "kind": "diagnostic",
+      "command": "Compare application pool active/max/queued values with native server connection headroom",
+      "expected": "pool_saturated",
+      "on_expected": "pool_change",
+      "otherwise": "archive",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    },
+    {
+      "id": "archive",
+      "kind": "diagnostic",
+      "command": "Compare pg_stat_archiver archived_count/failed_count over the same reset epoch",
+      "expected": "archive_stalled",
+      "on_expected": "archive_change",
+      "otherwise": "slots",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    },
+    {
+      "id": "slots",
+      "kind": "diagnostic",
+      "command": "Compare pg_replication_slots restart_lsn progress and retained WAL with capacity over time",
+      "expected": "slot_retention_pressure",
+      "on_expected": "slot_change",
+      "otherwise": "escalate",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    },
+    {
+      "id": "pool_change",
+      "kind": "mitigation",
+      "command": "Prepared target-bound candidate through database execution owner",
+      "expected": "mitigation_succeeds",
+      "on_expected": "verify",
+      "otherwise": "abort",
+      "timeout_seconds": 10,
+      "authority": "Synthetic disposable-target authority receipt",
+      "undo": "Prepared inverse or irreversible effects with usable recovery evidence"
+    },
+    {
+      "id": "archive_change",
+      "kind": "mitigation",
+      "command": "Prepared target-bound candidate through database execution owner",
+      "expected": "mitigation_succeeds",
+      "on_expected": "verify",
+      "otherwise": "abort",
+      "timeout_seconds": 10,
+      "authority": "Synthetic disposable-target authority receipt",
+      "undo": "Prepared inverse or irreversible effects with usable recovery evidence"
+    },
+    {
+      "id": "slot_change",
+      "kind": "mitigation",
+      "command": "Prepared target-bound candidate through database execution owner",
+      "expected": "mitigation_succeeds",
+      "on_expected": "verify",
+      "otherwise": "abort",
+      "timeout_seconds": 10,
+      "authority": "Synthetic disposable-target authority receipt",
+      "undo": "Prepared inverse or irreversible effects with usable recovery evidence"
+    },
+    {
+      "id": "verify",
+      "kind": "verification",
+      "command": "Independent user-path recovery and stable observation-window check",
+      "expected": "user_path_recovers",
+      "on_expected": "recovered",
+      "otherwise": "escalate",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    }
+  ]
+}

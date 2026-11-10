@@ -1,0 +1,52 @@
+{
+  "route": {
+    "receiver": "fallback",
+    "group_by": [
+      "service",
+      "cluster",
+      "alertname"
+    ],
+    "routes": [
+      {
+        "matchers": [
+          "severity=\"page\"",
+          "owner=\"example_owner\""
+        ],
+        "receiver": "pager"
+      },
+      {
+        "matchers": [
+          "severity=\"ticket\"",
+          "owner=\"example_owner\""
+        ],
+        "receiver": "tickets"
+      }
+    ]
+  },
+  "receivers": [
+    {
+      "name": "fallback"
+    },
+    {
+      "name": "pager"
+    },
+    {
+      "name": "tickets"
+    }
+  ],
+  "inhibit_rules": [
+    {
+      "source_matchers": [
+        "severity=\"page\""
+      ],
+      "target_matchers": [
+        "severity=\"ticket\""
+      ],
+      "equal": [
+        "service",
+        "cluster",
+        "owner"
+      ]
+    }
+  ]
+}

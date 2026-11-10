@@ -1,0 +1,7 @@
+{
+  "SecurityOptions": [
+    "name=seccomp,profile=builtin",
+    "name=rootless",
+    "name=cgroupns"
+  ]
+}

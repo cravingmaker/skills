@@ -1,0 +1,49 @@
+{
+  "name": "fixture",
+  "services": {
+    "db": {
+      "image": "fixture-db",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "check-fixture"
+        ]
+      },
+      "environment": {
+        "PASSWORD_FILE": "/run/secrets/fixture"
+      },
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "data",
+          "target": "/data"
+        }
+      ]
+    },
+    "app": {
+      "image": "fixture-app",
+      "depends_on": {
+        "db": {
+          "condition": "service_healthy",
+          "required": true
+        }
+      },
+      "ports": [
+        {
+          "target": 8080,
+          "published": "18080",
+          "host_ip": "127.0.0.1",
+          "protocol": "tcp"
+        }
+      ],
+      "environment": {
+        "MODE": "test"
+      }
+    }
+  },
+  "volumes": {
+    "data": {
+      "name": "fixture_data"
+    }
+  }
+}

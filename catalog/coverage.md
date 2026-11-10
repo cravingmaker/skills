@@ -23,9 +23,9 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | mobile-engineer | Software architecture | planned (shared architecture capabilities) | none | planned |
 | ui-ux-designer | UI and UX design | `prototype`, `domain-modeling`; remaining methods planned | none | planned |
 | qa-engineer | Quality assurance and testing | `tdd`, `change-review`; remaining QA methods planned | none | planned |
-| devops-engineer | Shell: zsh on macOS, bash on Linux | planned | none | planned |
-| devops-engineer | CI/CD | `fix-ci`; remaining delivery methods planned | none | planned |
-| devops-engineer | Docker and Kubernetes | planned | none | planned |
+| devops-engineer | Shell: zsh on macOS, bash on Linux | `shell-scripting`, `zsh-configuration`; interpreter, utility, failure and startup-mode proof | none | in PR |
+| devops-engineer | CI/CD | CI: `github-actions-workflow-authoring`, `github-actions-hardening`, `fix-ci` (search aliases ci-failure-triage, ci-failure-diagnosis), `workload-identity-federation`. CD: `release-automation`, `release-rollback-planning`, `software-supply-chain-provenance`. Baseline: `project-guardrails`. GitHub Actions first; other CI systems deferred | none | in PR |
+| devops-engineer | Docker and Kubernetes | `container-image-build`, `container-runtime-hardening`, `docker-compose-environments`, `kubernetes-workloads`, `kubernetes-troubleshooting`; Helm chart packaging, cluster security policy, cluster upgrades and Gateway API migration deferred to the extended set | none | in PR |
 | sysadmin | Shell, Linux, and system administration | planned | none | planned |
 | sysadmin | Network | planned | none | planned |
 | sysadmin | Hardware and software | planned | none | planned |
@@ -53,7 +53,7 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | agent-orchestrator | Run approved code tickets through one coordinator | `implement-spec`, `implement`, `work-decomposition`, `result-verification`; shared record and budget | none | in PR |
 | engineering and QA | Deep modules, design alternatives and architecture reports | `codebase-design`, `architect`, `improve-codebase-architecture`; domain methods and routers planned | none | in PR |
 | engineering, QA and systems | Build and diagnose an authorized slice | `implement`, `tdd`, `diagnosing-bugs`; domain methods planned | none | in PR |
-| agent-orchestrator, devops-engineer | Resumable setup for human-only steps | `wizard`; devops router planned | none | in PR |
+| agent-orchestrator, devops-engineer | Resumable setup for human-only steps | `wizard` | none | in PR |
 | engineering, QA, security and data | Code review, bounded fix loops and downstream effects | `change-review`, `sol-loop`, `interrogate`, `blast-radius` | none | in PR |
 | all roles | Explicit code, design or read-only provider panels | `council`, `sol-loop`, `agent-debate`; requested mode preserves authority | none | in PR |
 | engineering, QA, systems and data-scientist | Comparable benchmarks and explainable numbers | `benchmark-checklist`; domain methods planned | none | in PR |
@@ -86,3 +86,29 @@ Roadmaps from [roadmap.sh](https://roadmap.sh/roadmaps) are coverage references 
 | backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, sysadmin, security-engineer, data-engineer | Application instrumentation and security event contracts | `opentelemetry-instrumentation`, including security event contract reference | none | in PR |
 | backend-engineer, frontend-engineer, qa-engineer | Checked Node TypeScript deployment artifacts | `typescript-node-services`; Bun and Deno verified only for an actual target | none | in PR |
 | backend-engineer, frontend-engineer | Tokio/Axum service runtime behavior | `rust-async-services`; desktop Rust/GPUI remains separate | none | in PR |
+| devops-engineer | Release engineering | `release-rollback-planning`; immutable prior/candidate state, schema compatibility and timed staging undo; release/provenance methods arrive in slice B | none | in PR |
+| devops-engineer | Observability and operational response | `runbook-authoring`; alert-linked diagnostic branches, PostgreSQL incident entry, bounded mitigation and operator rehearsal; objectives/rules arrive in slice E | none | in PR |
+| devops-engineer | Delivery and operations role | `devops-engineer` (router); 21 domain methods plus `project-guardrails`, `clear-communication`, `implement`, `diagnosing-bugs` and `fix-ci` | none | in PR |
+| backend-engineer, qa-engineer, sysadmin, security-engineer, data-engineer | Executable shell contracts | `shell-scripting`; actual declared interpreters and hostile-input/failure/interruption/retry fixtures | none | in PR |
+| backend-engineer, frontend-engineer, mobile-engineer, sysadmin | macOS interactive shell state | `zsh-configuration`; startup order, PATH, functions, options, completion and timing | none | in PR |
+| agent-orchestrator, backend-engineer, qa-engineer, sysadmin, security-engineer, data-engineer, technical-writer | Alert-linked operator procedures | `runbook-authoring`; branch structure, owner/link checks and disposable operator rehearsal | none | in PR |
+| backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, sysadmin, data-engineer | Release recovery readiness | `release-rollback-planning`; compatibility, irreversible effects, decision criteria and measured user-path recovery | none | in PR |
+| backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, technical-writer | GitHub Actions workflow structure, reusable workflows and required-check contracts | `github-actions-workflow-authoring` | none | in PR |
+| qa-engineer, devops-engineer, sysadmin, security-engineer, technical-writer | CI trust paths: triggers, injection, AI-agent steps, pins, caches and artifacts | `github-actions-hardening` | none | in PR |
+| backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, technical-writer | Release engineering: generated versions, changelogs, tags and immutable releases | `release-automation`; registry publication deferred | none | in PR |
+| backend-engineer, qa-engineer, devops-engineer, security-engineer | SBOMs, build provenance, signatures, digest promotion and SLSA evidence | `software-supply-chain-provenance` | none | in PR |
+| agent-orchestrator, backend-engineer, frontend-engineer, devops-engineer, sysadmin, security-engineer, data-engineer, business-analyst | Package, image and host-package advisory triage with VEX and retest | `dependency-vulnerability-triage` | none | in PR |
+| backend-engineer, frontend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer | Digest-pinned, non-root images with runtime and scan-gate proof | `container-image-build` | none | in PR |
+| backend-engineer, devops-engineer, sysadmin, security-engineer | Container isolation on single hosts: daemon mode, capabilities, sockets, read-only root | `container-runtime-hardening` | none | in PR |
+| backend-engineer, frontend-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer | Compose for local development, CI integration environments and single-host deployment | `docker-compose-environments`; tests that need isolation guarantees stay with `integration-test-harness` | none | in PR |
+| backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer | Rendered workload manifests validated per variant against the target version | `kubernetes-workloads`, including Kustomize overlays | none | in PR |
+| backend-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer | Read-only diagnosis of failing pods, rollouts and Services | `kubernetes-troubleshooting` | none | in PR |
+| devops-engineer | Infrastructure as code (Terraform and OpenTofu) | `terraform-plan-review`, `terraform-state-operations`; module authoring, policy rules and cost review deferred to the extended set | none | in PR |
+| devops-engineer | CI/CD identity and secrets | `workload-identity-federation`, `secrets-management` | none | in PR |
+| backend-engineer, frontend-engineer, mobile-engineer, sysadmin, security-engineer, data-engineer | Review a saved infrastructure plan before apply | `terraform-plan-review` | none | in PR |
+| sysadmin, security-engineer | Refactor, import, unlock, drift and engine migration for infrastructure state | `terraform-state-operations` | none | in PR |
+| backend-engineer, sysadmin, security-engineer, data-engineer | Keyless CI and workload access to clouds and registries | `workload-identity-federation` | none | in PR |
+| backend-engineer, sysadmin, security-engineer, data-engineer | Secret store choice, delivery, Kubernetes Secret protection and rotation drills | `secrets-management`; leak response stays with the security role | none | in PR |
+| backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer | Recording rules, symptom alerts, Alertmanager routing and PostgreSQL signal semantics | `prometheus-alerting-rules`, including references/postgres-signals.md for postgres-monitoring and postgres-observability | none | in PR |
+| backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, business-analyst | Event/latency SLIs, SLO ownership, burn alerts and error-budget policy | `slo-error-budgets` | none | in PR |
+| backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer | Minor PostgreSQL updates and major engine transitions with measured cutover and recovery limits | `postgres-version-upgrades`; requires `integration-test-harness` | none | in PR |

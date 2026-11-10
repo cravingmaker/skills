@@ -1,0 +1,19 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "components": [
+    {
+      "type": "library",
+      "name": "fixture-library",
+      "purl": "pkg:npm/%40fixture/library@1.2.0",
+      "version": "1.2.0"
+    },
+    {
+      "type": "library",
+      "name": "libdemo",
+      "purl": "pkg:deb/fixture/libdemo@1.0-2?arch=amd64",
+      "version": "1.0-2"
+    }
+  ]
+}

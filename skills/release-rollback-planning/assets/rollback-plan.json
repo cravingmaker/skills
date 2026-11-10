@@ -1,0 +1,70 @@
+{
+  "note": "Comparison starter only. Fill from live sources; no authority or rehearsal is supplied.",
+  "service": "<service>",
+  "environment": "<deployment environment>",
+  "strategy": "rollback",
+  "candidate": {
+    "artifact": "<trusted live-resolved artifact@sha256:digest>",
+    "config": "<retained commit or digest>"
+  },
+  "previous": {
+    "artifact": "<trusted live-resolved artifact@sha256:digest>",
+    "config": "<retained commit or digest>",
+    "retained_until": "<owner-approved retention evidence>"
+  },
+  "delivery": {
+    "mechanism": "gitops",
+    "controller": "Argo CD application checkout-prod",
+    "auto_sync": "revert the image change in the deploy repo; never roll back in the cluster while auto-sync is on"
+  },
+  "rollback": {
+    "commands": [
+      "<exact target-bound undo>"
+    ],
+    "max_seconds": 600,
+    "abort": "Stop on wrong identity, failed prerequisite, uncertain partial effect or deadline; escalate to decision owner",
+    "recovery": "Independent user journey and stable observation window"
+  },
+  "schema": {
+    "phase": "expand",
+    "previous_code_compatible": true,
+    "notes": "adds nullable column orders.coupon_code; the previous code ignores it"
+  },
+  "irreversible_effects": [
+    {
+      "effect": "order confirmation emails sent by the candidate",
+      "handling": "cannot be recalled; support macro prepared"
+    },
+    {
+      "effect": "rows written to orders.coupon_code",
+      "handling": "kept; the previous code ignores them; the contract step waits for the next release"
+    }
+  ],
+  "decision": {
+    "rollback_when": [
+      {
+        "signal": "checkout 5xx ratio",
+        "threshold": "above 2% for 5 minutes",
+        "source": "checkout SLO dashboard"
+      },
+      {
+        "signal": "payment authorization failures",
+        "threshold": "double the 7-day baseline for 10 minutes",
+        "source": "provider dashboard"
+      }
+    ],
+    "roll_forward_when": [
+      "the fix is a one-line config change already reviewed"
+    ],
+    "decider": "release captain on duty",
+    "decide_within_minutes": 15,
+    "roll_forward_commands": [
+      "<exact reviewed compatible repair, when applicable>"
+    ]
+  },
+  "drill": null,
+  "source_revision": "<full live-resolved source commit>",
+  "target": "<account/project/region/cluster or database>",
+  "owner": "<decision owner>",
+  "authority": "<existing target/effect authority or planning only>"
+}

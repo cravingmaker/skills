@@ -1,0 +1,83 @@
+# Reference workload to compare with, not to apply. Replace every <placeholder>; resolve the image digest live.
+# Probes, grace period and resources must come from the application's measured behavior.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels: {app.kubernetes.io/name: api}
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 300
+  strategy:
+    rollingUpdate: {maxSurge: 1, maxUnavailable: 0}
+  selector:
+    matchLabels: {app.kubernetes.io/name: api}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: api}
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 45          # preStop pause + measured drain + margin
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile: {type: RuntimeDefault}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {app.kubernetes.io/name: api}
+      containers:
+        - name: api
+          image: <registry>/api@sha256:<digest>
+          ports:
+            - {name: http, containerPort: 8080}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          resources:
+            requests: {cpu: 250m, memory: 256Mi}    # from observed usage
+            limits: {memory: 256Mi}                 # CPU limit omitted by a recorded decision
+          startupProbe:
+            httpGet: {path: /healthz/live, port: http}
+            periodSeconds: 2
+            failureThreshold: 60                    # covers the slowest measured start
+          readinessProbe:
+            httpGet: {path: /healthz/ready, port: http}   # may check what serving needs
+            periodSeconds: 5
+            failureThreshold: 2
+          livenessProbe:
+            httpGet: {path: /healthz/live, port: http}    # process health only, no dependencies
+            periodSeconds: 10
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              sleep: {seconds: 10}                  # check the sleep action exists on the target version
+          volumeMounts:
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: tmp
+          emptyDir: {sizeLimit: 64Mi}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: api
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels: {app.kubernetes.io/name: api}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector: {app.kubernetes.io/name: api}
+  ports:
+    - {name: http, port: 80, targetPort: http}

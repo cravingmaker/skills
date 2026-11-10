@@ -1,0 +1,76 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "fixture",
+    "namespace": "fixture"
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app": "fixture"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "fixture"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "app",
+            "image": "invalid.example/fixture:inert",
+            "resources": {
+              "requests": {
+                "cpu": "10m",
+                "memory": "16Mi"
+              },
+              "limits": {
+                "memory": "32Mi"
+              }
+            },
+            "securityContext": {
+              "privileged": false,
+              "allowPrivilegeEscalation": false,
+              "readOnlyRootFilesystem": true,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/ready",
+                "port": "http"
+              }
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/live",
+                "port": "http"
+              }
+            }
+          }
+        ],
+        "automountServiceAccountToken": false,
+        "securityContext": {
+          "runAsNonRoot": true,
+          "runAsUser": 10001,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        }
+      }
+    }
+  }
+}

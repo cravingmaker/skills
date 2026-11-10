@@ -1,0 +1,50 @@
+{
+  "schema_version": "1",
+  "service": "checkout",
+  "owner": "example_owner",
+  "target": "0.999",
+  "objective_window_seconds": 2592000,
+  "runbook_url": "https://example.invalid/runbooks/checkout",
+  "sli": {
+    "eligible_counter": "fixture_eligible_total",
+    "bad_counter": "fixture_bad_total",
+    "numerator": "Eligible completed requests minus bad eligible requests",
+    "denominator": "All completed checkout requests",
+    "source": "Synthetic unsampled counters; bad is a subset of eligible",
+    "exclusions": "None in this fixture",
+    "missing_data": "Unknown reliability; separate collection alert",
+    "window": "Rolling; no calendar boundary in this fixture"
+  },
+  "policies": [
+    {
+      "name": "fast",
+      "long_seconds": 3600,
+      "short_seconds": 300,
+      "budget_fraction": "0.02",
+      "long_min_events": 10000,
+      "short_min_events": 1000,
+      "hold_seconds": 0,
+      "severity": "page"
+    },
+    {
+      "name": "slow",
+      "long_seconds": 21600,
+      "short_seconds": 1800,
+      "budget_fraction": "0.05",
+      "long_min_events": 10000,
+      "short_min_events": 1000,
+      "hold_seconds": 0,
+      "severity": "page"
+    },
+    {
+      "name": "ticket",
+      "long_seconds": 259200,
+      "short_seconds": 21600,
+      "budget_fraction": "0.1",
+      "long_min_events": 10000,
+      "short_min_events": 10000,
+      "hold_seconds": 0,
+      "severity": "ticket"
+    }
+  ]
+}

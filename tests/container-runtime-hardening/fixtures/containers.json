@@ -1,0 +1,39 @@
+[
+  {
+    "Id": "1111111111111111111111111111111111111111111111111111111111111111",
+    "Name": "fixture",
+    "Config": {
+      "User": "10001:10001",
+      "Env": [
+        "TOKEN=SECRET_SENTINEL"
+      ]
+    },
+    "HostConfig": {
+      "Privileged": false,
+      "ReadonlyRootfs": true,
+      "CapDrop": [
+        "ALL"
+      ],
+      "CapAdd": null,
+      "SecurityOpt": [
+        "no-new-privileges"
+      ],
+      "PidMode": "",
+      "IpcMode": "private",
+      "NetworkMode": "bridge",
+      "UsernsMode": "",
+      "Memory": 536870912,
+      "PidsLimit": 256,
+      "Devices": [],
+      "DeviceRequests": []
+    },
+    "Mounts": [
+      {
+        "Type": "volume",
+        "Source": "/var/lib/docker/volumes/fixture/_data",
+        "Destination": "/data",
+        "RW": true
+      }
+    ]
+  }
+]

@@ -101,6 +101,28 @@ Craving Maker's opinionated collection of [Agent Skills](https://agentskills.io)
 | [opentelemetry-instrumentation](skills/opentelemetry-instrumentation) | Adds or repairs telemetry in application code: service spans, correlated JSON logs, bounded metric labels, queue context, and security events. |
 | [typescript-node-services](skills/typescript-node-services) | Builds or repairs a Node TypeScript service so its deployed entry matches what was checked. |
 | [rust-async-services](skills/rust-async-services) | Builds or repairs a Tokio/Axum service's state, tasks, cancellation, middleware, and shutdown. |
+| [devops-engineer](skills/devops-engineer) | Role: routes delivery and operations through owned capability skills with tool-backed validation and recovery evidence. |
+| [shell-scripting](skills/shell-scripting) | Writes or repairs executable Bash, POSIX sh or zsh scripts for declared macOS and Linux targets. |
+| [zsh-configuration](skills/zsh-configuration) | Diagnoses or changes macOS zsh startup and interactive state. |
+| [runbook-authoring](skills/runbook-authoring) | Writes and rehearses alert-linked runbooks with diagnostic branches, bounded mitigations, abort, recovery and escalation. |
+| [release-rollback-planning](skills/release-rollback-planning) | Writes and rehearses the undo before a deploy, bound to artifact digests, config, schema state and irreversible effects. |
+| [github-actions-workflow-authoring](skills/github-actions-workflow-authoring) | Writes or restructures GitHub Actions workflows, job graphs, matrices, reusable workflows and composite actions. |
+| [github-actions-hardening](skills/github-actions-hardening) | Audits and fixes GitHub Actions trust paths, token permissions, action pins, untrusted inputs, caches and artifacts. |
+| [release-automation](skills/release-automation) | Automates versions, changelogs, tags and GitHub releases with release-please, Changesets or semantic-release. |
+| [software-supply-chain-provenance](skills/software-supply-chain-provenance) | Produces and verifies SBOMs, build provenance and signatures for images, binaries and packages. |
+| [dependency-vulnerability-triage](skills/dependency-vulnerability-triage) | Triages package, container image or OS advisories against installed or shipped software. |
+| [container-image-build](skills/container-image-build) | Writes or improves a Dockerfile and proves the final image runs on its target architecture. |
+| [container-runtime-hardening](skills/container-runtime-hardening) | Hardens how containers run on Docker or a single host outside Kubernetes. |
+| [docker-compose-environments](skills/docker-compose-environments) | Builds or fixes Docker Compose environments for local development, CI integration tests or single-host deployment. |
+| [kubernetes-workloads](skills/kubernetes-workloads) | Writes or reviews Kubernetes manifests and Kustomize overlays for probes, resources, shutdown, rollout and workload security. |
+| [kubernetes-troubleshooting](skills/kubernetes-troubleshooting) | Diagnoses Pending pods, CrashLoopBackOff, OOMKilled, image pulls, failing probes, stuck rollouts and Service failures. |
+| [terraform-plan-review](skills/terraform-plan-review) | Reviews a saved Terraform or OpenTofu plan for destructive changes, exposure, unknowns, policy and cost. |
+| [terraform-state-operations](skills/terraform-state-operations) | Reconciles Terraform or OpenTofu state without accidental resource recreation. |
+| [workload-identity-federation](skills/workload-identity-federation) | Configures or repairs OIDC workload federation from CI or Kubernetes service accounts to clouds and registries. |
+| [secrets-management](skills/secrets-management) | Chooses and wires secret delivery and lifecycle for pipelines and workloads. |
+| [prometheus-alerting-rules](skills/prometheus-alerting-rules) | Writes or repairs Prometheus recording rules, alerts and Alertmanager routes, with tests for rate, histogram and missing-data math. |
+| [slo-error-budgets](skills/slo-error-budgets) | Defines SLIs, SLOs and error-budget policy, and generates and tests multiwindow burn-rate alerts. |
+| [postgres-version-upgrades](skills/postgres-version-upgrades) | Plans and rehearses PostgreSQL minor updates and major-version transitions with compatibility, cutover and recovery evidence. |
 
 See [the catalog](catalog/skills.yaml) for evaluation status and each skill's `evals/results/` for outcomes and limits. Explicit entries use the catalog's `invocation: user`; host policy grants no additional task authority.
 

@@ -1,0 +1,85 @@
+{
+  "groups": [
+    {
+      "name": "fixture",
+      "rules": [
+        {
+          "record": "fixture:bad_ratio5m",
+          "expr": "sum by (service) (rate(fixture_requests_total{result=\"bad\"}[5m])) / sum by (service) (rate(fixture_requests_total[5m]))"
+        },
+        {
+          "record": "fixture:latency_fraction",
+          "expr": "sum by (service) (rate(fixture_duration_seconds_bucket{le=\"0.5\"}[5m])) / sum by (service) (rate(fixture_duration_seconds_count[5m]))"
+        },
+        {
+          "record": "fixture:reset_rate",
+          "expr": "sum by (service) (rate(fixture_counter_total[5m]))"
+        },
+        {
+          "alert": "FixtureSymptom",
+          "expr": "(fixture:bad_ratio5m > 0.05) and on (service) (sum by (service) (increase(fixture_requests_total[5m])) >= 100)",
+          "for": "2m",
+          "labels": {
+            "severity": "page",
+            "owner": "example_owner"
+          },
+          "annotations": {
+            "runbook_url": "https://example.invalid/runbooks/fixture"
+          }
+        },
+        {
+          "alert": "FixtureCollectorMissing",
+          "expr": "(fixture_expected_pg_target == 1) unless on (cluster) (fixture_pg_collector_ok == 1)",
+          "for": "1m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "example_owner"
+          },
+          "annotations": {
+            "runbook_url": "https://example.invalid/runbooks/fixture"
+          }
+        },
+        {
+          "alert": "FixtureArchiveFailure",
+          "expr": "(increase(fixture_pg_archive_failures_total[5m]) > 0) and on (cluster) (changes(fixture_pg_epoch[5m]) == 0) and on (cluster) (fixture_pg_collector_ok == 1)",
+          "for": "1m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "example_owner"
+          },
+          "annotations": {
+            "runbook_url": "https://example.invalid/runbooks/fixture"
+          }
+        },
+        {
+          "alert": "FixturePgPressure",
+          "expr": "(fixture_pg_freeze_age_ratio > 0.8) or on (cluster) (fixture_pg_retained_wal_bytes > 1000)",
+          "for": "2m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "example_owner"
+          },
+          "annotations": {
+            "runbook_url": "https://example.invalid/runbooks/fixture"
+          }
+        },
+        {
+          "record": "fixture:latency_p90",
+          "expr": "histogram_quantile(0.9, sum by (service, le) (rate(fixture_duration_seconds_bucket[5m])))"
+        },
+        {
+          "alert": "FixturePgRoleChanged",
+          "expr": "changes(fixture_pg_in_recovery[5m]) > 0",
+          "for": "1m",
+          "labels": {
+            "severity": "ticket",
+            "owner": "example_owner"
+          },
+          "annotations": {
+            "runbook_url": "https://example.invalid/runbooks/fixture"
+          }
+        }
+      ]
+    }
+  ]
+}

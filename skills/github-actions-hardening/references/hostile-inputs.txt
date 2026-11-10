@@ -1,0 +1,13 @@
+# Inert hostile inputs for injection fixtures. Each line is harmless if evaluated:
+# it only computes 6*7 and prints the marker INJECTED-42. Never add network,
+# file-writing or credential-reading payloads here.
+#
+# Title, body and commit-message inputs:
+"; echo INJECTED-$((6*7)) #
+$(echo INJECTED-$((6*7)))
+`echo INJECTED-$((6*7))`
+'; echo INJECTED-$((6*7)); echo '
+a" && echo INJECTED-$((6*7)) && echo "b
+# Branch-safe inputs (no spaces):
+x$(echo${IFS}INJECTED-$((6*7)))
+x;echo${IFS}INJECTED-$((6*7))

@@ -1,0 +1,89 @@
+{
+  "note": "Synthetic starter. Replace every value; resolve digests and commits live (for example crane digest, git rev-parse), never by hand.",
+  "service": "checkout",
+  "environment": "production",
+  "strategy": "rollback",
+  "candidate": {
+    "artifact": "registry.example.com/checkout@sha256:0000000000000000000000000000000000000000000000000000000000000002",
+    "config": "git:000000000000000000000000000000000000000b"
+  },
+  "previous": {
+    "artifact": "registry.example.com/checkout@sha256:0000000000000000000000000000000000000000000000000000000000000001",
+    "config": "git:000000000000000000000000000000000000000a",
+    "retained_until": "2026-12-31: registry retention rule keeps the last 20 digests; Git tag release-41"
+  },
+  "delivery": {
+    "mechanism": "gitops",
+    "controller": "Argo CD application checkout-prod",
+    "auto_sync": "revert the image change in the deploy repo; never roll back in the cluster while auto-sync is on"
+  },
+  "rollback": {
+    "commands": [
+      "git -C deploy revert --no-edit \"$CANDIDATE_DEPLOY_COMMIT\" && git -C deploy push",
+      "argocd app wait checkout-prod --health --timeout 600"
+    ],
+    "max_seconds": 600,
+    "abort": "Stop on wrong identity, failed prerequisite, uncertain partial effect or deadline; escalate to decision owner",
+    "recovery": "Independent user journey and stable observation window"
+  },
+  "schema": {
+    "phase": "expand",
+    "previous_code_compatible": true,
+    "notes": "adds nullable column orders.coupon_code; the previous code ignores it"
+  },
+  "irreversible_effects": [
+    {
+      "effect": "order confirmation emails sent by the candidate",
+      "handling": "cannot be recalled; support macro prepared"
+    },
+    {
+      "effect": "rows written to orders.coupon_code",
+      "handling": "kept; the previous code ignores them; the contract step waits for the next release"
+    }
+  ],
+  "decision": {
+    "rollback_when": [
+      {
+        "signal": "checkout 5xx ratio",
+        "threshold": "above 2% for 5 minutes",
+        "source": "checkout SLO dashboard"
+      },
+      {
+        "signal": "payment authorization failures",
+        "threshold": "double the 7-day baseline for 10 minutes",
+        "source": "provider dashboard"
+      }
+    ],
+    "roll_forward_when": [
+      "the fix is a one-line config change already reviewed"
+    ],
+    "decider": "release captain on duty",
+    "decide_within_minutes": 15,
+    "roll_forward_commands": [
+      "Run the separately reviewed compatible candidate repair"
+    ]
+  },
+  "drill": {
+    "environment": "staging",
+    "date": "2026-11-05",
+    "candidate_artifact": "registry.example.com/checkout@sha256:0000000000000000000000000000000000000000000000000000000000000002",
+    "previous_artifact": "registry.example.com/checkout@sha256:0000000000000000000000000000000000000000000000000000000000000001",
+    "measured_seconds": 212,
+    "user_path_check": {
+      "command": "scripts/smoke-checkout.sh https://staging.example.com",
+      "passed": true
+    },
+    "target_kind": "disposable",
+    "target": "synthetic-disposable-staging",
+    "action": "rollback",
+    "recovered_artifact": "registry.example.com/checkout@sha256:0000000000000000000000000000000000000000000000000000000000000001",
+    "candidate_config": "git:000000000000000000000000000000000000000b",
+    "previous_config": "git:000000000000000000000000000000000000000a",
+    "receipt": "drill.txt",
+    "plan_sha256": "8866c2fd89bbb457292d50d935d45c608339a397c5cc7f253f0a53d739b30c89"
+  },
+  "source_revision": "1111111111111111111111111111111111111111",
+  "target": "synthetic-production-endpoint",
+  "owner": "synthetic-decision-owner",
+  "authority": "Planning fixture only; no commands execute"
+}

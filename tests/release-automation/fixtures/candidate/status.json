@@ -1,0 +1,15 @@
+{
+  "changesets": [
+    {
+      "id": "synthetic"
+    }
+  ],
+  "releases": [
+    {
+      "name": "fixture-node",
+      "oldVersion": "1.1.0",
+      "newVersion": "1.2.0",
+      "type": "minor"
+    }
+  ]
+}

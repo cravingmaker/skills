@@ -1,0 +1,50 @@
+{
+  "title": "<alert-specific procedure>",
+  "alert": "<alert rule identity>",
+  "runbook_url": "https://docs.example.invalid/runbooks/replace-me",
+  "owner": "<service owner>",
+  "escalation": "<escalation owner and contact>",
+  "target": "<exact platform identity; no credentials>",
+  "preconditions": [
+    "<access, tool/runtime and safe observation budget>"
+  ],
+  "abort": [
+    "<wrong target, unavailable observation, unexpected effect or deadline>"
+  ],
+  "recovery": "<independent user-path and stable observation window>",
+  "last_rehearsed": null,
+  "rehearsal_receipt": "<relative private successful rehearsal receipt>",
+  "steps": [
+    {
+      "id": "inspect",
+      "kind": "diagnostic",
+      "command": "<exact bounded read-only diagnostic>",
+      "expected": "<observation discriminating the cause>",
+      "on_expected": "mitigate",
+      "otherwise": "escalate",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    },
+    {
+      "id": "mitigate",
+      "kind": "mitigation",
+      "command": "<exact prepared target-bound mitigation>",
+      "expected": "<bounded intended effect>",
+      "on_expected": "verify",
+      "otherwise": "abort",
+      "timeout_seconds": 30,
+      "authority": "<explicit authority reference for this target and effect>",
+      "undo": "<reverse command or explicit irreversible effects and recovery prerequisite>"
+    },
+    {
+      "id": "verify",
+      "kind": "verification",
+      "command": "<independent user-path check>",
+      "expected": "<actual recovery over the stated window>",
+      "on_expected": "recovered",
+      "otherwise": "escalate",
+      "timeout_seconds": 10,
+      "authority": "read-only"
+    }
+  ]
+}

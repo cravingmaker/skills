@@ -1,0 +1,656 @@
+{
+  "rule_files": [
+    "rules.json"
+  ],
+  "evaluation_interval": "1m",
+  "fuzzy_compare": true,
+  "tests": [
+    {
+      "name": "symptom-pending-fire-recover",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_requests_total{service=\"demo\",result=\"good\"}",
+          "values": "0 90 180 270 360 450 550 650 750 850 950 1050 1150"
+        },
+        {
+          "series": "fixture_requests_total{service=\"demo\",result=\"bad\"}",
+          "values": "0 10 20 30 40 50 50 50 50 50 50 50 50"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureSymptom",
+          "eval_time": "2m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "FixtureSymptom",
+          "eval_time": "4m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "service": "demo",
+                "severity": "page",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "FixtureSymptom",
+          "eval_time": "10m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "healthy",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_requests_total{service=\"demo\",result=\"good\"}",
+          "values": "0+99x12"
+        },
+        {
+          "series": "fixture_requests_total{service=\"demo\",result=\"bad\"}",
+          "values": "0+1x12"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureSymptom",
+          "eval_time": "10m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "sparse-failures",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_requests_total{service=\"demo\",result=\"good\"}",
+          "values": "0x12"
+        },
+        {
+          "series": "fixture_requests_total{service=\"demo\",result=\"bad\"}",
+          "values": "0+1x12"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureSymptom",
+          "eval_time": "10m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "stale-request-series",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_requests_total{service=\"demo\",result=\"good\"}",
+          "values": "0 90 180 stale _x10"
+        },
+        {
+          "series": "fixture_requests_total{service=\"demo\",result=\"bad\"}",
+          "values": "0 10 20 stale _x10"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureSymptom",
+          "eval_time": "10m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": [
+        {
+          "expr": "fixture:bad_ratio5m",
+          "eval_time": "10m",
+          "exp_samples": []
+        }
+      ]
+    },
+    {
+      "name": "independent-counter-reset",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_counter_total{service=\"demo\",instance=\"a\"}",
+          "values": "0 10 20 0 10 20 30"
+        },
+        {
+          "series": "fixture_counter_total{service=\"demo\",instance=\"b\"}",
+          "values": "1000+10x6"
+        }
+      ],
+      "alert_rule_test": [],
+      "promql_expr_test": [
+        {
+          "expr": "fixture:reset_rate",
+          "eval_time": "6m",
+          "exp_samples": [
+            {
+              "labels": "fixture:reset_rate{service=\"demo\"}",
+              "value": 0.2916666666666667
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unequal-histogram-traffic",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_duration_seconds_bucket{service=\"demo\",instance=\"a\",le=\"0.5\"}",
+          "values": "0+450x10"
+        },
+        {
+          "series": "fixture_duration_seconds_count{service=\"demo\",instance=\"a\"}",
+          "values": "0+900x10"
+        },
+        {
+          "series": "fixture_duration_seconds_bucket{service=\"demo\",instance=\"b\",le=\"0.5\"}",
+          "values": "0+100x10"
+        },
+        {
+          "series": "fixture_duration_seconds_count{service=\"demo\",instance=\"b\"}",
+          "values": "0+100x10"
+        },
+        {
+          "series": "fixture_duration_seconds_bucket{service=\"demo\",instance=\"a\",le=\"1\"}",
+          "values": "0+900x10"
+        },
+        {
+          "series": "fixture_duration_seconds_bucket{service=\"demo\",instance=\"a\",le=\"+Inf\"}",
+          "values": "0+900x10"
+        },
+        {
+          "series": "fixture_duration_seconds_bucket{service=\"demo\",instance=\"b\",le=\"1\"}",
+          "values": "0+100x10"
+        },
+        {
+          "series": "fixture_duration_seconds_bucket{service=\"demo\",instance=\"b\",le=\"+Inf\"}",
+          "values": "0+100x10"
+        }
+      ],
+      "alert_rule_test": [],
+      "promql_expr_test": [
+        {
+          "expr": "fixture:latency_fraction",
+          "eval_time": "10m",
+          "exp_samples": [
+            {
+              "labels": "fixture:latency_fraction{service=\"demo\"}",
+              "value": 0.55
+            }
+          ]
+        },
+        {
+          "expr": "fixture:latency_p90",
+          "eval_time": "10m",
+          "exp_samples": [
+            {
+              "labels": "fixture:latency_p90{service=\"demo\"}",
+              "value": 0.8888888888888888
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "collector-denied",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x5"
+        },
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "0x5"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureCollectorMissing",
+          "eval_time": "0m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "FixtureCollectorMissing",
+          "eval_time": "2m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "collector-absent",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x5"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureCollectorMissing",
+          "eval_time": "2m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "collector-stale-and-recovery",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x10"
+        },
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "1 1 stale _ _ 1 1 1 1 1 1"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureCollectorMissing",
+          "eval_time": "1m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "FixtureCollectorMissing",
+          "eval_time": "4m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "FixtureCollectorMissing",
+          "eval_time": "7m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "null-lag-is-absent",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_epoch{cluster=\"demo\"}",
+          "values": "1x15"
+        }
+      ],
+      "alert_rule_test": [],
+      "promql_expr_test": [
+        {
+          "expr": "fixture_pg_replication_lag_seconds",
+          "eval_time": "10m",
+          "exp_samples": []
+        }
+      ]
+    },
+    {
+      "name": "measured-zero-lag",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_epoch{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_replication_lag_seconds{cluster=\"demo\"}",
+          "values": "0x15"
+        }
+      ],
+      "alert_rule_test": [],
+      "promql_expr_test": [
+        {
+          "expr": "fixture_pg_replication_lag_seconds",
+          "eval_time": "10m",
+          "exp_samples": [
+            {
+              "labels": "fixture_pg_replication_lag_seconds{cluster=\"demo\"}",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "archive-failure-and-recovery",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_epoch{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_archive_failures_total{cluster=\"demo\"}",
+          "values": "0 0 1 1 1 1 1 1 1 1 1 1 1"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureArchiveFailure",
+          "eval_time": "4m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "FixtureArchiveFailure",
+          "eval_time": "10m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "restart-and-suspend-epochs",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "1 1 1 stale _ 1 1 1 1 1 1 1 1"
+        },
+        {
+          "series": "fixture_pg_epoch{cluster=\"demo\"}",
+          "values": "1 1 1 1 1 2 2 2 2 2 2 2 2"
+        },
+        {
+          "series": "fixture_pg_archive_failures_total{cluster=\"demo\"}",
+          "values": "0 0 0 _ _ 100 100 100 100 100 100 100 100"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureArchiveFailure",
+          "eval_time": "6m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "FixtureArchiveFailure",
+          "eval_time": "10m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "FixtureCollectorMissing",
+          "eval_time": "4m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "FixtureCollectorMissing",
+          "eval_time": "7m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "freeze-pressure-and-recovery",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_epoch{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_freeze_age_ratio{cluster=\"demo\"}",
+          "values": "0.1 0.9 0.9 0.9 0.1 0.1 0.1"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixturePgPressure",
+          "eval_time": "2m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "FixturePgPressure",
+          "eval_time": "3m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "FixturePgPressure",
+          "eval_time": "6m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "retained-wal-pressure-and-recovery",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_expected_pg_target{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_epoch{cluster=\"demo\"}",
+          "values": "1x15"
+        },
+        {
+          "series": "fixture_pg_retained_wal_bytes{cluster=\"demo\"}",
+          "values": "0 2000 2000 2000 0 0 0"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixturePgPressure",
+          "eval_time": "3m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "FixturePgPressure",
+          "eval_time": "6m",
+          "exp_alerts": []
+        }
+      ],
+      "promql_expr_test": []
+    },
+    {
+      "name": "database-role-transition-and-recovery",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_pg_in_recovery{cluster=\"demo\"}",
+          "values": "0 0 1 1 1 1 1 1 1 1 1"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixturePgRoleChanged",
+          "eval_time": "1m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "FixturePgRoleChanged",
+          "eval_time": "3m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "FixturePgRoleChanged",
+          "eval_time": "10m",
+          "exp_alerts": []
+        }
+      ]
+    },
+    {
+      "name": "archive-failures-continue-after-restart",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_pg_collector_ok{cluster=\"demo\"}",
+          "values": "1x20"
+        },
+        {
+          "series": "fixture_pg_epoch{cluster=\"demo\"}",
+          "values": "1x4 2x16"
+        },
+        {
+          "series": "fixture_pg_archive_failures_total{cluster=\"demo\"}",
+          "values": "0+1x4 0+1x16"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "FixtureArchiveFailure",
+          "eval_time": "12m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "cluster": "demo",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/fixture"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

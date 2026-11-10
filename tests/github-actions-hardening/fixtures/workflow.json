@@ -1,0 +1,20 @@
+{
+  "jobs": {
+    "build": {
+      "steps": [
+        {
+          "uses": "fixture-owner/action@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "uses": "./local"
+        },
+        {
+          "uses": "docker://registry.example/tool@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        }
+      ]
+    },
+    "call": {
+      "uses": "fixture-owner/workflows/.github/workflows/check.yml@cccccccccccccccccccccccccccccccccccccccc"
+    }
+  }
+}

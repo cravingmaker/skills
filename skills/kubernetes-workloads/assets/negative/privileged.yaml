@@ -1,0 +1,28 @@
+# Expect: FAIL lint (privileged-container, privilege-escalation-container, run-as-non-root, no-read-only-root-fs).
+# A restricted namespace also denies it at `kubectl apply --dry-run=server`.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: negative-privileged
+spec:
+  selector:
+    matchLabels: {app: negative-privileged}
+  template:
+    metadata:
+      labels: {app: negative-privileged}
+    spec:
+      containers:
+        - name: app
+          image: example.test/app@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+          resources:
+            requests: {cpu: 100m, memory: 64Mi}
+            limits: {memory: 64Mi}
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet: {path: /healthz/ready, port: 8080}
+          livenessProbe:
+            httpGet: {path: /healthz/live, port: 8080}

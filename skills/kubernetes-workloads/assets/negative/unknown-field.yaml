@@ -1,0 +1,18 @@
+# Expect: FAIL schema. `livenesProbe` is misspelled; kubeconform -strict rejects unknown fields,
+# keeping the probe typo out of the rendered workload.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: negative-unknown-field
+spec:
+  selector:
+    matchLabels: {app: negative-unknown-field}
+  template:
+    metadata:
+      labels: {app: negative-unknown-field}
+    spec:
+      containers:
+        - name: app
+          image: example.test/app@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          livenesProbe:
+            httpGet: {path: /healthz/live, port: 8080}

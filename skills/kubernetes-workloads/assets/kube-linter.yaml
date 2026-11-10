@@ -1,0 +1,53 @@
+# kube-linter configuration for workload review. Compare with the repository's config; do not overwrite it.
+# Written against kube-linter's documented built-in checks and templates. Before relying on it, run
+# `kube-linter checks list` and `kube-linter templates list` with the repository's pinned version,
+# and fix any name that version rejects.
+checks:
+  doNotAutoAddDefaults: true
+  include:
+    - no-liveness-probe
+    - no-readiness-probe
+    - run-as-non-root
+    - no-read-only-root-fs
+    - privilege-escalation-container
+    - privileged-container
+    - drop-net-raw-capability
+    - host-network
+    - host-pid
+    - host-ipc
+    - docker-sock
+    - sensitive-host-mounts
+    - writable-host-mount
+    - latest-tag
+    - dangling-service
+    - mismatching-selector
+    - liveness-port
+    - readiness-port
+    - startup-port
+    - pdb-max-unavailable
+    - pdb-min-available
+    - env-var-secret
+# Require CPU and memory requests; decide limits from measurements and target policy.
+customChecks:
+  - name: cpu-request-unset
+    description: Container has no CPU request.
+    remediation: Set resources.requests.cpu from measured usage.
+    scope:
+      objectKinds:
+        - DeploymentLike
+    template: cpu-requirements
+    params:
+      requirementsType: request
+      lowerBoundMillis: 0
+      upperBoundMillis: 0
+  - name: memory-request-unset
+    description: Container has no memory request.
+    remediation: Set resources.requests.memory from measured usage.
+    scope:
+      objectKinds:
+        - DeploymentLike
+    template: memory-requirements
+    params:
+      requirementsType: request
+      lowerBoundMB: 0
+      upperBoundMB: 0

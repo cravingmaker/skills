@@ -1,0 +1,84 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "namespace": "fixture",
+        "name": "app-1",
+        "uid": "pod-current",
+        "labels": {
+          "app": "fixture"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "app",
+            "env": [
+              {
+                "name": "TOKEN",
+                "value": "SECRET_SENTINEL"
+              }
+            ]
+          }
+        ]
+      },
+      "status": {
+        "phase": "Running",
+        "containerStatuses": [
+          {
+            "name": "app",
+            "restartCount": 0,
+            "state": {
+              "running": {}
+            },
+            "lastState": {}
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "namespace": "fixture",
+        "name": "app"
+      },
+      "spec": {
+        "selector": {
+          "app": "fixture"
+        },
+        "ports": [
+          {
+            "port": 80,
+            "targetPort": 8080
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "discovery.k8s.io/v1",
+      "kind": "EndpointSlice",
+      "metadata": {
+        "namespace": "fixture",
+        "name": "app-abc",
+        "labels": {
+          "kubernetes.io/service-name": "app"
+        }
+      },
+      "endpoints": [
+        {
+          "addresses": [
+            "192.0.2.10"
+          ],
+          "conditions": {
+            "ready": true
+          }
+        }
+      ]
+    }
+  ]
+}

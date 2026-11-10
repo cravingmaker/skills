@@ -1,0 +1,29 @@
+# Expect: FAIL lint (cpu-request-unset, memory-request-unset).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: negative-missing-requests
+spec:
+  selector:
+    matchLabels: {app: negative-missing-requests}
+  template:
+    metadata:
+      labels: {app: negative-missing-requests}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: app
+          image: example.test/app@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet: {path: /healthz/ready, port: 8080}
+          livenessProbe:
+            httpGet: {path: /healthz/live, port: 8080}

@@ -1,0 +1,22 @@
+{
+  "repos/fixture-owner/action/git/ref/tags/fixture-v1": {
+    "ref": "refs/tags/fixture-v1",
+    "object": {
+      "type": "tag",
+      "sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  },
+  "repos/fixture-owner/action/git/tags/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": {
+    "object": {
+      "type": "commit",
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  "repos/fixture-owner/workflows/git/ref/tags/fixture-v2": {
+    "ref": "refs/tags/fixture-v2",
+    "object": {
+      "type": "commit",
+      "sha": "cccccccccccccccccccccccccccccccccccccccc"
+    }
+  }
+}

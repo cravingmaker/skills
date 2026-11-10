@@ -424,6 +424,134 @@ skills:
     roles: [backend-engineer, frontend-engineer]
     status: unevaluated
     invocation: model
+  shell-scripting:
+    kind: capability
+    roles: [backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    aliases: [safe-shell-automation, shell-portability-review, shell-script-authoring, shell-script-engineering, shell-script-safety, shell-script-testing]
+    status: unevaluated
+    invocation: model
+  zsh-configuration:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, sysadmin]
+    aliases: [zsh-environment-diagnosis, zsh-function-engineering]
+    status: unevaluated
+    invocation: model
+  runbook-authoring:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer, technical-writer]
+    aliases: [on-call-runbook-engineering, operations-runbooks, postgres-incident-triage]
+    status: unevaluated
+    invocation: model
+  release-rollback-planning:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    status: unevaluated
+    invocation: model
+  devops-engineer:
+    kind: role
+    status: unevaluated
+    invocation: model
+  github-actions-workflow-authoring:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, technical-writer]
+    aliases: [github-actions-workflow-design, reusable-workflow-design]
+    status: unevaluated
+    invocation: model
+  github-actions-hardening:
+    kind: capability
+    roles: [qa-engineer, devops-engineer, sysadmin, security-engineer, technical-writer]
+    aliases: [ci-cache-review, ci-security-review]
+    status: unevaluated
+    invocation: model
+  release-automation:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, technical-writer]
+    aliases: [release-workflow-engineering]
+    status: unevaluated
+    invocation: model
+  software-supply-chain-provenance:
+    kind: capability
+    roles: [backend-engineer, qa-engineer, devops-engineer, security-engineer]
+    aliases: [artifact-provenance-verification]
+    status: unevaluated
+    invocation: model
+  dependency-vulnerability-triage:
+    kind: capability
+    roles: [agent-orchestrator, backend-engineer, frontend-engineer, devops-engineer, sysadmin, security-engineer, data-engineer, business-analyst]
+    aliases: [container-vulnerability-triage, dependency-risk-review, host-vulnerability-triage, vulnerability-triage]
+    status: unevaluated
+    invocation: model
+  container-image-build:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    aliases: [container-build-engineering, dockerfile-authoring]
+    status: unevaluated
+    invocation: model
+  container-runtime-hardening:
+    kind: capability
+    roles: [backend-engineer, devops-engineer, sysadmin, security-engineer]
+    aliases: [container-host-hygiene]
+    status: unevaluated
+    invocation: model
+  docker-compose-environments:
+    kind: capability
+    roles: [backend-engineer, frontend-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    aliases: [docker-compose-deployment]
+    status: unevaluated
+    invocation: model
+  kubernetes-workloads:
+    kind: capability
+    roles: [backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer]
+    aliases: [kubernetes-manifest-authoring, kubernetes-workload-review, kustomize-overlays]
+    status: unevaluated
+    invocation: model
+  kubernetes-troubleshooting:
+    kind: capability
+    roles: [backend-engineer, qa-engineer, devops-engineer, sysadmin, data-engineer]
+    status: unevaluated
+    invocation: model
+  terraform-plan-review:
+    kind: capability
+    aliases: [terraform-change-review]
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  terraform-state-operations:
+    kind: capability
+    aliases: [iac-state-recovery, infrastructure-drift-reconciliation, opentofu-migration]
+    roles: [devops-engineer, sysadmin, security-engineer]
+    status: unevaluated
+    invocation: model
+  workload-identity-federation:
+    kind: capability
+    aliases: [cloud-workload-identity, oidc-cloud-federation]
+    roles: [backend-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  secrets-management:
+    kind: capability
+    aliases: [credential-lifecycle-review, secret-lifecycle-engineering]
+    roles: [backend-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  prometheus-alerting-rules:
+    kind: capability
+    aliases: [prometheus-rule-engineering]
+    roles: [backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
+  slo-error-budgets:
+    kind: capability
+    aliases: [slo-error-budget-design]
+    roles: [backend-engineer, frontend-engineer, mobile-engineer, qa-engineer, devops-engineer, sysadmin, business-analyst]
+    status: unevaluated
+    invocation: model
+  postgres-version-upgrades:
+    kind: capability
+    aliases: [postgres-major-upgrades]
+    roles: [backend-engineer, qa-engineer, devops-engineer, sysadmin, security-engineer, data-engineer]
+    status: unevaluated
+    invocation: model
 
 external:
   android-skills:

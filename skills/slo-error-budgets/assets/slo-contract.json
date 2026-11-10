@@ -1,0 +1,30 @@
+{
+  "schema_version": "1",
+  "service": null,
+  "owner": null,
+  "target": null,
+  "objective_window_seconds": null,
+  "runbook_url": null,
+  "sli": {
+    "eligible_counter": null,
+    "bad_counter": null,
+    "numerator": null,
+    "denominator": null,
+    "source": null,
+    "exclusions": null,
+    "missing_data": null,
+    "window": null
+  },
+  "policies": [
+    {
+      "name": "fast",
+      "long_seconds": null,
+      "short_seconds": null,
+      "budget_fraction": null,
+      "long_min_events": null,
+      "short_min_events": null,
+      "hold_seconds": null,
+      "severity": "page"
+    }
+  ]
+}

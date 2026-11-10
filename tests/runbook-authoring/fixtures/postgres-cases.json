@@ -1,0 +1,472 @@
+[
+  {
+    "name": "blocker causes pool queue despite exhausted connections",
+    "observations": {
+      "collector_visible": true,
+      "database_reachable": true,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Lock",
+          "blocked_by": [
+            101
+          ]
+        }
+      ],
+      "connections": {
+        "used": 50,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 10,
+        "limit": 10,
+        "queued": 8
+      },
+      "archiver": {
+        "reset_epoch": "same",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 11,
+          "failed_count": 0
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 10,
+          "capacity_budget_bytes": 100,
+          "progressed": true
+        }
+      ],
+      "mitigation_succeeds": true,
+      "user_path_recovers": true
+    },
+    "expected_steps": [
+      "observe",
+      "provider",
+      "locks",
+      "lock_change",
+      "verify"
+    ],
+    "terminal": "recovered"
+  },
+  {
+    "name": "server exhausted without blocker",
+    "observations": {
+      "collector_visible": true,
+      "database_reachable": true,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Client",
+          "blocked_by": []
+        }
+      ],
+      "connections": {
+        "used": 50,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 2,
+        "limit": 10,
+        "queued": 0
+      },
+      "archiver": {
+        "reset_epoch": "same",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 11,
+          "failed_count": 0
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 10,
+          "capacity_budget_bytes": 100,
+          "progressed": true
+        }
+      ],
+      "mitigation_succeeds": true,
+      "user_path_recovers": true
+    },
+    "expected_steps": [
+      "observe",
+      "provider",
+      "locks",
+      "capacity",
+      "capacity_change",
+      "verify"
+    ],
+    "terminal": "recovered"
+  },
+  {
+    "name": "local pool saturated while server has headroom",
+    "observations": {
+      "collector_visible": true,
+      "database_reachable": true,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Client",
+          "blocked_by": []
+        }
+      ],
+      "connections": {
+        "used": 5,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 10,
+        "limit": 10,
+        "queued": 8
+      },
+      "archiver": {
+        "reset_epoch": "same",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 11,
+          "failed_count": 0
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 10,
+          "capacity_budget_bytes": 100,
+          "progressed": true
+        }
+      ],
+      "mitigation_succeeds": true,
+      "user_path_recovers": true
+    },
+    "expected_steps": [
+      "observe",
+      "provider",
+      "locks",
+      "capacity",
+      "pool",
+      "pool_change",
+      "verify"
+    ],
+    "terminal": "recovered"
+  },
+  {
+    "name": "collector denied is unknown",
+    "observations": {
+      "collector_visible": false,
+      "database_reachable": true,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Client",
+          "blocked_by": []
+        }
+      ],
+      "connections": {
+        "used": 5,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 2,
+        "limit": 10,
+        "queued": 0
+      },
+      "archiver": {
+        "reset_epoch": "same",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 11,
+          "failed_count": 0
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 10,
+          "capacity_budget_bytes": 100,
+          "progressed": true
+        }
+      ],
+      "mitigation_succeeds": true,
+      "user_path_recovers": true
+    },
+    "expected_steps": [
+      "observe"
+    ],
+    "terminal": "escalate"
+  },
+  {
+    "name": "endpoint unavailable despite healthy provider status",
+    "observations": {
+      "collector_visible": true,
+      "database_reachable": false,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Client",
+          "blocked_by": []
+        }
+      ],
+      "connections": {
+        "used": 5,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 2,
+        "limit": 10,
+        "queued": 0
+      },
+      "archiver": {
+        "reset_epoch": "same",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 11,
+          "failed_count": 0
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 10,
+          "capacity_budget_bytes": 100,
+          "progressed": true
+        }
+      ],
+      "mitigation_succeeds": true,
+      "user_path_recovers": true
+    },
+    "expected_steps": [
+      "observe",
+      "provider"
+    ],
+    "terminal": "escalate"
+  },
+  {
+    "name": "archiving stalls with failed counter delta",
+    "observations": {
+      "collector_visible": true,
+      "database_reachable": true,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Client",
+          "blocked_by": []
+        }
+      ],
+      "connections": {
+        "used": 5,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 2,
+        "limit": 10,
+        "queued": 0
+      },
+      "archiver": {
+        "reset_epoch": "same",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 10,
+          "failed_count": 2
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 10,
+          "capacity_budget_bytes": 100,
+          "progressed": true
+        }
+      ],
+      "mitigation_succeeds": true,
+      "user_path_recovers": true
+    },
+    "expected_steps": [
+      "observe",
+      "provider",
+      "locks",
+      "capacity",
+      "pool",
+      "archive",
+      "archive_change",
+      "verify"
+    ],
+    "terminal": "recovered"
+  },
+  {
+    "name": "active slot can retain too much WAL",
+    "observations": {
+      "collector_visible": true,
+      "database_reachable": true,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Client",
+          "blocked_by": []
+        }
+      ],
+      "connections": {
+        "used": 5,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 2,
+        "limit": 10,
+        "queued": 0
+      },
+      "archiver": {
+        "reset_epoch": "same",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 11,
+          "failed_count": 0
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 200,
+          "capacity_budget_bytes": 100,
+          "progressed": false
+        }
+      ],
+      "mitigation_succeeds": true,
+      "user_path_recovers": true
+    },
+    "expected_steps": [
+      "observe",
+      "provider",
+      "locks",
+      "capacity",
+      "pool",
+      "archive",
+      "slots",
+      "slot_change",
+      "verify"
+    ],
+    "terminal": "recovered"
+  },
+  {
+    "name": "failed mitigation stops without retry",
+    "observations": {
+      "collector_visible": true,
+      "database_reachable": true,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Lock",
+          "blocked_by": [
+            101
+          ]
+        }
+      ],
+      "connections": {
+        "used": 5,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 2,
+        "limit": 10,
+        "queued": 0
+      },
+      "archiver": {
+        "reset_epoch": "same",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 11,
+          "failed_count": 0
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 10,
+          "capacity_budget_bytes": 100,
+          "progressed": true
+        }
+      ],
+      "mitigation_succeeds": false,
+      "user_path_recovers": false
+    },
+    "expected_steps": [
+      "observe",
+      "provider",
+      "locks",
+      "lock_change"
+    ],
+    "terminal": "abort"
+  },
+  {
+    "name": "collector reset makes interval comparison unknown",
+    "observations": {
+      "collector_visible": true,
+      "database_reachable": true,
+      "activity": [
+        {
+          "pid": 202,
+          "wait_event_type": "Client",
+          "blocked_by": []
+        }
+      ],
+      "connections": {
+        "used": 5,
+        "usable_limit": 50
+      },
+      "pool": {
+        "active": 2,
+        "limit": 10,
+        "queued": 0
+      },
+      "archiver": {
+        "reset_epoch": "changed",
+        "before": {
+          "archived_count": 10,
+          "failed_count": 0
+        },
+        "after": {
+          "archived_count": 10,
+          "failed_count": 2
+        }
+      },
+      "slots": [
+        {
+          "active": true,
+          "retained_bytes": 10,
+          "capacity_budget_bytes": 100,
+          "progressed": true
+        }
+      ],
+      "mitigation_succeeds": true,
+      "user_path_recovers": true
+    },
+    "expected_steps": [
+      "observe"
+    ],
+    "terminal": "escalate"
+  }
+]

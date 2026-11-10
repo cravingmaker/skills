@@ -1,0 +1,304 @@
+{
+  "rule_files": [
+    "generated-rules.json"
+  ],
+  "evaluation_interval": "1m",
+  "tests": [
+    {
+      "name": "sustained-fast-burn",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0+10000x100"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0+200x100"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "70m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "service": "checkout",
+                "severity": "page",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/checkout",
+                "summary": "checkout fast budget burn"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "SloBurn_slow",
+          "eval_time": "70m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "service": "checkout",
+                "severity": "page",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/checkout",
+                "summary": "checkout slow budget burn"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "slow-burn-below-page-thresholds",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0+10000x4440"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0+15x4440"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "73h",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "SloBurn_slow",
+          "eval_time": "73h",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "SloBurn_ticket",
+          "eval_time": "73h",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "service": "checkout",
+                "severity": "ticket",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/checkout",
+                "summary": "checkout ticket budget burn"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "long-only-burn",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0+10000x100"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0+300x60 18000+0x40"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "70m",
+          "exp_alerts": []
+        }
+      ]
+    },
+    {
+      "name": "threshold-equality",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0+10000x100"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0+144x100"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "70m",
+          "exp_alerts": []
+        }
+      ]
+    },
+    {
+      "name": "no-traffic",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0x100"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0x100"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "70m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "SloBurn_ticket",
+          "eval_time": "70m",
+          "exp_alerts": []
+        }
+      ]
+    },
+    {
+      "name": "sparse-errors",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0+1x100"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0+1x100"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "70m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "SloBurn_ticket",
+          "eval_time": "70m",
+          "exp_alerts": []
+        }
+      ]
+    },
+    {
+      "name": "recovery",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0+10000x200"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0+200x100 20000+0x100"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "70m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "service": "checkout",
+                "severity": "page",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/checkout",
+                "summary": "checkout fast budget burn"
+              }
+            }
+          ]
+        },
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "180m",
+          "exp_alerts": []
+        }
+      ]
+    },
+    {
+      "name": "stale-data",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0+10000x60 stale _x40"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0+200x60 stale _x40"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "100m",
+          "exp_alerts": []
+        }
+      ]
+    },
+    {
+      "name": "no-data",
+      "interval": "1m",
+      "input_series": [],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "70m",
+          "exp_alerts": []
+        },
+        {
+          "alertname": "SloBurn_ticket",
+          "eval_time": "70m",
+          "exp_alerts": []
+        }
+      ]
+    },
+    {
+      "name": "counter-reset",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "fixture_eligible_total{service=\"checkout\"}",
+          "values": "0+10000x60 0+10000x40"
+        },
+        {
+          "series": "fixture_bad_total{service=\"checkout\"}",
+          "values": "0+200x60 0+200x40"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "alertname": "SloBurn_fast",
+          "eval_time": "80m",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "service": "checkout",
+                "severity": "page",
+                "owner": "example_owner"
+              },
+              "exp_annotations": {
+                "runbook_url": "https://example.invalid/runbooks/checkout",
+                "summary": "checkout fast budget burn"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

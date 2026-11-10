@@ -1,0 +1,29 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-0",
+      "name": "fixture-0",
+      "versionInfo": "1.2.0",
+      "externalRefs": [
+        {
+          "referenceType": "purl",
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40fixture/library@1.2.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-1",
+      "name": "fixture-1",
+      "versionInfo": "1.0-2",
+      "externalRefs": [
+        {
+          "referenceType": "purl",
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:deb/fixture/libdemo@1.0-2?arch=amd64"
+        }
+      ]
+    }
+  ]
+}

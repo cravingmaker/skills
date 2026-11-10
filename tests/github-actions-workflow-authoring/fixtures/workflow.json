@@ -1,0 +1,36 @@
+{
+  "name": "CI fixture",
+  "on": {
+    "pull_request": {}
+  },
+  "permissions": {},
+  "concurrency": {
+    "group": "fixture-ci",
+    "cancel-in-progress": true
+  },
+  "jobs": {
+    "build": {
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 10,
+      "steps": [
+        {
+          "run": "exit 0"
+        }
+      ]
+    },
+    "gate": {
+      "name": "CI",
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 5,
+      "needs": [
+        "build"
+      ],
+      "if": "${{ always() }}",
+      "steps": [
+        {
+          "run": "test \"${{ needs.build.result }}\" = success"
+        }
+      ]
+    }
+  }
+}

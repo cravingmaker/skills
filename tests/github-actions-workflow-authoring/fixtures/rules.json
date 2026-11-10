@@ -1,0 +1,18 @@
+[
+  {
+    "id": 7,
+    "rules": [
+      {
+        "type": "required_status_checks",
+        "parameters": {
+          "required_status_checks": [
+            {
+              "context": "CI",
+              "integration_id": 15368
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

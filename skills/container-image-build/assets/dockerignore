@@ -1,0 +1,15 @@
+# Compare with the repository's context; do not overwrite its existing rules.
+.git
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/.npmrc
+**/.pypirc
+**/.netrc
+**/node_modules
+**/.venv
+**/__pycache__
+**/.DS_Store
+# Add repository-specific credentials and generated files after tracing COPY inputs.
+# Add explicit exceptions only for required non-secret inputs.
