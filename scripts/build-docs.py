@@ -26,6 +26,7 @@ section, rule failure or unreadable source, 2 usage.
 
 import argparse
 import html
+from html.parser import HTMLParser
 from urllib.parse import unquote
 import json
 import os
@@ -48,7 +49,7 @@ END = re.compile(r"^<!-- END GENERATED ([a-z0-9-]+) -->$")
 # Only these may mention a path into handbook/: the human docs, this tool and its
 # tests, and validate.sh, which lints the handbook's prose and runs this check.
 MENTION_ALLOWED = ("README.md", "CHANGELOG.md", "DOCS-REPORT.md", "MERGE-REPORT.md", "MOVES.txt", "handbook/", "scripts/build-docs.py", "tests/build-docs/", "scripts/validate.sh")
-MENTION = re.compile(r"(?<![\w.-])handbook/", re.I)
+MENTION = re.compile(r"(?<![\w.-])handbook(?:/|(?=[)#?`\"'<>]|$))", re.I)
 SKIP_DIRS = {".git", "node_modules", ".venv", "__pycache__"}
 NOT_COMMANDS = {"bin", "dev", "etc", "home", "opt", "tmp", "usr", "var"}
 UPSTREAMS = (
@@ -106,11 +107,23 @@ def _scalar(text: str, where: str):
         for item in items:
             if not item or re.search(r"[\[\]{}\"'#&*!|>]|:\s|:$", item):
                 raise SourceError(f"{where}: flow lists may hold only plain names; got {item!r}")
-        return items
+        return [_scalar(item, where) for item in items]
     elif text[:1] in set("{&*!|>%@`"):
         raise SourceError(f"{where}: unsupported YAML syntax {text[:1]!r}; use a plain or quoted single-line value")
     else:
         value = re.split(r"\s#", text, maxsplit=1)[0].rstrip()
+        if re.match(r"^[,\]{}]|^[-?:](?:\s|$)", value):
+            raise SourceError(f"{where}: unsupported YAML plain scalar; quote the value")
+        # This subset supports strings, not YAML's implicit typed scalars.
+        typed = (
+            re.fullmatch(r"(?:~|null|true|false|yes|no|on|off)", value, re.I)
+            or re.fullmatch(r"[-+]?(?:[0-9][0-9_:]*(?:\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|"
+                            r"\.[0-9_]+(?:[eE][-+]?[0-9]+)?|0[bBoOxX][0-9a-fA-F_]+|"
+                            r"\.(?:inf|nan))", value, re.I)
+            or re.match(r"\d{4}-\d{1,2}-\d{1,2}(?:$|[Tt\s])", value)
+        )
+        if typed:
+            raise SourceError(f"{where}: unsupported implicit YAML type; quote the string value")
         if re.search(r":\s|:$", value):
             raise SourceError(f"{where}: a plain value cannot contain ': '; quote it")
         return value
@@ -623,11 +636,25 @@ def slugs(text: str) -> set[str]:
     return found
 
 
+class HTMLLinks(HTMLParser):
+    """Collect file links from prose HTML, including quoted and unquoted attributes."""
+
+    def __init__(self):
+        super().__init__()
+        self.targets = []
+
+    def handle_starttag(self, tag, attrs):
+        self.targets.extend(value for key, value in attrs if key in ("href", "src") and value)
+
+
 def check_docs(repo: Repo, docs: dict, problems: list) -> None:
     root, skills, headings = repo.root, repo.skills, {}
     for path, text in docs.items():
         prose = skillprose.prose(text)
-        for target in re.findall(r"!?\[[^\]\n]*\]\(([^)\s]+)\)", prose):
+        html_links = HTMLLinks()
+        html_links.feed(prose)
+        for target in skillprose.link_targets(prose) + html_links.targets:
+            target = unquote(html.unescape(target.strip("<>")))
             if re.match(r"[a-z][a-z0-9+.-]*:", target):
                 continue
             file_part, _, anchor = target.partition("#")

@@ -106,6 +106,30 @@ class BuildDocs(unittest.TestCase):
         self.edit("handbook/README.md", "- [Start and choose](#start-and-choose)", "- [Start and choose](#nowhere)\n- [Gone](missing.md)")
         self.assertFails("link #nowhere names a missing heading", "link missing.md points to a missing file")
 
+    def test_link_forms_reject_missing_destinations_and_accept_real_ones(self):
+        path = self.copy / "handbook/README.md"
+        before = path.read_bytes()
+        self.addCleanup(path.write_bytes, before)
+        forms = (
+            '[Guide]({target} "Title")',
+            '[Guide](<{target}>)',
+            '[Guide][target]\n\n[target]: {target}',
+            '[Guide][]\n\n[Guide]: <{target}> "Title"',
+            '[Guide]\n\n[Guide]: {target}',
+            '<a href="{target}">Guide</a>',
+            "<a href='{target}'>Guide</a>",
+            '<a href={target}>Guide</a>',
+        )
+        for form in forms:
+            for target, expected in (("getting-started.md", 0), ("missing-guide.md", 1),
+                                     ("getting-started.md#missing-heading", 1)):
+                with self.subTest(form=form, target=target):
+                    path.write_text(before.decode() + "\n" + form.format(target=target) + "\n")
+                    result = run(self.copy, "--check")
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    if expected:
+                        self.assertIn("link " + target, result.stderr)
+
     def test_unknown_skill_pointer_and_command_are_rejected(self):
         self.edit("handbook/recommended-flow.md", "## Choose the starting point\n", "## Choose the starting point\n\nUse the `no-such-skill` skill, or type `/no-such-command`.\n")
         self.assertFails("'the `no-such-skill` skill' names no current skill", "command `/no-such-command` names no current skill")
@@ -117,6 +141,22 @@ class BuildDocs(unittest.TestCase):
     def test_unsupported_yaml_fails_with_a_message(self):
         self.edit("skills/tdd/SKILL.md", "description: Test-driven", "description: >\n  Test-driven")
         self.assertFails("skills/tdd/SKILL.md:3: unsupported YAML syntax")
+
+    def test_unsupported_plain_scalars_fail_before_any_write(self):
+        path = self.copy / "skills/tdd/SKILL.md"
+        before = path.read_bytes()
+        self.addCleanup(path.write_bytes, before)
+        import re
+        for value in ("]", "}", ",bad", "- nested", "? key", "true", "null", "42",
+                      "0x12", "1.5", ".inf", "2026-11-10"):
+            with self.subTest(value=value):
+                path.write_text(re.sub(r"(?m)^description: .*?$", "description: " + value, before.decode()))
+                snapshot = self.snapshot()
+                result = run(self.copy)
+                self.assertEqual(result.returncode, 1, result.stderr)
+                self.assertIn("unsupported", result.stderr)
+                self.assertIn("quote", result.stderr)
+                self.assertEqual(snapshot, self.snapshot())
 
     def test_parser_matches_pyyaml(self):
         uv = shutil.which("uv")
@@ -150,7 +190,8 @@ class BuildDocs(unittest.TestCase):
 
     def test_agent_boundary_variants(self):
         target = "hand" + "book/README.md"
-        cases = [("AGENTS.md", "[guide](" + target + ")"),
+        cases = [("AGENTS.md", "[guide](hand" + "book)"),
+                 ("AGENTS.md", "[guide](" + target + ")"),
                  ("CLAUDE.local.md", "`" + target + "`"),
                  ("nested/AGENTS.override.md", "[guide](../" + target + ")"),
                  ("skills/tdd/references/extra.md", "[guide]: ../../" + target),

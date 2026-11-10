@@ -44,7 +44,7 @@ Three things typed only does not do:
 
 - **It does not stop other skills from reading it.** A skill that requires a typed-only skill still reads it by name. `implement-spec` reads `implement`, `full-stop` reads `full-send`, and `agent-orchestrator` reads `to-spec`, `to-tickets`, `grill-with-docs`, `implement-spec` and `retro`.
 - **It is not a lock on the file.** A model that already knows the path can read the `SKILL.md` from disk. The evals saw this once on each host: `to-questionnaire` on Claude Code, which a fresh repeat did not reproduce, and `teach` on Codex, fixed by narrowing its description. See [known issues](known-issues.md#manual-only-is-not-a-file-access-boundary).
-- **It grants no authority.** `/pr` writes a body; it does not file. `/full-stop` never merges. An explicit request to merge supplies merge authority; the `full-send` method owns the guarded procedure. Loading a command supplies no authority beyond the request.
+- **It grants no authority.** `/pr` drafts by default and files when the same request or existing task authority permits it. `/full-stop` never merges. An explicit request to merge supplies merge authority; the `full-send` method owns the guarded procedure. Loading a command supplies no authority beyond the request.
 
 ## All typed commands
 
@@ -118,7 +118,7 @@ Seven entries are thin: they open another skill in one mode and add no method of
 - **Typing it:** splits an approved spec into vertical-slice tickets and asks you to review the breakdown.
 - **Opens:** a full skill.
 - **Output:** a numbered list, each ticket with its title, **Blocked by**, what it delivers, its **Proof** and the stories it covers. You approve, merge or split, then it files.
-- **Changes:** one `NN-slug.md` file per ticket in the local ticket folder, or one issue per ticket on a remote tracker, in dependency order. For local tickets it runs the `work-decomposition` importer and fixes every `FAIL` line before reporting.
+- **Changes:** one `NN-slug.md` file per ticket in the local ticket folder, or one issue per ticket on a remote tracker, in dependency order. For local tickets, when `work-decomposition` is installed, it runs that skill's importer and fixes every `FAIL` line before reporting.
 - **Rules it keeps:** wide refactors become expand, migrate in batches, then contract. Ticket numbers and approved wording stay stable once filed.
 - **Why typed only:** it files tickets, and the breakdown needs your approval.
 - **Example:** `/to-tickets docs/specs/saved-searches.md`

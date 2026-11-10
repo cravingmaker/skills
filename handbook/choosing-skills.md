@@ -31,7 +31,7 @@ Each generated row includes an example prompt and a neighboring method to compar
 | Get a long draft, README or explanation written clearly and faithfully | [`clear-communication`](skills.md#clear-communication) | "tighten this README", "explain this simply" | `/bro`, which repairs only the agent's last answer |
 | Have the last answer said plainly | [`/bro`](skills.md#bro) | `/bro` | `/wait-what`, which explains one point with your context |
 | Understand one point in the last answer that lost me | [`/wait-what`](skills.md#wait-what) | `/wait-what` what is settlement here? | `/teach`, which builds a whole layered explanation |
-| Make my request deeper, not bigger, before anyone works on it | [`/sharpen`](skills.md#sharpen) | `/sharpen` <your prompt> | `grilling`, which settles decisions instead of rewriting the prompt |
+| Make my request deeper, not bigger, before anyone works on it | [`/sharpen`](skills.md#sharpen) | `/sharpen` `<your prompt>` | `grilling`, which settles decisions instead of rewriting the prompt |
 | Know how this code runs today | [`how`](skills.md#how) | "walk me through how checkout works" | `why`, which explains history and intent |
 | Know why it was built this way, or whether a note matches what someone decided | [`why`](skills.md#why) | "why does the cache expire after 90 seconds?" | `how`, which traces current behavior only |
 | Learn a concept in layers, or save a course | [`/teach`](skills.md#teach) | `/teach` how the retry queue works | `how` and `why`, which it uses underneath |
@@ -42,10 +42,10 @@ Each generated row includes an example prompt and a neighboring method to compar
 | I want to... | Use | Start it with | Easily confused with |
 | --- | --- | --- | --- |
 | Be interviewed until the plan is settled, with no files written | [`grilling`](skills.md#grilling) | "grill me on this plan", "stress-test this design" | `/grill-me`, the typed shortcut to the same interview |
-| The same interview, started by command | [`/grill-me`](skills.md#grill-me) | `/grill-me` <plan> | `/grill-with-docs`, which writes glossary terms and ADRs |
-| Be interviewed and have terms and decisions recorded as they settle | [`/grill-with-docs`](skills.md#grill-with-docs) | `/grill-with-docs` <idea> | `domain-modeling`, which edits the glossary or ADRs directly; missing project paths allow a plain interview without document writes |
+| The same interview, started by command | [`/grill-me`](skills.md#grill-me) | `/grill-me` `<plan>` | `/grill-with-docs`, which writes glossary terms and ADRs |
+| Be interviewed and have terms and decisions recorded as they settle | [`/grill-with-docs`](skills.md#grill-with-docs) | `/grill-with-docs` `<idea>` | `domain-modeling`, which edits the glossary or ADRs directly; missing project paths allow a plain interview without document writes |
 | Fix a term conflict, record a definition, rename a concept, or record or supersede an ADR | [`domain-modeling`](skills.md#domain-modeling) | "record that a refund means ...", "supersede ADR-0003" | `decision-log`, which records choices inside one agent run |
-| Plan a goal too big and unclear for one session | [`/wayfinder`](skills.md#wayfinder) | `/wayfinder` <goal> | `/to-tickets`, which splits an already approved spec |
+| Plan a goal too big and unclear for one session | [`/wayfinder`](skills.md#wayfinder) | `/wayfinder` `<goal>` | `/to-tickets`, which splits an already approved spec |
 | Ask another person what only they know | [`/to-questionnaire`](skills.md#to-questionnaire) | `/to-questionnaire` ask the finance lead ... | `research`, which reads sources instead of asking people |
 | Try a state model or UI before building it | [`prototype`](skills.md#prototype) | "prototype the order states first" | `architect`, which designs the real interface |
 
@@ -54,7 +54,7 @@ Each generated row includes an example prompt and a neighboring method to compar
 | I want to... | Use | Start it with | Easily confused with |
 | --- | --- | --- | --- |
 | Turn an agreed plan into a spec with stories, Acceptance and Proof | [`/to-spec`](skills.md#to-spec) | `/to-spec` | `grilling`, which settles the plan first; `/to-spec` never interviews |
-| Split an approved spec into vertical-slice tickets | [`/to-tickets`](skills.md#to-tickets) | `/to-tickets` <spec> | `work-decomposition`, which imports tickets into an execution plan |
+| Split an approved spec into vertical-slice tickets | [`/to-tickets`](skills.md#to-tickets) | `/to-tickets` `<spec>` | `work-decomposition`, which imports tickets into an execution plan |
 | Triage new issues and external PRs | [`/triage`](skills.md#triage) | `/triage` move #42 to ready-for-agent | `/to-tickets`, which writes new tickets from a spec |
 | Record a project's tracker, labels and domain paths | [`/setup-agent-skills`](skills.md#setup-agent-skills) | `/setup-agent-skills` | `project-guardrails`, which sets up checks, not the planning contract |
 
@@ -72,7 +72,7 @@ Each generated row includes an example prompt and a neighboring method to compar
 | I want to... | Use | Start it with | Easily confused with |
 | --- | --- | --- | --- |
 | Build one ticket or agreed change, proved and self-reviewed | [`/implement`](skills.md#implement) | `/implement` ticket 03 | `/implement-spec`, which runs the whole ticket graph |
-| Build a whole approved ticket graph with workers | [`/implement-spec`](skills.md#implement-spec) | `/implement-spec` <spec> | `agent-orchestrator`, which routes approved code tickets to it |
+| Build a whole approved ticket graph with workers | [`/implement-spec`](skills.md#implement-spec) | `/implement-spec` `<spec>` | `agent-orchestrator`, which routes approved code tickets to it |
 | Work test-first or add a regression test | [`tdd`](skills.md#tdd) | "do this test-first", "add a regression test" | `diagnosing-bugs`, which first finds the cause |
 | Find the real cause of a bug or slowdown | [`diagnosing-bugs`](skills.md#diagnosing-bugs) | "debug this", "why is this slow?" | `fix-ci`, which handles a failing CI check |
 | Walk a human through steps only they can do | [`wizard`](skills.md#wizard) | "make a setup wizard for the API keys" | `create-verification-skill`, which the agent itself runs |
@@ -85,7 +85,7 @@ Each generated row includes an example prompt and a neighboring method to compar
 | A report on a change against standards and the spec, without fixes | [`change-review`](skills.md#change-review) | "review this branch against the spec" | Claude Code's built-in `code-review` and `review`, which keep their own behavior |
 | Review, fix and recheck in bounded rounds | [`sol-loop`](skills.md#sol-loop) | "run a sol loop on this PR" | `change-review`, its report-only primitive |
 | A panel of different providers on one question | [`/council`](skills.md#council) | `/council` review this with Claude and Codex | `agent-debate`, which `/council` uses for design questions |
-| An adversarial review that tries to break the change, report only | [`/interrogate`](skills.md#interrogate) | `/interrogate` <scope> | `sol-loop`, which also fixes what it finds |
+| An adversarial review that tries to break the change, report only | [`/interrogate`](skills.md#interrogate) | `/interrogate` `<scope>` | `sol-loop`, which also fixes what it finds |
 
 ## Prove it works
 
@@ -99,15 +99,15 @@ Each generated row includes an example prompt and a neighboring method to compar
 
 | I want to... | Use | Start it with | Easily confused with |
 | --- | --- | --- | --- |
-| A PR title and body, drafted or filed | [`file-pr`](skills.md#file-pr) | "write the PR description", "open a PR" | `/pr`, which only ever drafts |
+| A PR title and body, drafted or filed | [`file-pr`](skills.md#file-pr) | "write the PR description", "open a PR" | `/pr`, which drafts by default and files when the same request or existing task authority permits it |
 | A PR body as a local draft, by command | [`/pr`](skills.md#pr) | `/pr` | `file-pr`, which can file when the same request or existing task authority permits it |
 | A PR watched until it is ready | [`babysit-pr`](skills.md#babysit-pr) | "babysit this PR", "get it green" | `/full-send`, which also merges |
 | A failing CI check fixed for the right reason | [`fix-ci`](skills.md#fix-ci) | "CI is red on this PR" | `diagnosing-bugs`, which it calls for hard failures |
 | Review comments verified and answered | [`leaving-pr-comments`](skills.md#leaving-pr-comments) | "answer the review comments" | `babysit-pr`, which uses it in a full pass |
 | An old or conflicted PR brought up to date | [`modernize`](skills.md#modernize) | "rebase this PR onto main" | `takeover`, which also changes who owns the work |
 | Someone else's PR or branch finished | [`takeover`](skills.md#takeover) | "take over this PR and finish it" | `modernize`, which only updates it |
-| A change taken all the way to merged | [`/full-send`](skills.md#full-send) | `/full-send` <task> | `/full-stop`, which stops at ready |
-| A change taken to a ready PR, not merged | [`/full-stop`](skills.md#full-stop) | `/full-stop` <task> | `babysit-pr`, which watches a PR you already have |
+| A change taken all the way to merged | [`/full-send`](skills.md#full-send) | `/full-send` `<task>` | `/full-stop`, which stops at ready |
+| A change taken to a ready PR, not merged | [`/full-stop`](skills.md#full-stop) | `/full-stop` `<task>` | `babysit-pr`, which watches a PR you already have |
 
 ## Coordinate several agents
 
@@ -132,7 +132,7 @@ Each generated row includes an example prompt and a neighboring method to compar
 
 | I want to... | Use | Start it with | Easily confused with |
 | --- | --- | --- | --- |
-| Hand the work to a fresh session | [`/handoff`](skills.md#handoff) | `/handoff` <focus for next session> | `decision-log`, the durable record a handoff points to |
+| Hand the work to a fresh session | [`/handoff`](skills.md#handoff) | `/handoff` `<focus for next session>` | `decision-log`, the durable record a handoff points to |
 | Find an earlier run whose link I lost | [`recall`](skills.md#recall) | "find the run where we fixed the importer" | `decision-log`, which resumes a run you can already locate |
 | Catch up on what happened since my last message | [`/ketchup`](skills.md#ketchup) | `/ketchup` | `recall`, which searches older history |
 | Review how a session went and what to improve | [`/retro`](skills.md#retro) | `/retro` | `correct`, which acts on a recurrence |

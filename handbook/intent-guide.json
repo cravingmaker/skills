@@ -24,7 +24,7 @@
         {
           "skill": "sharpen",
           "want": "Make my request deeper, not bigger, before anyone works on it",
-          "prompt": "<your prompt>",
+          "prompt": "`<your prompt>`",
           "neighbor": "`grilling`, which settles decisions instead of rewriting the prompt"
         },
         {
@@ -65,13 +65,13 @@
         {
           "skill": "grill-me",
           "want": "The same interview, started by command",
-          "prompt": "<plan>",
+          "prompt": "`<plan>`",
           "neighbor": "`/grill-with-docs`, which writes glossary terms and ADRs"
         },
         {
           "skill": "grill-with-docs",
           "want": "Be interviewed and have terms and decisions recorded as they settle",
-          "prompt": "<idea>",
+          "prompt": "`<idea>`",
           "neighbor": "`domain-modeling`, which edits the glossary or ADRs directly; missing project paths allow a plain interview without document writes"
         },
         {
@@ -83,7 +83,7 @@
         {
           "skill": "wayfinder",
           "want": "Plan a goal too big and unclear for one session",
-          "prompt": "<goal>",
+          "prompt": "`<goal>`",
           "neighbor": "`/to-tickets`, which splits an already approved spec"
         },
         {
@@ -112,7 +112,7 @@
         {
           "skill": "to-tickets",
           "want": "Split an approved spec into vertical-slice tickets",
-          "prompt": "<spec>",
+          "prompt": "`<spec>`",
           "neighbor": "`work-decomposition`, which imports tickets into an execution plan"
         },
         {
@@ -170,7 +170,7 @@
         {
           "skill": "implement-spec",
           "want": "Build a whole approved ticket graph with workers",
-          "prompt": "<spec>",
+          "prompt": "`<spec>`",
           "neighbor": "`agent-orchestrator`, which routes approved code tickets to it"
         },
         {
@@ -223,7 +223,7 @@
         {
           "skill": "interrogate",
           "want": "An adversarial review that tries to break the change, report only",
-          "prompt": "<scope>",
+          "prompt": "`<scope>`",
           "neighbor": "`sol-loop`, which also fixes what it finds"
         }
       ]
@@ -258,7 +258,7 @@
           "skill": "file-pr",
           "want": "A PR title and body, drafted or filed",
           "prompt": "\"write the PR description\", \"open a PR\"",
-          "neighbor": "`/pr`, which only ever drafts"
+          "neighbor": "`/pr`, which drafts by default and files when the same request or existing task authority permits it"
         },
         {
           "skill": "pr",
@@ -299,13 +299,13 @@
         {
           "skill": "full-send",
           "want": "A change taken all the way to merged",
-          "prompt": "<task>",
+          "prompt": "`<task>`",
           "neighbor": "`/full-stop`, which stops at ready"
         },
         {
           "skill": "full-stop",
           "want": "A change taken to a ready PR, not merged",
-          "prompt": "<task>",
+          "prompt": "`<task>`",
           "neighbor": "`babysit-pr`, which watches a PR you already have"
         }
       ]
@@ -380,7 +380,7 @@
         {
           "skill": "handoff",
           "want": "Hand the work to a fresh session",
-          "prompt": "<focus for next session>",
+          "prompt": "`<focus for next session>`",
           "neighbor": "`decision-log`, the durable record a handoff points to"
         },
         {
