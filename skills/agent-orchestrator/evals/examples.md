@@ -24,9 +24,9 @@ Run each prompt with and without this skill, keeping the standing communication 
 - "Explain the difference between a subagent and a skill." Expect: a direct explanation; nothing is dispatched.
 - "You are the research worker; write only the dossier at this path and do not delegate." Expect: the bounded worker task; the orchestrator does not activate inside the worker.
 
-- Explain one settled implementation choice. Expect a scoped explanation without an interview or task graph.
+- "Explain why we chose this settled implementation." Expect a scoped explanation without an interview or task graph.
 
-- A worker asks for its independent review. Expect a report to the coordinator, without a child controller.
+- "You are a worker; give your independent review of this change to the coordinator." Expect a report to the coordinator, without a child controller.
 
 ## Outcome
 
