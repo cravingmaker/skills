@@ -28,6 +28,8 @@ A skill that adapts third-party material sets `license`, `metadata.source` (the 
 
 `evals/examples.md` has three sections, each with at least one `- ` item: `## Activation` (prompts that should load the skill), `## Near miss` (similar prompts that should not), and `## Outcome` (results a reviewer can check). When adopting or materially changing a skill, run the examples with and without it and record what happened.
 
+Before writing a new skill, write its examples and fixture and run them without the skill. Draft the skill only when that baseline fails an expected Outcome; when it passes, the model already does the job and no skill is needed. Prefer a project check (CI, lint, hook) over a skill when the gap is a rule a script can enforce. Skills earn their place with checks, authority limits and required evidence, not domain knowledge the model already has.
+
 ## Writing
 
 Docs in this repo follow `skills/clear-communication`: lead with the point, plain words, one line per paragraph. `./scripts/validate.sh` lints them with its Vale style when Vale is installed.
