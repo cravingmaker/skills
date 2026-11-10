@@ -61,7 +61,11 @@
     "decide_within_minutes": 15,
     "roll_forward_commands": [
       "Run the separately reviewed compatible candidate repair"
-    ]
+    ],
+    "roll_forward_target": {
+      "artifact": "registry.example.com/checkout@sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "config": "git:cccccccccccccccccccccccccccccccccccccccc"
+    }
   },
   "drill": {
     "environment": "staging",
@@ -80,7 +84,8 @@
     "candidate_config": "git:000000000000000000000000000000000000000b",
     "previous_config": "git:000000000000000000000000000000000000000a",
     "receipt": "drill.txt",
-    "plan_sha256": "8866c2fd89bbb457292d50d935d45c608339a397c5cc7f253f0a53d739b30c89"
+    "plan_sha256": "faaa2d0cee1f0ee59704f714423c95b7490bde33710e35f397a8c5060daab1b0",
+    "recovered_config": "git:000000000000000000000000000000000000000a"
   },
   "source_revision": "1111111111111111111111111111111111111111",
   "target": "synthetic-production-endpoint",

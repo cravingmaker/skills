@@ -60,7 +60,11 @@
     "decide_within_minutes": 15,
     "roll_forward_commands": [
       "<exact reviewed compatible repair, when applicable>"
-    ]
+    ],
+    "roll_forward_target": {
+      "artifact": "<separately reviewed repair artifact@sha256:digest, when applicable>",
+      "config": "<separately reviewed repair config commit or digest, when applicable>"
+    }
   },
   "drill": null,
   "source_revision": "<full live-resolved source commit>",

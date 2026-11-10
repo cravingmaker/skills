@@ -17,7 +17,7 @@ with signal and threshold, a decider and a decision deadline; a drill outside
 production on these exact artifacts, with measured duration within budget
 and a passing user-path check. Source/target/authority, abort/recovery, exact config,
 plan-digest and local receipt binding are also required. A roll-forward drill
-exercises the compatible candidate repair, not an incompatible old artifact.
+exercises the separately pinned repair target, not an incompatible old artifact.
 A pass means the record is complete and self-consistent. It does not prove
 the commands work on the real target or that the listed effects are all of
 them.
@@ -154,10 +154,16 @@ def check(plan, args):
     if strategy == "roll-forward" and not (isinstance(decision.get("roll_forward_when"), list) and decision["roll_forward_when"]):
         find("decision", "a roll-forward plan lists `roll_forward_when` conditions")
 
+    repair = decision.get("roll_forward_target", {})
+    if not isinstance(repair, dict):
+        repair = {}
     if strategy == "roll-forward":
+        for field, pattern in (("artifact", ARTIFACT), ("config", CONFIG)):
+            if not (text(repair.get(field)) and pattern.fullmatch(repair[field])):
+                find("roll_forward_target", "pin the compatible repair artifact and config separately from the deployed candidate")
         commands = decision.get("roll_forward_commands")
         if not (isinstance(commands, list) and commands and all(text(x) for x in commands)):
-            find("decision", "a roll-forward plan names the exact compatible repair commands and candidate artifact")
+            find("decision", "a roll-forward plan names the exact compatible repair commands and pinned repair target")
     drill = plan.get("drill")
     if drill is None:
         if not args.allow_unrehearsed:
@@ -171,9 +177,11 @@ def check(plan, args):
             find("drill_stale", "the source, target, commands, config or decision changed; rehearse the current plan")
         if drill.get("action") != strategy:
             find("drill_action", "record which selected recovery strategy the drill exercised")
-        expected = previous.get("artifact") if strategy == "rollback" else candidate.get("artifact")
-        if drill.get("recovered_artifact") != expected:
+        recovery = previous if strategy == "rollback" else repair
+        if drill.get("recovered_artifact") != recovery.get("artifact"):
             find("drill_recovery_artifact", "record the recovered artifact for the selected strategy")
+        if drill.get("recovered_config") != recovery.get("config"):
+            find("drill_recovery_config", "record the recovered config for the selected strategy")
         if not local_receipt(args.base, drill.get("receipt")):
             find("drill_receipt", "keep a relative regular local rehearsal receipt inside the plan directory")
         for field in ("candidate_config", "previous_config"):

@@ -90,11 +90,37 @@ class CheckRollbackPlan(unittest.TestCase):
         code, rules = self.rules(self.variant(change))
         self.assertEqual((code, rules), (1, {"rollback_blocked_by_schema"}))
         forward = self.variant(lambda p: (change(p), p.update(strategy="roll-forward"),
-                                          p["drill"].update(action="roll-forward", recovered_artifact=p["candidate"]["artifact"])))
+                                          p["drill"].update(action="roll-forward",
+                                                            recovered_artifact=p["decision"]["roll_forward_target"]["artifact"],
+                                                            recovered_config=p["decision"]["roll_forward_target"]["config"])))
         self.assertEqual(self.rules(forward)[0], 0)
         no_conditions = self.variant(lambda p: (change(p), p.update(strategy="roll-forward"),
                                                 p["decision"].update(roll_forward_when=[])))
         self.assertIn("decision", self.rules(no_conditions)[1])
+
+    def test_roll_forward_binds_a_distinct_repair_artifact_and_config(self):
+        plan = copy.deepcopy(self.plan)
+        plan['strategy'] = 'roll-forward'
+        plan['schema'].update(phase='contract', previous_code_compatible=False)
+        repair = plan['decision']['roll_forward_target']
+        plan['drill'].update(action='roll-forward',
+                            recovered_artifact=repair['artifact'],
+                            recovered_config=repair['config'])
+        self.assertNotEqual(repair['artifact'], plan['candidate']['artifact'])
+        self.assertEqual(self.rules(plan)[0], 0)
+        changed = copy.deepcopy(plan)
+        changed['drill']['recovered_artifact'] = plan['candidate']['artifact']
+        self.assertIn('drill_recovery_artifact', self.rules(changed)[1])
+        changed = copy.deepcopy(plan)
+        changed['drill']['recovered_config'] = plan['candidate']['config']
+        self.assertIn('drill_recovery_config', self.rules(changed)[1])
+        changed = copy.deepcopy(plan)
+        del changed['decision']['roll_forward_target']
+        self.assertIn('roll_forward_target', self.rules(changed)[1])
+        # A config-only repair may retain B's image while changing its config.
+        plan['decision']['roll_forward_target']['artifact'] = plan['candidate']['artifact']
+        plan['drill']['recovered_artifact'] = plan['candidate']['artifact']
+        self.assertEqual(self.rules(plan)[0], 0)
 
     def test_gitops_needs_auto_sync_handling(self):
         self.assertIn("gitops_auto_sync", self.rules(self.variant(lambda p: p["delivery"].pop("auto_sync")))[1])

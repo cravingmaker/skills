@@ -25,7 +25,7 @@ import time
 NAMES = (".zshenv", ".zprofile", ".zshrc", ".zlogin", ".zlogout")
 MODES = {"noninteractive": [], "login": ["-l"], "interactive": ["-i"], "login_interactive": ["-l", "-i"]}
 MARKER = b"\0ZSH_PROBE\0"
-COMMAND = r"""builtin printf '\000ZSH_PROBE\000%s\000%s,%s\000' "$PATH" "$options[shwordsplit]" "$options[nomatch]"; builtin exit 0"""
+COMMAND = r"""builtin printf '\000ZSH_PROBE\000%s\000%s,%s\000%s\000' "$PATH" "$options[shwordsplit]" "$options[nomatch]" "$PWD"; builtin exit 0"""
 
 
 def validate(root, zsh):
@@ -73,19 +73,19 @@ def probe(zsh, directory, root, flags, timeout):
         order.append(known[match[1]])
         extra_stderr -= len(match[0])
     prefix, found, tail = stdout.partition(MARKER)
-    parts = tail.split(b"\0", 2)
-    valid = bool(found and len(parts) == 3 and parts[1] in (b"on,on", b"on,off", b"off,on", b"off,off"))
+    parts = tail.split(b"\0", 3)
+    valid = bool(found and len(parts) == 4 and os.path.isabs(parts[2]) and parts[1] in (b"on,on", b"on,off", b"off,on", b"off,off"))
     result = {"elapsed_ms": round((time.perf_counter() - start) * 1000, 3),
               "exit_code": process.returncode, "timeout": timed_out,
               "protocol_complete": valid, "startup_order": order,
-              "extra_stdout_bytes": len(prefix) + (len(parts[2]) if valid else len(tail)),
+              "extra_stdout_bytes": len(prefix) + (len(parts[3]) if valid else len(tail)),
               "extra_stderr_bytes": extra_stderr}
     if valid:
         entries = parts[0].split(b":")
         result.update(path_entry_sha256=[hashlib.sha256(x).hexdigest() for x in entries],
                       duplicate_path_entries=len(entries) - len(set(entries)),
                       empty_path_entries=entries.count(b""),
-                      missing_path_entries=sum(bool(x) and not os.path.isdir(x) for x in entries))
+                      missing_path_entries=sum(bool(x) and not os.path.isdir(os.path.join(parts[2], x)) for x in entries))
         split, glob = parts[1].decode().split(",")
         result.update(path_sha256=hashlib.sha256(parts[0]).hexdigest(),
                       options={"shwordsplit": split, "nomatch": glob})

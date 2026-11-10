@@ -105,6 +105,23 @@ class Startup(unittest.TestCase):
         self.assertEqual(row["empty_path_entries"], 1)
         self.assertGreaterEqual(row["missing_path_entries"], 2)
 
+    def test_relative_path_entries_use_the_observed_shell_directory(self):
+        (self.probe / "local-bin").mkdir()
+        (self.probe / "child").mkdir()
+        (self.probe / "child/local-bin").mkdir()
+        (self.work / "parent-only").mkdir()
+        startup = self.probe / "candidate/.zshenv"
+        for prefix in ("", 'builtin cd "$TMPDIR/child"\n'):
+            for entry, missing in (("local-bin", 0), ("parent-only", 1)):
+                startup.write_text(prefix + f"export PATH={entry}:/usr/bin:/bin\n")
+                result = self.run_probe()
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertNotIn(str(self.probe), result.stdout + result.stderr)
+                self.assertNotIn(entry, result.stdout + result.stderr)
+                for row in json.loads(result.stdout)["rows"]:
+                    if row["variant"] == "candidate":
+                        self.assertEqual(row["missing_path_entries"], missing)
+
     def test_reject_symlink_and_nonempty_baseline(self):
         marker = self.probe / ".zsh-probe-disposable"
         marker.unlink()

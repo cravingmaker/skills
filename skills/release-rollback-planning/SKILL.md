@@ -21,7 +21,7 @@ Compare [assets/rollback-plan.json](assets/rollback-plan.json) with the project 
 4. **Rollback commands and budget.** The exact commands, with no `<placeholders>`, the longest acceptable duration, abort/escalation conditions and an independent recovery observation window.
 5. **Schema state.** The expand, migrate or contract phase after this deploy, and whether the previous code runs on it. Prove actual old-code compatibility: a contraction that removes an old-code dependency blocks rollback; contraction alone does not establish incompatibility.
 6. **What rollback cannot undo.** Never empty. Read [references/rollback-limits.md](references/rollback-limits.md) to find them: data written or deleted, messages and emails sent, external calls, format migrations, client caches, mobile builds, DNS and certificate changes. Give each its handling.
-7. **Decision.** Rollback triggers as signal plus threshold plus source, conditions for rolling forward instead, who decides, and the decision deadline.
+7. **Decision.** Rollback triggers as signal plus threshold plus source, conditions for rolling forward instead, who decides, and the decision deadline. For roll-forward, record decision.roll_forward_target with the separately reviewed repair artifact and config; candidate remains the release being recovered from.
 
 Rule of thumb: roll back when the previous version was healthy, it runs on the current schema and configuration, and nothing irreversible blocks it. Roll forward only when rollback is impossible (contracted schema, incompatible data) or slower than an already reviewed fix.
 
@@ -30,9 +30,9 @@ Done when every field holds a live-resolved value and the cannot-undo list names
 ## Rehearse in a non-production environment
 
 1. Use an explicitly disposable staging target with contained jobs, credentials and external effects, representative schema and the same delivery path as production.
-2. Run the recorded rollback commands exactly. Measure through verified user-path recovery, including controller sync, image pulls, warm-up and the agreed observation window. For roll-forward, exercise the reviewed compatible candidate repair and record its recovered artifact; do not try to run incompatible old code.
+2. Run the recorded rollback commands exactly. Measure through verified user-path recovery, including controller sync, image pulls, warm-up and the agreed observation window. For roll-forward, exercise the reviewed roll_forward_target and record its recovered artifact and config; do not try to run incompatible old code.
 3. Run a user-path check (a real request through the service, not only a health endpoint) and record the result.
-4. Keep a local private receipt with commands/exits and actual effects. Record the drill target/kind, action, date, both artifact and config identities, recovered artifact, measured seconds and user-path result. Bind plan_sha256 to the checker output for the exact plan excluding drill; edits invalidate that proof. Restamping a hash without another drill supplies no evidence.
+4. Keep a local private receipt with commands/exits and actual effects. Record the drill target/kind, action, date, both artifact and config identities, recovered artifact and recovered_config, measured seconds and user-path result. Bind plan_sha256 to the checker output for the exact plan excluding drill; edits invalidate that proof. Restamping a hash without another drill supplies no evidence.
 
 If the drill fails or exceeds the budget, fix the plan and drill again. Record staging differences in load, data and provider behavior; they limit production timing claims. If no non-production environment exists, record the plan as unrehearsed and say so; do not drill in production without explicit authorization.
 
