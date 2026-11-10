@@ -41,4 +41,4 @@ Declare dependencies in `SKILL.md` as quoted, space-separated strings: `metadata
 1. `cp -r template skills/<skill-name>`, then edit `SKILL.md` and `evals/examples.md`.
 2. Add the skill to `catalog/skills.yaml` and update `catalog/coverage.md`.
 3. Run `scripts/build-profiles.py`, preview/apply `scripts/build-host-config.py` if invocation policy changed, then run `./scripts/validate.sh` and fix every error.
-4. Add the skill to the table in `README.md`.
+4. Run `scripts/build-docs.py`, then fix whatever `scripts/build-docs.py --check` reports; it generates the README skill index and asks for the human guidance a new skill needs.

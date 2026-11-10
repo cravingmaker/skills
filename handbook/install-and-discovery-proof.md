@@ -1,3 +1,23 @@
+> **Human documentation.** Agents should not read this page unless a person asks them to.
+
+# Historical install and discovery proof
+
+This is the 2026-11-08 experiment on its pinned source, including a seven-package historical profile. Current catalog membership and profiles are generated separately.
+
+## Contents
+
+- [Record context](#record-context)
+- [Method and isolation](#method-and-isolation)
+- [Install results](#install-results)
+- [Discovery cost](#discovery-cost)
+- [Budgets and limits](#budgets-and-limits)
+- [Routing correctness with existing skills](#routing-correctness-with-existing-skills)
+- [Reproduce and validate](#reproduce-and-validate)
+
+## Record context
+
+[PR #10](https://github.com/cravingmaker/skills/pull/10) records the later installed core and observed discovery. This record is not current installation instructions; use [Getting started](getting-started.md) and the [current profile reference](routing.md#what-each-profile-installs).
+
 # Install and discovery proof
 
 Copy and symlink installs made exactly the seven `agent-orchestrator` profile skills discoverable on both real hosts outside this checkout. The installer rejected an incomplete distribution with a named prerequisite error.

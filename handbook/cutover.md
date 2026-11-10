@@ -1,3 +1,22 @@
+> **Human documentation.** Agents should not read this page unless a person asks them to.
+
+# Historical core cutover checklist
+
+This checklist was written before cutover. PR #10 records the observed 2026-11-09 result; the archived future tense below is retained as history.
+
+## Contents
+
+- [Record context](#record-context)
+- [Pass the gates](#pass-the-gates)
+- [Inventory and rollback](#inventory-and-rollback)
+- [Stage the replacement](#stage-the-replacement)
+- [Uninstall all four sources](#uninstall-all-four-sources)
+- [Install and verify each host](#install-and-verify-each-host)
+
+## Record context
+
+[PR #10](https://github.com/cravingmaker/skills/pull/10) records the later installed core and observed discovery. This record is not current installation instructions; use [Getting started](getting-started.md) and the [current profile reference](routing.md#what-each-profile-installs).
+
 # Core skill cutover
 
 Replace mattpocock-skills, the pstack port, tstack and Superpowers with the owned 58-package core only after this PR is merged and the behavioral and host gates below pass. This checklist records a future operation; shipping the checklist or passing static checks does not perform or prove cutover. A1-08 requires actual uninstall of all four sources. Disabling them alone is incomplete.
@@ -64,7 +83,7 @@ scripts/install-skills.py --target "$host_skills_dir" --mode copy --apply "$@"
 scripts/build-host-config.py --check
 ```
 
-Use the implemented host adapters in [installing.md](installing.md) at the confirmed settings targets. For Claude, supply the actual host, target, settings path, settings scope and project root, then inspect the preview and explicitly apply only the owned preference changes. For Codex, install the checked generated files; never generate through an upstream or shared symlink. Preserve unrelated keys, stricter disabled/manual settings and effective precedence. Unsupported schemas or malformed settings are failures to reconcile, not permission to overwrite.
+Use the implemented host adapters in [installation contract](../docs/installing.md) at the confirmed settings targets. For Claude, supply the actual host, target, settings path, settings scope and project root, then inspect the preview and explicitly apply only the owned preference changes. For Codex, install the checked generated files; never generate through an upstream or shared symlink. Preserve unrelated keys, stricter disabled/manual settings and effective precedence. Unsupported schemas or malformed settings are failures to reconcile, not permission to overwrite.
 
 Reopen clean Claude Code and Codex sessions. Verify actual discovery and explicit selection of grill-me, council, interrogate, wait-what, bro, pr and ketchup, plus full-stop, owned correct and every required helper. Check all 58 expected names and every catalog user entry's manual suppression and explicit mode. Test that body-only creates no remote action, full-stop preserves no-merge in deeper helpers, and a child returns PR state without watching. No runtime route may resolve to a retired source cache.
 
